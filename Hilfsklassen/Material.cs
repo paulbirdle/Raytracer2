@@ -80,12 +80,12 @@ namespace Raytracer
 
         public static Material Mirror
         {
-            get { return new Material(RaytracerColor.White, 1.0, 0.9); }
+            get { return new Material(RaytracerColor.White, 1.0, 0.9, 0, 0); }
         }
 
         public static Material TealBG
         {
-            get{ return new Material(RaytracerColor.Teal, 0.5, 0.5); }
+            get{ return new Material(RaytracerColor.Teal, 0, 0.5, 0.3, 0.7); }
         }
 
         public static Material RoughLight

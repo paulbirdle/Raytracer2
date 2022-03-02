@@ -80,11 +80,11 @@ namespace Raytracer
         
         private Scene scene2(int resX, int resY)
         {
-            Camera theCamera = new Camera(new Vector(-200, -200, 200), new Vector(2, 2, -2), new Vector(1,1,2), Math.PI / 4, resX, resY);
+            Camera theCamera = new Camera(new Vector(-400, -400, 400), new Vector(2, 2, -1.93), new Vector(1,1,2), Math.PI / 8, resX, resY);
 
             Entity[] theEntities = new Entity[20];
-            Lightsource[] theLights = new Lightsource[20];
-            //theEntities[0] = new Lightsource(new Vector(0, 0, 0), Color.LightGray, 2);
+            Lightsource[] theLights = new Lightsource[2];
+            //theLights[0] = new ParallelLight(new Vector(0, 0.2, -1), new RaytracerColor(Color.LightGray));
             theLights[1] = new PointLight(new Vector(-75, 25, 25), RaytracerColor.White);
 
             int b_s = 50; // background_size
