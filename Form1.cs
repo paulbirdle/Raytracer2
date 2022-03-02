@@ -105,7 +105,7 @@ namespace Raytracer
                 }
             }
 
-            Scene theScene = new Scene(theCamera, theEntities,theLights);
+            Scene theScene = new Scene(theCamera, theEntities,theLights, RaytracerColor.Black);
             return theScene;
         }
     }
