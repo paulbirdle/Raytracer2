@@ -58,5 +58,36 @@ namespace Raytracer
             material = this.material;
             return t1;
         }
+
+        public override double get_intersection(Ray ray)
+        {
+            Vector start = ray.Start;
+            Vector direction = ray.Direction;
+            Vector v_to_start = start - center;
+
+            double b = 2 * (direction * v_to_start);
+            double c = v_to_start * v_to_start - radius * radius;
+
+            double discr = b * b / 4 - c;
+
+            if (discr < 1e-6)//quadratische Gleichung hat keine Lösung
+            {
+                return -1;
+            }
+            double sqrt = Math.Sqrt(discr);
+            double t1 = -b / 2 - sqrt;      //sonst: die beiden Lösungen (Schnittpunkte) der quadratischen Gleichung
+            double t2 = -b / 2 + sqrt;
+
+            if (t1 < 1e-6 && t2 < 1e-6) //Kugel hinter ray
+            {
+                return -1;
+            }
+            else if (t1 < 1e-6 && t2 > 0) //start in der Kugel
+            {
+                return t2;
+            }
+            //Kugel vor ray
+            return t1;
+        }
     }
 }

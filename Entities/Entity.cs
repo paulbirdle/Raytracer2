@@ -22,5 +22,10 @@ namespace Raytracer
             material = new Material();
             return -1;
         }
+
+        public virtual double get_intersection(Ray ray)
+        {
+            return -1;
+        }
     }
 }

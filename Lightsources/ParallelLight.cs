@@ -32,7 +32,7 @@ namespace Raytracer
             for (int l = 0; l < entities.Length; l++)
             {
                 if (entities[l] == null) continue;
-                if (entities[l].get_intersection(ray, out _, out _) >= 0) return false;
+                if (entities[l].get_intersection(ray) >= 0) return false;
             }
             return true;
         }

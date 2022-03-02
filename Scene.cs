@@ -126,8 +126,14 @@ namespace Raytracer
                     Vector v = ray.Direction;
                     Ray reflected_ray = new Ray((-v).reflect_at(n), intersection);
                     RaytracerColor reflected_col;
-                    if (material.Reflectivity < 1e-6) reflected_col = RaytracerColor.Black;
-                    else reflected_col = material.Reflectivity * calculateRays(reflected_ray, depth - 1);
+                    if (material.Reflectivity < 1e-6)
+                    {
+                        reflected_col = RaytracerColor.Black;
+                    }
+                    else
+                    {
+                        reflected_col = material.Reflectivity * calculateRays(reflected_ray, depth - 1);
+                    }
 
                     RaytracerColor specular = RaytracerColor.Black;
                     RaytracerColor diffuse = RaytracerColor.Black;

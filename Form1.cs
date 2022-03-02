@@ -26,13 +26,13 @@ namespace Raytracer
         private void button1_Click(object sender, EventArgs e)
         {
             //int resX = 3840; int resY = 2160; //4K
-            //int resX = 1920; int resY = 1080; //FHD
+            int resX = 1920; int resY = 1080; //FHD
             //int resX = 1080; int resY = 720;  //HD
-            int resX = 640; int resY = 360; //360p
+            //int resX = 640; int resY = 360; //360p
 
             int depth = 3;
             Bitmap flag = new Bitmap(resX, resY);
-            Scene scene = scene2(resX, resY);
+            Scene scene = scene1(resX, resY);
 
             DateTime before = DateTime.Now;
             RaytracerColor[,] col = scene.render(depth);
@@ -51,8 +51,8 @@ namespace Raytracer
             }
             pictureBox1.Image = flag;
 
-            flag.Save("scene2.png", ImageFormat.Png);
-            System.Diagnostics.Process.Start("scene2.png");
+            flag.Save("scene1.png", ImageFormat.Png);
+            System.Diagnostics.Process.Start("scene1.png");
             after = DateTime.Now;
 
             duration = after - before;
@@ -75,7 +75,7 @@ namespace Raytracer
             Lightsource[] theLights = new Lightsource[1];
             theLights[0] = new PointLight(new Vector(15, 5, 7), RaytracerColor.White);
 
-            return new Scene(theCamera, theEntities, theLights);
+            return new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
         }
         
         private Scene scene2(int resX, int resY)
