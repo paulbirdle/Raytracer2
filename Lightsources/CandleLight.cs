@@ -9,17 +9,19 @@ namespace Raytracer
     class CandleLight : Lightsource
     {
         private Vector position;
+        double lengthscale;
 
-        public CandleLight(Vector position, RaytracerColor color)
+        public CandleLight(Vector position, double lengthscale, RaytracerColor color)
             : base(color)
         {
             this.position = position;
+            this.lengthscale = lengthscale;
         }
 
         public override double Intensity(Vector point)
         {
             double distance = (position - point).norm();
-            return Math.Min(1 / Math.Pow(distance, 2), 1);
+            return Math.Min(1, Math.Pow(distance/lengthscale, -2));
         }
 
         public override Vector Direction(Vector point)
@@ -34,8 +36,7 @@ namespace Raytracer
             double t;
             for (int l = 0; l < entities.Length; l++)
             {
-                if(entities[l] == null) continue;
-                t = entities[l].get_intersection(ray, out _, out _);
+                t = entities[l].get_intersection(ray);
                 if (t >= 0 && t < tmax) return false;
             }
             return true;

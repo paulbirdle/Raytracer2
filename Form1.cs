@@ -51,8 +51,8 @@ namespace Raytracer
             }
             pictureBox1.Image = flag;
 
-            flag.Save("scene2.png", ImageFormat.Png);
-            System.Diagnostics.Process.Start("scene2.png");
+            flag.Save("scene1.png", ImageFormat.Png);
+            System.Diagnostics.Process.Start("scene1.png");
             after = DateTime.Now;
 
             duration = after - before;
@@ -75,7 +75,7 @@ namespace Raytracer
             Lightsource[] theLights = new Lightsource[1];
             theLights[0] = new PointLight(new Vector(15, 5, 7), RaytracerColor.White);
 
-            return new Scene(theCamera, theEntities, theLights);
+            return new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
         }
         
         private Scene scene2(int resX, int resY)

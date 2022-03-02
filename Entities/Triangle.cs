@@ -71,5 +71,34 @@ namespace Raytracer
             material = this.material;
             return t;
         }
+
+        public override double get_intersection(Ray ray)
+        {
+            Vector x = ray.Start;
+            Vector v = ray.Direction;
+            Vector tri = corners[0];
+
+            double scalprod = v * this.n;
+            if (Math.Abs(scalprod) < 1e-6)//ray parallel zu Dreieck
+            {
+                return -1;
+            }
+
+            double t = (tri - x) * this.n / scalprod;
+            Vector intersection = x + t * v;
+
+            Vector n_side;
+            for (int i = 0; i < 3; i++)
+            {   //checke ob intersection auf der richtigen Seite von corners[i] - corners[i+1] liegt:
+                n_side = this.n ^ (corners[i] - corners[(i + 1) % 3]).normalize();
+
+                if ((intersection - corners[i]) * n_side * ((corners[(i + 2) % 3] - corners[i]) * n_side) < 1e-6)
+                {
+                    return -1;
+                }
+            }
+
+            return t;
+        }
     }
 }
