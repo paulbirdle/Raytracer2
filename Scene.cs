@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 
-namespace Raytracer2
+namespace Raytracer
 {
     class Scene
     {
@@ -141,7 +141,7 @@ namespace Raytracer2
                             diffuse += lights[i].Intensity(intersection) * diffuseIntensity(angle_n_light, material.DiffuseReflectivity) * lights[i].Col;
                         }
                     }
-                    return material.Col * (diffuse + reflected_col + specular);
+                    return material.Col * (diffuse + reflected_col) + specular;
                 }
             }
         }

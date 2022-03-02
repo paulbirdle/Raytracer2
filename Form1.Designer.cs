@@ -1,4 +1,4 @@
-﻿namespace Raytracer2
+﻿namespace Raytracer
 {
     partial class Form1
     {
