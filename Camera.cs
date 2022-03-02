@@ -28,22 +28,24 @@ namespace Raytracer
             this.position = position;
             this.up = up.normalize();
             this.xangle = xangle;
-            this.yangle = 2.0 * Math.Atan(Math.Tan((double)xangle / 2.0) * (double)resy / (double)resx); 
+            yangle = 2.0 * Math.Atan(Math.Tan(xangle / 2.0) * resy / resx); 
 
             this.resx = resx;
             this.resy = resy;
 
             if(direction*up != 0)
             {
-                throw new Exception("up ist nicht rechtwinklig zu direction");
+                this.up = (this.up - this.up * this.direction * this.direction).normalize();
+                //throw new Exception("Up falsch");
             }
 
             right = direction ^ up;
             right = right.normalize();
 
-            ULcorner = direction + Math.Tan(xangle / 2.0) * (-right) + Math.Tan(yangle / 2.0) * up;
-            step_right = (Math.Tan(xangle / 2.0) / (resx / 2.0)) * right;
-            step_down = (Math.Tan(yangle / 2.0) / (resy / 2.0)) * (-up);
+            ULcorner = direction + Math.Tan(xangle / 2.0) * (-right) + Math.Tan(yangle / 2.0) * this.up;
+            double stepLength = 2.0 * Math.Tan(xangle / 2.0) / resx;
+            step_right = stepLength * right;
+            step_down = -stepLength * this.up;
         }
 
         public int resX

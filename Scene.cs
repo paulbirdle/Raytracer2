@@ -47,12 +47,12 @@ namespace Raytracer
             { 
                 for (int y = 0; y < resY; y++)
                 {
-                    ray = new Ray(v, p);
-                    //Ray ray = cam.get_Rays(x,y);
+                    //ray = new Ray(v, p);
+                    ray = cam.get_Rays(x,y);
                     color[x,y] = calculateRays(ray, depth);
-                    v += d;
+                    //v += d;
                 }
-                v += r - resY * d;
+                //v += r - resY * d;
             }
             return color;
         }
@@ -105,14 +105,14 @@ namespace Raytracer
             if(depth == 0)
             {
                 int l = firstIntersection(ray, out _, out _, out _, out Material material);
-                if(l == -1)//nichts getroffen
-                {
+                /*if(l == -1)//nichts getroffen
+                {*/
                     return ambientColor;
-                }
+                /*}
                 else //etwas getroffen
                 {
                     return material.Col;
-                }
+                }*/
             }
             else //depth > 0
             {
@@ -125,15 +125,18 @@ namespace Raytracer
                 {
                     Vector v = ray.Direction;
                     Ray reflected_ray = new Ray((-v).reflect_at(n), intersection);
-                    RaytracerColor reflected_col = calculateRays(reflected_ray, depth - 1);
+                    RaytracerColor reflected_col;
+                    if (material.Reflectivity < 1e-6) reflected_col = RaytracerColor.Black;
+                    else reflected_col = material.Reflectivity * calculateRays(reflected_ray, depth - 1);
 
                     RaytracerColor specular = RaytracerColor.Black;
                     RaytracerColor diffuse = RaytracerColor.Black;
 
+
                     for (int i = 0; i < lights.Length; i++)
                     {
                         if(lights[i] == null) continue;
-                        if(lights[i].is_visible(intersection, entities))
+                        if(lights[i].is_visible(intersection + 1e-6*n, entities))
                         {
                             double angle_refl_light = Vector.angle(lights[i].Direction(intersection), reflected_ray.Direction)/2;
                             double angle_n_light = Vector.angle(lights[i].Direction(intersection), n);
@@ -141,7 +144,8 @@ namespace Raytracer
                             diffuse += lights[i].Intensity(intersection) * diffuseIntensity(angle_n_light, material.DiffuseReflectivity) * lights[i].Col;
                         }
                     }
-                    return material.Col * (diffuse + reflected_col) + specular;
+                    RaytracerColor result = material.Col * (diffuse + reflected_col) + specular;
+                    return result;
                 }
             }
         }
@@ -153,7 +157,7 @@ namespace Raytracer
 
         public double diffuseIntensity(double angle, double diffuseReflectivity)
         {
-            return diffuseReflectivity*Math.Cos(angle);
+            return diffuseReflectivity * Math.Cos(angle);
         }
     }
 }

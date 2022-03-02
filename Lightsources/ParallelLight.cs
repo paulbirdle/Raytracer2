@@ -31,6 +31,7 @@ namespace Raytracer
             Ray ray = new Ray(direction, point);
             for (int l = 0; l < entities.Length; l++)
             {
+                if (entities[l] == null) continue;
                 if (entities[l].get_intersection(ray, out _, out _) >= 0) return false;
             }
             return true;
