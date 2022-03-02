@@ -132,6 +132,7 @@ namespace Raytracer
 
                     for (int i = 0; i < lights.Length; i++)
                     {
+                        if(lights[i] == null) continue;
                         if(lights[i].is_visible(intersection, entities))
                         {
                             double angle_refl_light = Vector.angle(lights[i].Direction(intersection), reflected_ray.Direction)/2;
