@@ -29,8 +29,8 @@ namespace Raytracer
             //int resX = 3840; int resY = 2160; //4K
             //int resX = 1920; int resY = 1080; //FHD
             //int resX = 1080; int resY = 720;  //HD
-            //int resX = 640; int resY = 360; //360p
-            int resX = 960; int resY = 540; 
+            int resX = 640; int resY = 360; //360p
+            //int resX = 960; int resY = 540; 
 
             int depth = 5;
             Bitmap flag = new Bitmap(resX, resY);
@@ -116,15 +116,18 @@ namespace Raytracer
 
         private void button2_Click(object sender, EventArgs e)
         {
-            int resX = 7680; int resY = 4320; //8k
+            // AntiAliasing ist eine Form der Kantenglättung, und kann verschieden umgesetzt werden, hier mal das Sogenannte SSAA 
+            //int resX = 7680; int resY = 4320; //8k
             //int resX = 3840; int resY = 2160; //4K
-            //int resX = 1920; int resY = 1080; //FHD
+            int resX = 1920; int resY = 1080; //FHD  
             //int resX = 1080; int resY = 720;  //HD
             //int resX = 640; int resY = 360; //360p
 
+            int ssaa = 4; // Faktor: vielfaches der Ausgaberesolution, also Faktor fuer die Renderaufloesung;
             int depth = 5;
-            Bitmap flag = new Bitmap(resX/2, resY/2);
-            Scene scene = scene2(resX, resY);
+
+            Bitmap flag = new Bitmap(resX, resY);
+            Scene scene = scene2(resX*ssaa, resY*ssaa); // höhere Renderauflösung wird übergeben
 
             DateTime before = DateTime.Now;
             RaytracerColor[,] col = scene.render(depth);
@@ -136,12 +139,20 @@ namespace Raytracer
             before = DateTime.Now;
             RaytracerColor avg;
 
-            for (int i = 0; i < resX/2; i++)
+            for (int i = 0; i < resX; i++)
             {
-                for (int j = 0; j < resY/2; j++)
+                for (int j = 0; j < resY; j++)
                 {
-                    avg = 0.25 * col[2*i, 2*j] + 0.25 * col[2*i + 1, 2 * j] + 0.25 * col[2 * i, 2 * j + 1] + 0.25 * col[2 * i + 1, 2 * j + 1]; 
-                    flag.SetPixel(i, j, avg.Col);
+                    // so macht es keine kantigen Farbübergänge... 
+                    int r = col[ssaa * i, ssaa * j].R + col[ssaa * i + 1, ssaa * j].R + col[ssaa * i, ssaa * j + 1].R + col[ssaa * i + 1, ssaa * j + 1].R;
+                    int g = col[ssaa * i, ssaa * j].G + col[ssaa * i + 1, ssaa * j].G + col[ssaa * i, ssaa * j + 1].G + col[ssaa * i + 1, ssaa * j + 1].G;
+                    int b = col[ssaa * i, ssaa * j].B + col[ssaa * i + 1, ssaa * j].B + col[ssaa * i, ssaa * j + 1].B + col[ssaa * i + 1, ssaa * j + 1].B;
+
+                    r = (int)(0.25 * r);
+                    g = (int)(0.25 * g);
+                    b = (int)(0.25 * b);
+
+                    flag.SetPixel(i, j, Color.FromArgb(r,g,b));
                 }
             }
             pictureBox1.Image = flag;
