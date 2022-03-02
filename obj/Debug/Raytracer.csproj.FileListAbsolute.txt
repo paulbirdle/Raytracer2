@@ -29,3 +29,14 @@ C:\Users\Luis Maoer\source\repos\Raytracer 2\obj\Debug\Raytracer.csproj.Generate
 C:\Users\Luis Maoer\source\repos\Raytracer 2\obj\Debug\Raytracer.csproj.CoreCompileInputs.cache
 C:\Users\Luis Maoer\source\repos\Raytracer 2\obj\Debug\Raytracer.exe
 C:\Users\Luis Maoer\source\repos\Raytracer 2\obj\Debug\Raytracer.pdb
+C:\Users\Antoin\source\repos\Raytracer2\bin\Debug\Raytracer.exe.config
+C:\Users\Antoin\source\repos\Raytracer2\bin\Debug\Raytracer.exe
+C:\Users\Antoin\source\repos\Raytracer2\bin\Debug\Raytracer.pdb
+C:\Users\Antoin\source\repos\Raytracer2\obj\Debug\Raytracer.csproj.AssemblyReference.cache
+C:\Users\Antoin\source\repos\Raytracer2\obj\Debug\Raytracer.csproj.SuggestedBindingRedirects.cache
+C:\Users\Antoin\source\repos\Raytracer2\obj\Debug\Raytracer.Form1.resources
+C:\Users\Antoin\source\repos\Raytracer2\obj\Debug\Raytracer.Properties.Resources.resources
+C:\Users\Antoin\source\repos\Raytracer2\obj\Debug\Raytracer.csproj.GenerateResource.cache
+C:\Users\Antoin\source\repos\Raytracer2\obj\Debug\Raytracer.csproj.CoreCompileInputs.cache
+C:\Users\Antoin\source\repos\Raytracer2\obj\Debug\Raytracer.exe
+C:\Users\Antoin\source\repos\Raytracer2\obj\Debug\Raytracer.pdb
