@@ -26,13 +26,13 @@ namespace Raytracer
         private void button1_Click(object sender, EventArgs e)
         {
             //int resX = 3840; int resY = 2160; //4K
-            int resX = 1920; int resY = 1080; //FHD
+            //int resX = 1920; int resY = 1080; //FHD
             //int resX = 1080; int resY = 720;  //HD
-            //int resX = 640; int resY = 360; //360p
+            int resX = 640; int resY = 360; //360p
 
             int depth = 3;
             Bitmap flag = new Bitmap(resX, resY);
-            Scene scene = scene1(resX, resY);
+            Scene scene = scene2(resX, resY);
 
             DateTime before = DateTime.Now;
             RaytracerColor[,] col = scene.render(depth);
