@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 
-namespace Raytracer2
+namespace Raytracer
 {
     class Sphere : Entity
     {
