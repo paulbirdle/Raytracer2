@@ -1,0 +1,11 @@
+C:\Users\Antoin\source\repos\Raytracer2\obj\Debug\Raytracer2.csproj.AssemblyReference.cache
+C:\Users\Antoin\source\repos\Raytracer2\obj\Debug\Raytracer2.csproj.SuggestedBindingRedirects.cache
+C:\Users\Antoin\source\repos\Raytracer2\obj\Debug\Raytracer2.Form1.resources
+C:\Users\Antoin\source\repos\Raytracer2\obj\Debug\Raytracer.Properties.Resources.resources
+C:\Users\Antoin\source\repos\Raytracer2\obj\Debug\Raytracer2.csproj.GenerateResource.cache
+C:\Users\Antoin\source\repos\Raytracer2\obj\Debug\Raytracer2.csproj.CoreCompileInputs.cache
+C:\Users\Antoin\source\repos\Raytracer2\bin\Debug\Raytracer.exe.config
+C:\Users\Antoin\source\repos\Raytracer2\bin\Debug\Raytracer.exe
+C:\Users\Antoin\source\repos\Raytracer2\bin\Debug\Raytracer.pdb
+C:\Users\Antoin\source\repos\Raytracer2\obj\Debug\Raytracer.exe
+C:\Users\Antoin\source\repos\Raytracer2\obj\Debug\Raytracer.pdb

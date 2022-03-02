@@ -26,13 +26,13 @@ namespace Raytracer2
         private void button1_Click(object sender, EventArgs e)
         {
             //int resX = 3840; int resY = 2160; //4K
-            int resX = 1920; int resY = 1080; //FHD
+            //int resX = 1920; int resY = 1080; //FHD
             //int resX = 1080; int resY = 720;  //HD
-            //int resX = 640; int resY = 360; //360p
+            int resX = 640; int resY = 360; //360p
 
             int depth = 3;
             Bitmap flag = new Bitmap(resX, resY);
-            Scene scene = scene1(resX, resY);
+            Scene scene = scene2(resX, resY);
 
             DateTime before = DateTime.Now;
             RaytracerColor[,] col = scene.render(depth);
@@ -51,8 +51,8 @@ namespace Raytracer2
             }
             pictureBox1.Image = flag;
 
-            flag.Save("scene1.png", ImageFormat.Png);
-            System.Diagnostics.Process.Start("scene1.png");
+            flag.Save("scene2.png", ImageFormat.Png);
+            System.Diagnostics.Process.Start("scene2.png");
             after = DateTime.Now;
 
             duration = after - before;
@@ -76,6 +76,37 @@ namespace Raytracer2
             theLights[0] = new PointLight(new Vector(15, 5, 7), RaytracerColor.White);
 
             return new Scene(theCamera, theEntities, theLights);
+        }
+        
+        private Scene scene2(int resX, int resY)
+        {
+            Camera theCamera = new Camera(new Vector(-200, -200, 200), new Vector(2, 2, -2), new Vector(1,1,2), Math.PI / 4, resX, resY);
+
+            Entity[] theEntities = new Entity[20];
+            Lightsource[] theLights = new Lightsource[20];
+            //theEntities[0] = new Lightsource(new Vector(0, 0, 0), Color.LightGray, 2);
+            theLights[1] = new PointLight(new Vector(-75, 25, 25), RaytracerColor.White);
+
+            int b_s = 50; // background_size
+            theEntities[2] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(-b_s, b_s, 0),  new Vector(-b_s, -b_s, 0),  new Vector(b_s, -b_s, 0),  Material.TealBG); // "Boden"
+            theEntities[3] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(b_s, b_s, b_s), new Vector(b_s,-b_s, b_s),  new Vector(b_s,-b_s, 0), Material.TealBG); // "rechte Wand"
+            theEntities[4] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(-b_s, b_s, 0),  new Vector(-b_s, b_s, b_s), new Vector(b_s, b_s, b_s), Material.TealBG); // "linke Wand"
+
+            int s_s = 6; // sphere_size natuerlich :)
+            int dist = 8;
+            int c = 5;
+            for(int i = 0; i < 2; i++)
+            {
+                for(int j = 0; j < 2; j++)
+                {
+                    theEntities[c] = new Sphere(new Vector(Math.Pow(-1,i)*dist, Math.Pow(-1,j)*dist, s_s), s_s, Material.Mirror);
+                    theEntities[c+1] = new Sphere(new Vector(Math.Pow(-1, i) * dist, Math.Pow(-1, j) * dist, s_s + 2*dist), s_s, Material.Mirror);
+                    c += 2;
+                }
+            }
+
+            Scene theScene = new Scene(theCamera, theEntities,theLights);
+            return theScene;
         }
     }
 }

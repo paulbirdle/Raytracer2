@@ -85,7 +85,7 @@ namespace Raytracer2
 
         public static Material TealBG
         {
-            get{ return new Material(RaytracerColor.Teal, 0, 0); }
+            get{ return new Material(RaytracerColor.Teal, 0.5, 0.5); }
         }
 
         public static Material RoughLight
