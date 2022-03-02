@@ -30,7 +30,7 @@ namespace Raytracer
             //int resX = 1080; int resY = 720;  //HD
             int resX = 640; int resY = 360; //360p
 
-            int depth = 3;
+            int depth = 5;
             Bitmap flag = new Bitmap(resX, resY);
             Scene scene = scene2(resX, resY);
 
@@ -56,7 +56,7 @@ namespace Raytracer
             after = DateTime.Now;
 
             duration = after - before;
-            label2.Text = duration.TotalSeconds.ToString() + " s";
+            label2.Text = duration.TotalSeconds.ToString() + " s"+ " Rays:" + scene.countout().ToString();
         }
 
         private Scene scene1(int resX, int resY)
@@ -80,12 +80,13 @@ namespace Raytracer
         
         private Scene scene2(int resX, int resY)
         {
-            Camera theCamera = new Camera(new Vector(-400, -400, 400), new Vector(2, 2, -1.93), new Vector(1,1,2), Math.PI / 8, resX, resY);
+            Camera theCamera = new Camera(new Vector(-400, -400, 400), new Vector(2, 2, -1.93), new Vector(1,1,2), Math.PI / 6, resX, resY);
 
             Entity[] theEntities = new Entity[20];
             Lightsource[] theLights = new Lightsource[2];
-            //theLights[0] = new ParallelLight(new Vector(0, 0.2, -1), new RaytracerColor(Color.LightGray));
-            theLights[1] = new PointLight(new Vector(-75, 25, 25), RaytracerColor.White);
+            //theLights[0] = new ParallelLight(new Vector(0, 1, 1), new RaytracerColor(Color.White));
+            //theLights[1] = new PointLight(new Vector(-50,-100, 25), RaytracerColor.White);
+            theLights[1] = new CandleLight(new Vector(0,0,30),new RaytracerColor(Color.Orange));
 
             int b_s = 50; // background_size
             theEntities[2] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(-b_s, b_s, 0),  new Vector(-b_s, -b_s, 0),  new Vector(b_s, -b_s, 0),  Material.TealBG); // "Boden"
@@ -95,12 +96,13 @@ namespace Raytracer
             int s_s = 6; // sphere_size natuerlich :)
             int dist = 8;
             int c = 5;
+            Material materialS = new Material(new RaytracerColor(Color.Orange),0.3,1,0,1);
             for(int i = 0; i < 2; i++)
             {
                 for(int j = 0; j < 2; j++)
                 {
-                    theEntities[c] = new Sphere(new Vector(Math.Pow(-1,i)*dist, Math.Pow(-1,j)*dist, s_s), s_s, Material.Mirror);
-                    theEntities[c+1] = new Sphere(new Vector(Math.Pow(-1, i) * dist, Math.Pow(-1, j) * dist, s_s + 2*dist), s_s, Material.Mirror);
+                    theEntities[c] = new Sphere(new Vector(Math.Pow(-1,i)*dist, Math.Pow(-1,j)*dist, s_s), s_s, materialS);
+                    theEntities[c+1] = new Sphere(new Vector(Math.Pow(-1, i) * dist, Math.Pow(-1, j) * dist, s_s + 2*dist), s_s, materialS);
                     c += 2;
                 }
             }
