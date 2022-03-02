@@ -88,7 +88,8 @@ namespace Raytracer
             theLights[1] = new PointLight(new Vector(-75, 25, 25), RaytracerColor.White);
 
             int b_s = 50; // background_size
-            theEntities[2] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(-b_s, b_s, 0),  new Vector(-b_s, -b_s, 0),  new Vector(b_s, -b_s, 0),  Material.TealBG); // "Boden"
+            theEntities[2] = new Triangle(new Vector(b_s, b_s, 0), new Vector(-b_s, b_s, 0),  new Vector(-b_s, -b_s, 0),  Material.TealBG); // "Boden"
+            //theEntities[2] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(-b_s, b_s, 0),  new Vector(-b_s, -b_s, 0),  new Vector(b_s, -b_s, 0),  Material.TealBG); // "Boden"
             theEntities[3] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(b_s, b_s, b_s), new Vector(b_s,-b_s, b_s),  new Vector(b_s,-b_s, 0), Material.TealBG); // "rechte Wand"
             theEntities[4] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(-b_s, b_s, 0),  new Vector(-b_s, b_s, b_s), new Vector(b_s, b_s, b_s), Material.TealBG); // "linke Wand"
 
