@@ -140,7 +140,7 @@ namespace Raytracer
                             diffuse += lights[i].Intensity(intersection) * diffuseIntensity(angle_n_light, material.DiffuseReflectivity) * lights[i].Col;
                         }
                     }
-                    return material.Col * (diffuse + reflected_col + specular);
+                    return material.Col * (diffuse + reflected_col) + specular;
                 }
             }
         }

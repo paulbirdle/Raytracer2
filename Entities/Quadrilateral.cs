@@ -59,12 +59,12 @@ namespace Raytracer
             }
 
             double t = (tri - x) * this.n / scalprod;
-            Vector intersection = x + t * v;
+            Vector intersection = ray.position_at_time(t);
 
             Vector n_side;
             for (int i = 0; i < 4; i++)
             {   //checke ob intersection auf der richtigen Seite von corners[i] - corners[i+1] liegt:
-                n_side = this.n ^ (corners[i] - corners[(i + 1) % 3]).normalize();
+                n_side = this.n ^ (corners[i] - corners[(i + 1) % 4]).normalize();
 
                 if ((intersection - corners[i]) * n_side * ((corners[(i + 2) % 4] - corners[i]) * n_side) < 1e-6)
                 {
