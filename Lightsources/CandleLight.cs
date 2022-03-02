@@ -36,6 +36,7 @@ namespace Raytracer
             double t;
             for (int l = 0; l < entities.Length; l++)
             {
+                if(entities[l] == null) continue;
                 t = entities[l].get_intersection(ray);
                 if (t >= 0 && t < tmax) return false;
             }
