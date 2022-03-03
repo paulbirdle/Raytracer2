@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\bin\\Debug",
-    "\\Properties"
+    "\\Entities",
+    "\\Hilfsklassen",
+    "\\Lightsources"
   ],
   "SelectedNode": "\\Raytracer.sln",
   "PreviewInSolutionExplorer": false
