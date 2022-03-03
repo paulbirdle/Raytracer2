@@ -25,11 +25,11 @@ namespace Raytracer
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //int resX = 7680; int resY = 4320; //8k
-            //int resX = 3840; int resY = 2160; //4K
+            //int resX = 7680; int resY = 4320; //8K
+            int resX = 3840; int resY = 2160; //4K
             //int resX = 1920; int resY = 1080; //FHD
             //int resX = 1080; int resY = 720;  //HD
-            int resX = 640; int resY = 360; //360p
+            //int resX = 640; int resY = 360; //360p
             //int resX = 960; int resY = 540; 
 
             int depth = 5;
