@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\bin\\Debug",
+    "\\Properties"
   ],
-  "SelectedNode": "\\Raytracer2.sln",
+  "SelectedNode": "\\Raytracer.sln",
   "PreviewInSolutionExplorer": false
 }
