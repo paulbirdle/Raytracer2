@@ -72,9 +72,9 @@ namespace Raytracer
         {
             Camera theCamera = new Camera(new Vector(0, 0, 0), new Vector(1, 0, 0), new Vector(0, 0, 1), Math.PI / 8, resX, resY);
 
-            Material MirrorRed = new Material(new RaytracerColor(Color.Red), 0.8, 100, 0.7, 0.3);
-            Material MattGreen = new Material(new RaytracerColor(Color.Green), 0.3, 30, 0.7, 0.3);
-            Material RoughYellow = new Material(new RaytracerColor(Color.Yellow), 0, 10, 0.7, 0.3);
+            Material MirrorRed = new Material(new RaytracerColor(Color.Red), 0.8, 100, 0.5, 0.8);
+            Material MattGreen = new Material(new RaytracerColor(Color.Green), 0.3, 30, 0.7, 0.6);
+            Material RoughYellow = new Material(new RaytracerColor(Color.Yellow), 0.5, 10, 0.7, 0.3);
 
             Entity[] theEntities = new Entity[3];
             theEntities[0] = new Sphere(new Vector(20, 0, 0), 1, MirrorRed);
@@ -130,8 +130,21 @@ namespace Raytracer
             }
 
             int resX, resY;
-            
-            if(auflösung == "360p")
+
+            Dictionary<string, int[]> resDict = new Dictionary<string, int[]>
+            {
+                {"360p", new int[2]{640, 360} },
+                {"720p", new int[2]{1080, 720} },
+                {"1080p", new int[2]{1920, 1080} },
+                {"1440p", new int[2]{2560, 1440} },
+                {"4k", new int[2]{3840, 2160} },
+                {"8k", new int[2]{7680, 4320} },
+            };
+            int[] res = resDict[auflösung];
+            resX = res[0];
+            resY = res[1];
+
+            /*if(auflösung == "360p")
             {
                 resX = 640; resY = 360;
             }
@@ -158,7 +171,7 @@ namespace Raytracer
             else
             {
                 resX = 640; resY = 360;
-            }
+            }*/
 
             //AntiAliasing ist eine Form der Kantenglättung, und kann verschieden umgesetzt werden, hier mal das Sogenannte SSAA 
 
