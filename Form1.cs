@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Timers;
 
 namespace Raytracer
 {
@@ -22,7 +23,6 @@ namespace Raytracer
         {
 
         }
-
         private void button1_Click(object sender, EventArgs e)
         {
             int scene = (int)SceneSelector.Value;
@@ -50,38 +50,38 @@ namespace Raytracer
 
             return new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
         }
-        
+
         private Scene scene2(int resX, int resY)
         {
-            Camera theCamera = new Camera(new Vector(-500, -400, 200), new Vector(5, 4, -1.85), new Vector(1,1,4.5), Math.PI / 2.9, resX, resY);
+            Camera theCamera = new Camera(new Vector(-500, -400, 200), new Vector(5, 4, -1.85), new Vector(1, 1, 4.5), Math.PI / 2.9, resX, resY);
 
             Entity[] theEntities = new Entity[20];
             Lightsource[] theLights = new Lightsource[4];
             //theLights[0] = new ParallelLight(new Vector(-50, -15, 100)-new Vector(0,0,0), new RaytracerColor(Color.White));
-            theLights[1] = new PointLight(new Vector(-40,-90, 40), RaytracerColor.White);
+            theLights[1] = new PointLight(new Vector(-40, -90, 40), RaytracerColor.White);
             //theLights[2] = new CandleLight(new Vector(0,-500,1000),300,new RaytracerColor(Color.White));
 
             int b_s = 50; // background_size
-            Material bgm = new Material(new RaytracerColor(Color.White),0,10,0,0);
-            theEntities[2] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(-b_s, b_s, 0), new Vector(-b_s, -b_s, 0), new Vector(b_s, -b_s, 0), new Material(new RaytracerColor(Color.White), 0.2, 10, 0.2, 0.8)) ; // "Boden"
-            theEntities[3] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(b_s, b_s, b_s), new Vector(b_s,-b_s, b_s),  new Vector(b_s,-b_s, 0), bgm); // "rechte Wand"
-            theEntities[4] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(-b_s, b_s, 0),  new Vector(-b_s, b_s, b_s), new Vector(b_s, b_s, b_s), bgm); // "linke Wand"
+            Material bgm = new Material(new RaytracerColor(Color.White), 0, 10, 0, 0);
+            theEntities[2] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(-b_s, b_s, 0), new Vector(-b_s, -b_s, 0), new Vector(b_s, -b_s, 0), new Material(new RaytracerColor(Color.White), 0.8, 10, 0, 0.6)); // "Boden"
+            theEntities[3] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(b_s, b_s, b_s), new Vector(b_s, -b_s, b_s), new Vector(b_s, -b_s, 0), bgm); // "rechte Wand"
+            theEntities[4] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(-b_s, b_s, 0), new Vector(-b_s, b_s, b_s), new Vector(b_s, b_s, b_s), bgm); // "linke Wand"
 
             int s_s = 6; // sphere_size natuerlich :)
             int dist = 8;
             int c = 5;
-            Material materialS = new Material(new RaytracerColor(Color.Yellow),1,40,0.7,0.3);
-            for(int i = 0; i < 2; i++)
+            Material materialS = Material.Matte;
+            for (int i = 0; i < 2; i++)
             {
-                for(int j = 0; j < 2; j++)
+                for (int j = 0; j < 2; j++)
                 {
-                    theEntities[c] = new Sphere(new Vector(Math.Pow(-1,i)*dist, Math.Pow(-1,j)*dist, s_s), s_s, materialS);
-                    theEntities[c+1] = new Sphere(new Vector(Math.Pow(-1, i) * dist, Math.Pow(-1, j) * dist, s_s + 2*dist), s_s, materialS);
+                    theEntities[c] = new Sphere(new Vector(Math.Pow(-1, i) * dist, Math.Pow(-1, j) * dist, s_s), s_s, materialS);
+                    theEntities[c + 1] = new Sphere(new Vector(Math.Pow(-1, i) * dist, Math.Pow(-1, j) * dist, s_s + 2 * dist), s_s, materialS);
                     c += 2;
                 }
             }
 
-            Scene theScene = new Scene(theCamera, theEntities,theLights, RaytracerColor.Black);
+            Scene theScene = new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
             return theScene;
         }
 
@@ -115,13 +115,13 @@ namespace Raytracer
             }
 
             Scene scene;
-            if(scene_to_Render == 1)
+            if (scene_to_Render == 1)
             {
                 scene = scene1(resX * ssaa, resY * ssaa); // höhere Renderauflösung wird übergeben
             }
-            else if(scene_to_Render == 2)
+            else if (scene_to_Render == 2)
             {
-                scene = scene2(resX * ssaa, resY * ssaa); 
+                scene = scene2(resX * ssaa, resY * ssaa);
             }
             else
             {
@@ -130,55 +130,91 @@ namespace Raytracer
 
             Bitmap outputBM = new Bitmap(resX, resY);
 
+            Ray.numRay = 0;
+            Vector.numVec = 0;
             DateTime before = DateTime.Now;
             RaytracerColor[,] col = scene.render(depth);
             DateTime after = DateTime.Now;
 
             TimeSpan duration = after - before;
-            label1.Text = duration.TotalSeconds.ToString() + " s";
+            statistics.Text = "Renderdauer   :  " + duration.TotalSeconds.ToString() + " s";
 
             before = DateTime.Now;
 
             double factor = 1.0 / (ssaa * ssaa);
 
-            for (int i = 0; i < resX; i++)
+            if (ssaa == 1)
             {
-                  
-                for (int j = 0; j < resY; j++)
+                for (int x = 0; x < resX; x++)
                 {
-                    if (ssaa == 1)
+                    for (int y = 0; y < resY; y++)
                     {
-                        outputBM.SetPixel(i, j, col[i, j].Col);
+                        outputBM.SetPixel(x, y, col[x, y].Col);
                         continue;
                     }
-                    //so macht es keine kantigen Farbübergänge... 
-                    int r = 0;
-                    int b = 0;
-                    int g = 0;
-                    for (int s1 = 0; s1 < ssaa; s1++)
-                    {
-                        for (int s2 = 0; s2 < ssaa; s2++)
-                        {
-                            r += col[ssaa * i + s1, ssaa * j + s2].R;
-                            g += col[ssaa * i + s1, ssaa * j + s2].G;
-                            b += col[ssaa * i + s1, ssaa * j + s2].B;
-                        }
-                    }
-                    r = (int)(factor * r);
-                    g = (int)(factor * g);
-                    b = (int)(factor * b);
-
-                    outputBM.SetPixel(i, j, Color.FromArgb(r, g, b));
                 }
             }
-            pictureBox1.Image = outputBM;
-            
-            outputBM.Save("scene.png", ImageFormat.Png);
-            System.Diagnostics.Process.Start("scene.png");
+            else
+            {
+                int actX;
+                int actY;
+                int r = 0;
+                int b = 0;
+                int g = 0;
+
+                for (int x = 0; x < resX; x++)
+                { 
+                    for (int y = 0; y < resY; y++)
+                    {
+                        //so macht es keine kantigen Farbübergänge... 
+                        r = 0;
+                        b = 0;
+                        g = 0;
+                        actX = ssaa * x;
+                        actY = ssaa * y;
+
+                        for (int s1 = 0; s1 < ssaa; s1++)
+                        {
+                            for (int s2 = 0; s2 < ssaa; s2++)
+                            {
+                                r += col[actX + s1, actY + s2].R;
+                                g += col[actX + s1, actY + s2].G;
+                                b += col[actX + s1, actY + s2].B;
+                            }
+                        }
+                        r = (int)(factor * r);
+                        g = (int)(factor * g);
+                        b = (int)(factor * b);
+
+                        outputBM.SetPixel(x, y, Color.FromArgb(r, g, b));
+                    }
+                }
+            }
+
+            pictureBox1.Height = pictureBox1.Width * outputBM.Height / outputBM.Width;
+            show(outputBM);
+            save(outputBM);
             after = DateTime.Now;
 
             duration = after - before;
-            label2.Text = duration.TotalSeconds.ToString() + " s" + "\nRays:" + scene.countout().ToString();
+            statistics.Text += "\nAnzeigedauer  :  " + duration.TotalSeconds.ToString() + "s";
+            statistics.Text += "\nAnzahl Rays    :  " + Ray.numRay.ToString(); 
+            statistics.Text += "\nAnzahl Vectors:  " + Vector.numVec.ToString();
+        }
+
+        private void show(Bitmap map)
+        {
+            if (pictureBox1.Image != null) { pictureBox1.Image.Dispose(); }
+            using (Image myImage = new Bitmap(map,pictureBox1.Size))
+            {
+                pictureBox1.Image = (Image)myImage.Clone();
+                pictureBox1.Update();
+            }
+        }
+        private void save(Bitmap map)
+        {
+            map.Save("scene.png", ImageFormat.Png);
+            System.Diagnostics.Process.Start("scene.png");
         }
     }
 }

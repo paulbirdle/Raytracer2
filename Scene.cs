@@ -13,11 +13,7 @@ namespace Raytracer
         Entity[] entities;
         Lightsource[] lights;
         RaytracerColor ambientColor;
-        int count = 0;
-        public int countout()
-        {
-            return count;
-        }
+
         public Scene(Camera cam, Entity[] entities, Lightsource[] lights, RaytracerColor ambientColor)
         {
             this.cam = cam;
@@ -36,7 +32,6 @@ namespace Raytracer
 
         public RaytracerColor[,] render(int depth)
         {
-            count = 0;
             RaytracerColor[,] color = new RaytracerColor[cam.resX, cam.resY];
             Vector p = cam.Position;
             Vector v = cam.ULCorner;
@@ -53,13 +48,17 @@ namespace Raytracer
                 for (int y = 0; y < resY; y++)
                 {
                       Ray ray = cam.get_Rays(x, y);
-                      count++;
                       color[x, y] = calculateRays(ray, depth);
                 }
             });
             return color;
         }
 
+        public RaytracerColor render(int x, int y, int depth)
+        {
+           Ray ray = cam.get_Rays(x, y);
+           return calculateRays(ray, depth);
+        }
         private int firstIntersection(Ray ray, out Vector intersection, out double t, out Vector n, out Material material)
         {
             t = double.PositiveInfinity;
@@ -124,7 +123,6 @@ namespace Raytracer
                 {
                     Vector v = ray.Direction;
                     Ray reflected_ray = new Ray((-v).reflect_at(n), intersection);
-                    count++;
                     RaytracerColor reflected_col;
                     if (material.Reflectivity < 1e-6)
                     {
@@ -142,7 +140,6 @@ namespace Raytracer
                     for (int i = 0; i < lights.Length; i++)
                     {
                         if(lights[i] == null) continue;
-                        count++;
                         if(lights[i].is_visible(intersection + 1e-6*n, entities))
                         {
                             double angle_refl_light = Vector.angle(lights[i].Direction(intersection), reflected_ray.Direction)/2;
