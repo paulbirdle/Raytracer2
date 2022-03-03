@@ -25,9 +25,16 @@ namespace Raytracer
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //int resX = 7680; int resY = 4320; //8K
-            int resX = 3840; int resY = 2160; //4K
-            //int resX = 1920; int resY = 1080; //FHD
+            int scene = (int)SceneSelector.Value;
+            int depth = (int)DepthSelector.Value;
+            string res = (string)ResolutionSelector.SelectedItem;
+            int ssaa = Convert.ToInt32(AAMultiplierSelector.SelectedItem);
+            render(scene, depth, res, ssaa);
+
+            /*
+            //int resX = 7680; int resY = 4320; //8k
+            //int resX = 3840; int resY = 2160; //4K
+            int resX = 1920; int resY = 1080; //FHD
             //int resX = 1080; int resY = 720;  //HD
             //int resX = 640; int resY = 360; //360p
             //int resX = 960; int resY = 540; 
@@ -58,7 +65,7 @@ namespace Raytracer
             after = DateTime.Now;
 
             duration = after - before;
-            label2.Text = duration.TotalSeconds.ToString() + " s"+ " Rays:" + scene.countout().ToString();
+            label2.Text = duration.TotalSeconds.ToString() + " s"+ " Rays:" + scene.countout().ToString();*/
         }
 
         private Scene scene1(int resX, int resY)
@@ -82,24 +89,24 @@ namespace Raytracer
         
         private Scene scene2(int resX, int resY)
         {
-            Camera theCamera = new Camera(new Vector(-400, -400, 400), new Vector(2, 2, -1.93), new Vector(1,1,2), Math.PI / 6.5, resX, resY);
+            Camera theCamera = new Camera(new Vector(-500, -400, 200), new Vector(5, 4, -1.85), new Vector(1,1,4.5), Math.PI / 2.9, resX, resY);
 
             Entity[] theEntities = new Entity[20];
-            Lightsource[] theLights = new Lightsource[2];
-            //theLights[0] = new ParallelLight(new Vector(0, 1, 1), new RaytracerColor(Color.White));
-            //theLights[1] = new PointLight(new Vector(-50,-100, 25), RaytracerColor.White);
-            theLights[1] = new CandleLight(new Vector(-40,0,30),60,new RaytracerColor(Color.White));
+            Lightsource[] theLights = new Lightsource[4];
+            //theLights[0] = new ParallelLight(new Vector(-50, -15, 100)-new Vector(0,0,0), new RaytracerColor(Color.White));
+            theLights[1] = new PointLight(new Vector(-40,-90, 40), RaytracerColor.White);
+            //theLights[2] = new CandleLight(new Vector(0,-500,1000),300,new RaytracerColor(Color.White));
 
             int b_s = 50; // background_size
-            Material bgm = new Material(new RaytracerColor(Color.Red),0,50);
-            theEntities[2] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(-b_s, b_s, 0),  new Vector(-b_s, -b_s, 0),  new Vector(b_s, -b_s, 0),  bgm); // "Boden"
+            Material bgm = new Material(new RaytracerColor(Color.White),0,10,0,0);
+            theEntities[2] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(-b_s, b_s, 0), new Vector(-b_s, -b_s, 0), new Vector(b_s, -b_s, 0), new Material(new RaytracerColor(Color.White), 0.2, 10, 0.2, 0.8)) ; // "Boden"
             theEntities[3] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(b_s, b_s, b_s), new Vector(b_s,-b_s, b_s),  new Vector(b_s,-b_s, 0), bgm); // "rechte Wand"
             theEntities[4] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(-b_s, b_s, 0),  new Vector(-b_s, b_s, b_s), new Vector(b_s, b_s, b_s), bgm); // "linke Wand"
 
             int s_s = 6; // sphere_size natuerlich :)
             int dist = 8;
             int c = 5;
-            Material materialS = new Material(new RaytracerColor(Color.White),1,40);
+            Material materialS = new Material(new RaytracerColor(Color.Yellow),1,40,0.7,0.3);
             for(int i = 0; i < 2; i++)
             {
                 for(int j = 0; j < 2; j++)
@@ -114,20 +121,68 @@ namespace Raytracer
             return theScene;
         }
 
-        private void button2_Click(object sender, EventArgs e)
+
+        private void render(int scene_to_Render, int depth, string auflösung, int kantenglaettung)
         {
-            // AntiAliasing ist eine Form der Kantenglättung, und kann verschieden umgesetzt werden, hier mal das Sogenannte SSAA 
-            //int resX = 7680; int resY = 4320; //8k
-            //int resX = 3840; int resY = 2160; //4K
-            int resX = 1920; int resY = 1080; //FHD  
-            //int resX = 1080; int resY = 720;  //HD
-            //int resX = 640; int resY = 360; //360p
+            if (string.IsNullOrEmpty(auflösung))
+            {
+                throw new ArgumentException($"\"{nameof(auflösung)}\" kann nicht NULL oder leer sein.", nameof(auflösung));
+            }
 
-            int ssaa = 4; // Faktor: vielfaches der Ausgaberesolution, also Faktor fuer die Renderaufloesung;
-            int depth = 5;
+            int resX, resY;
+            
+            if(auflösung == "360p")
+            {
+                resX = 640; resY = 360;
+            }
+            else if (auflösung == "720p")
+            {
+                resX = 1080; resY = 720;
+            }
+            else if (auflösung == "1080p")
+            {
+                resX = 1920; resY = 1080;
+            }
+            else if (auflösung == "1440p")
+            {
+                resX = 2560; resY = 1440;
+            }
+            else if (auflösung == "4k")
+            {
+                resX = 3840; resY = 2160;
+            }
+            else if (auflösung == "8k")
+            {
+                resX = 7680; resY = 4320;
+            }
+            else
+            {
+                resX = 640; resY = 360;
+            }
 
-            Bitmap flag = new Bitmap(resX, resY);
-            Scene scene = scene2(resX*ssaa, resY*ssaa); // höhere Renderauflösung wird übergeben
+            //AntiAliasing ist eine Form der Kantenglättung, und kann verschieden umgesetzt werden, hier mal das Sogenannte SSAA 
+
+            int ssaa = kantenglaettung; // Faktor: vielfaches der Ausgaberesolution, also Faktor fuer die Renderaufloesung;
+            if (ssaa % 2 != 0 && ssaa != 1)
+            {
+                throw new Exception("Nur vielfache von 2 oder nur 1 fuer Kantenglättung moeglich!");
+            }
+
+            Scene scene;
+            if(scene_to_Render == 1)
+            {
+                scene = scene1(resX * ssaa, resY * ssaa); // höhere Renderauflösung wird übergeben
+            }
+            else if(scene_to_Render == 2)
+            {
+                scene = scene2(resX * ssaa, resY * ssaa); 
+            }
+            else
+            {
+                throw new Exception("Wähl eine existierende Scene aus");
+            }
+
+            Bitmap outputBM = new Bitmap(resX, resY);
 
             DateTime before = DateTime.Now;
             RaytracerColor[,] col = scene.render(depth);
@@ -137,32 +192,47 @@ namespace Raytracer
             label1.Text = duration.TotalSeconds.ToString() + " s";
 
             before = DateTime.Now;
-            RaytracerColor avg;
+
+            double factor = 1.0 / (ssaa * ssaa);
 
             for (int i = 0; i < resX; i++)
             {
+                  
                 for (int j = 0; j < resY; j++)
                 {
-                    // so macht es keine kantigen Farbübergänge... 
-                    int r = col[ssaa * i, ssaa * j].R + col[ssaa * i + 1, ssaa * j].R + col[ssaa * i, ssaa * j + 1].R + col[ssaa * i + 1, ssaa * j + 1].R;
-                    int g = col[ssaa * i, ssaa * j].G + col[ssaa * i + 1, ssaa * j].G + col[ssaa * i, ssaa * j + 1].G + col[ssaa * i + 1, ssaa * j + 1].G;
-                    int b = col[ssaa * i, ssaa * j].B + col[ssaa * i + 1, ssaa * j].B + col[ssaa * i, ssaa * j + 1].B + col[ssaa * i + 1, ssaa * j + 1].B;
+                    if (ssaa == 1)
+                    {
+                        outputBM.SetPixel(i, j, col[i, j].Col);
+                        continue;
+                    }
+                    //so macht es keine kantigen Farbübergänge... 
+                    int r = 0;
+                    int b = 0;
+                    int g = 0;
+                    for (int s1 = 0; s1 < ssaa; s1++)
+                    {
+                        for (int s2 = 0; s2 < ssaa; s2++)
+                        {
+                            r += col[ssaa * i + s1, ssaa * j + s2].R;
+                            g += col[ssaa * i + s1, ssaa * j + s2].G;
+                            b += col[ssaa * i + s1, ssaa * j + s2].B;
+                        }
+                    }
+                    r = (int)(r * factor);
+                    g = (int)(factor * g);
+                    b = (int)(factor * b);
 
-                    r = (int)(0.25 * r);
-                    g = (int)(0.25 * g);
-                    b = (int)(0.25 * b);
-
-                    flag.SetPixel(i, j, Color.FromArgb(r,g,b));
+                    outputBM.SetPixel(i, j, Color.FromArgb(r, g, b));
                 }
             }
-            pictureBox1.Image = flag;
+            pictureBox1.Image = outputBM;
 
-            flag.Save("scene1.png", ImageFormat.Png);
-            System.Diagnostics.Process.Start("scene1.png");
+            outputBM.Save("scene.png", ImageFormat.Png);
+            System.Diagnostics.Process.Start("scene.png");
             after = DateTime.Now;
 
             duration = after - before;
-            label2.Text = duration.TotalSeconds.ToString() + " s" + " Rays:" + scene.countout().ToString();
+            label2.Text = duration.TotalSeconds.ToString() + " s" + "\nRays:" + scene.countout().ToString();
         }
     }
 }
