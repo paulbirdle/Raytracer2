@@ -48,7 +48,7 @@ namespace Raytracer
             ParallelOptions opt = new ParallelOptions();
             opt.MaxDegreeOfParallelism = -1; // max Anzahl Threads, man kann also cpu auslastung ugf. festlegen, -1 ist unbegrenzt (halt hardware begrenzt)
 
-            Parallel.For(0,resX, opt,x => // parallel mehrere Threads nutzen, bis zu 4x schneller, weil max Cpu ausnutzng
+            Parallel.For(0,resX, opt,x => // parallel mehrere Threads nutzen
             {
                 for (int y = 0; y < resY; y++)
                 {
@@ -58,19 +58,6 @@ namespace Raytracer
                 }
             });
             return color;
-            /*
-            for(int x = 0; x < resX; x++) // hier ohne multithreading
-            { 
-                for (int y = 0; y < resY; y++)
-                {
-                    //ray = new Ray(v, p);
-                    ray = cam.get_Rays(x,y);
-                    count++;
-                    color[x,y] = calculateRays(ray, depth);
-                    //v += d;
-                }
-                //v += r - resY * d;
-            }*/
         }
 
         private int firstIntersection(Ray ray, out Vector intersection, out double t, out Vector n, out Material material)
@@ -78,36 +65,32 @@ namespace Raytracer
             t = double.PositiveInfinity;
             double currentDist;
             int collisionEntity = -1;
-            Vector n_ = new Vector();
-            Material material_ = new Material();
 
             for(int l = 0; l < entities.Length; l++)
             {
                 if (entities[l] == null) continue;
 
-                currentDist = entities[l].get_intersection(ray, out Vector n_tmp, out Material material_tmp);
+                currentDist = entities[l].get_intersection(ray); //, out Vector n_tmp, out Material material_tmp
 
                 if (currentDist < t && currentDist > 1e-6)
                 {
                     t = currentDist;
                     collisionEntity = l;
-                    n_ = n_tmp;
-                    material_ = material_tmp;
                 }
             }
 
             if (collisionEntity == -1)//nichts getroffen
             {
-                intersection = new Vector();
-                n = new Vector();
-                material = new Material();
+                intersection = null; // schneller als neue Instanzen zu erstellen
+                n = null;
+                material = null;
+
                 return -1;
             }
             else //etwas getroffen
             {
                 intersection = ray.position_at_time(t);
-                n = n_;
-                material = material_;
+                entities[collisionEntity].get_intersection(ray, out n, out material);
                 return collisionEntity;
             }
         }

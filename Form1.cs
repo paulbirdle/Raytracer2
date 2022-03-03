@@ -30,42 +30,6 @@ namespace Raytracer
             string res = (string)ResolutionSelector.SelectedItem;
             int ssaa = Convert.ToInt32(AAMultiplierSelector.SelectedItem);
             render(scene, depth, res, ssaa);
-
-            /*
-            //int resX = 7680; int resY = 4320; //8k
-            //int resX = 3840; int resY = 2160; //4K
-            int resX = 1920; int resY = 1080; //FHD
-            //int resX = 1080; int resY = 720;  //HD
-            //int resX = 640; int resY = 360; //360p
-            //int resX = 960; int resY = 540; 
-
-            int depth = 5;
-            Bitmap flag = new Bitmap(resX, resY);
-            Scene scene = scene2(resX, resY);
-
-            DateTime before = DateTime.Now;
-            RaytracerColor[,] col = scene.render(depth);
-            DateTime after = DateTime.Now;
-
-            TimeSpan duration = after - before;
-            label1.Text = duration.TotalSeconds.ToString() + " s";
-
-            before = DateTime.Now;
-            for (int i = 0; i < resX; i++)
-            {
-                for (int j = 0; j < resY; j++)
-                {
-                    flag.SetPixel(i, j, col[i, j].Col);
-                }
-            }
-            pictureBox1.Image = flag;
-
-            flag.Save("scene1.png", ImageFormat.Png);
-            System.Diagnostics.Process.Start("scene1.png");
-            after = DateTime.Now;
-
-            duration = after - before;
-            label2.Text = duration.TotalSeconds.ToString() + " s"+ " Rays:" + scene.countout().ToString();*/
         }
 
         private Scene scene1(int resX, int resY)
@@ -144,37 +108,6 @@ namespace Raytracer
             resX = res[0];
             resY = res[1];
 
-            /*if(auflösung == "360p")
-            {
-                resX = 640; resY = 360;
-            }
-            else if (auflösung == "720p")
-            {
-                resX = 1080; resY = 720;
-            }
-            else if (auflösung == "1080p")
-            {
-                resX = 1920; resY = 1080;
-            }
-            else if (auflösung == "1440p")
-            {
-                resX = 2560; resY = 1440;
-            }
-            else if (auflösung == "4k")
-            {
-                resX = 3840; resY = 2160;
-            }
-            else if (auflösung == "8k")
-            {
-                resX = 7680; resY = 4320;
-            }
-            else
-            {
-                resX = 640; resY = 360;
-            }*/
-
-            //AntiAliasing ist eine Form der Kantenglättung, und kann verschieden umgesetzt werden, hier mal das Sogenannte SSAA 
-
             int ssaa = kantenglaettung; // Faktor: vielfaches der Ausgaberesolution, also Faktor fuer die Renderaufloesung;
             if (ssaa % 2 != 0 && ssaa != 1)
             {
@@ -231,7 +164,7 @@ namespace Raytracer
                             b += col[ssaa * i + s1, ssaa * j + s2].B;
                         }
                     }
-                    r = (int)(r * factor);
+                    r = (int)(factor * r);
                     g = (int)(factor * g);
                     b = (int)(factor * b);
 
@@ -239,7 +172,7 @@ namespace Raytracer
                 }
             }
             pictureBox1.Image = outputBM;
-
+            
             outputBM.Save("scene.png", ImageFormat.Png);
             System.Diagnostics.Process.Start("scene.png");
             after = DateTime.Now;
