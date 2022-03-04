@@ -24,7 +24,7 @@ namespace Raytracer
 
         }
         private void button1_Click(object sender, EventArgs e)
-        {
+        {  // für progressbar und liveRender etc. gehts für uns dann in die Multithreadinghölle
             int scene = (int)SceneSelector.Value;
             int depth = (int)DepthSelector.Value;
             string res = (string)ResolutionSelector.SelectedItem;
