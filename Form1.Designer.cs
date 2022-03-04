@@ -115,7 +115,7 @@
             this.SceneSelector.Size = new System.Drawing.Size(112, 26);
             this.SceneSelector.TabIndex = 10;
             this.SceneSelector.Value = new decimal(new int[] {
-            2,
+            3,
             0,
             0,
             0});

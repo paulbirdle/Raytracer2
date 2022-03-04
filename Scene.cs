@@ -125,6 +125,7 @@ namespace Raytracer
                     }
                     else
                     {
+                        if (material.Reflectivity > 1 || material.Reflectivity < 0) throw new Exception(" hier fehler");
                         reflected_col = material.Reflectivity * calculateRays(reflected_ray, depth - 1);
                     }
 
