@@ -68,6 +68,20 @@ namespace Raytracer
             return weight * A + (1 - weight) * B;
         }
 
+        public static Color avg(RaytracerColor[] colors)
+        {
+            int r = 0;
+            int g = 0;
+            int b = 0;
+            int length = colors.Length;
+            for ( int i = 0; i< length; i++)
+            {
+                r += colors[i].R;
+                g += colors[i].G;
+                b += colors[i].B;
+            }
+            return Color.FromArgb(r / length, g / length, b / length);
+        }
         public static RaytracerColor Black
         {
             get { return new RaytracerColor(Color.Black); }

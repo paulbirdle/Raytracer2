@@ -54,11 +54,6 @@ namespace Raytracer
             return color;
         }
 
-        public RaytracerColor render(int x, int y, int depth)
-        {
-           Ray ray = cam.get_Rays(x, y);
-           return calculateRays(ray, depth);
-        }
         private int firstIntersection(Ray ray, out Vector intersection, out double t, out Vector n, out Material material)
         {
             t = double.PositiveInfinity;
