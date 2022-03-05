@@ -55,10 +55,6 @@ namespace Raytracer
 
         public static RaytracerColor operator *(double a, RaytracerColor x) //0 <= a <= 1
         {
-            if (x.R > 255 || x.R < 0 || a == null|| a > 1 || a<0 || a*x.R < 0 || a * x.R > 255)
-            {
-                throw new Exception(" wtfffffff");
-            }
             return new RaytracerColor(Color.FromArgb((int)(a * x.R), (int)(a * x.G), (int)(a * x.B)));
         }
 

@@ -36,7 +36,7 @@ namespace Raytracer
             //theLights[2] = new CandleLight(new Vector(0,-500,1000),300,new RaytracerColor(Color.White));
 
             int b_s = 50; // background_size
-            Material bgm = new Material(new RaytracerColor(Color.White), 0, 10, 0, 0);
+            Material bgm = new Material(new RaytracerColor(Color.White), 0.5, 10, 0, 0.6);
             theEntities[2] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(-b_s, b_s, 0), new Vector(-b_s, -b_s, 0), new Vector(b_s, -b_s, 0), new Material(new RaytracerColor(Color.White), 0.8, 10, 0, 0.6)); // "Boden"
             theEntities[3] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(b_s, b_s, b_s), new Vector(b_s, -b_s, b_s), new Vector(b_s, -b_s, 0), bgm); // "rechte Wand"
             theEntities[4] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(-b_s, b_s, 0), new Vector(-b_s, b_s, b_s), new Vector(b_s, b_s, b_s), bgm); // "linke Wand"
@@ -59,34 +59,34 @@ namespace Raytracer
             return theScene;
         }
 
-        public static Scene scene3(int resX, int resY)
+        public static Scene scene3(int resX, int resY) // Ball Mirrored Multiple times
         {
-            Camera theCamera = new Camera(new Vector(-40,0,0),new Vector(1,0,0), new Vector(0,0,1), Math.PI/2,resX,resY);
+            Camera theCamera = new Camera(new Vector(-8,-49,10),new Vector(0,5,0), new Vector(0,0,1), Math.PI/2,resX,resY);
 
             Entity[] theEntities = new Entity[20];
             Lightsource[] theLights = new Lightsource[4];
-            int size = 50;
-            int lights = size - 10;
-            int range = 50;
-            theLights[0] = new CandleLight(new Vector(lights,lights,lights),range,RaytracerColor.White);
-            theLights[1] = new CandleLight(new Vector(-lights,lights,lights),range,RaytracerColor.White);
-            theLights[2] = new CandleLight(new Vector(lights,-lights,lights),range,RaytracerColor.White);
+            int lights = 35;
+            int range = 60;
+           //theLights[0] = new CandleLight(new Vector(lights,lights,lights),range,RaytracerColor.White); // 4 Overhead Lights
+           // theLights[1] = new CandleLight(new Vector(-lights,lights,lights),range,RaytracerColor.White);
+           //theLights[2] = new CandleLight(new Vector(lights,-lights,lights),range,RaytracerColor.White);
             theLights[3] = new CandleLight(new Vector(-lights,-lights,lights),range,RaytracerColor.White);
 
 
-            Material matte = new Material(new RaytracerColor(Color.LightGray),0,1000,0,1);
+            Material matte = new Material(new RaytracerColor(Color.LightGray),0,100,0.2,0.6);
 
-           theEntities[0] = new Quadrilateral(new Vector(size,size,size),new Vector(-size,size,size),new Vector(-size,-size,size),new Vector(size,-size,size),matte); //Decke
-           theEntities[1] = new Quadrilateral(new Vector(size,size,-size),new Vector(-size,size,-size),new Vector(-size,-size,-size),new Vector(size,-size,-size),matte);//Boden
-           theEntities[2] = new Quadrilateral(new Vector(size,size,size),new Vector(size,size,-size),new Vector(size,-size,-size),new Vector(size,-size,size),matte); // Wand bei X
-           theEntities[3] = new Quadrilateral(new Vector(-size,size,size),new Vector(-size,size,-size),new Vector(-size,-size,-size),new Vector(-size,-size,size),matte); // Wand bei -X
-           
-            
-           theEntities[4] = new Quadrilateral(new Vector(size, size,size),new Vector(-size,size,size),new Vector(-size,size,-size),new Vector(size,size,-size),Material.Iron); // Wand bei Y
-           theEntities[5] = new Quadrilateral(new Vector(size, -size,size),new Vector(-size,-size,size),new Vector(-size,-size,-size),new Vector(size,-size,-size),Material.Iron); // Wand bei -Y 
+            int b_s = 20; // background_size
+            Material bgm = new Material(new RaytracerColor(Color.LightCyan), 0, 100, 0.05, 0.7);
+            theEntities[0] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(-b_s, b_s, 0), new Vector(-b_s, -b_s, 0), new Vector(b_s, -b_s, 0), bgm); // "Boden"
+
+           double mirrorS = 50;
+
+           Material mirror = new Material(new RaytracerColor(Color.White),1,100,0,0);
+           theEntities[4] = new Quadrilateral(new Vector(mirrorS,mirrorS,mirrorS),new Vector(-mirrorS,mirrorS-2,mirrorS),new Vector(-mirrorS,mirrorS-2,0),new Vector(mirrorS,mirrorS,0), mirror);
+           theEntities[5] = new Quadrilateral(new Vector(mirrorS,-mirrorS,mirrorS),new Vector(-mirrorS,-mirrorS,mirrorS),new Vector(-mirrorS,-mirrorS,0),new Vector(mirrorS,-mirrorS,0), mirror);
 
             matte = new Material(new RaytracerColor(Color.Green),0,20,0.2,0.8);
-            theEntities[6] = new Sphere(new Vector(10,0,0),5,matte);
+            theEntities[6] = new Sphere(new Vector(0,0,10),2,Material.MetalicRed);
 
 
             Scene theScene = new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
