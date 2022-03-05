@@ -42,7 +42,7 @@ namespace Raytracer
             
             ParallelOptions opt = new ParallelOptions();
             opt.MaxDegreeOfParallelism = -1; // max Anzahl Threads, man kann also cpu auslastung ugf. festlegen, -1 ist unbegrenzt (halt hardware begrenzt)
-
+            
             Parallel.For(0,resX, opt,x => // parallel mehrere Threads nutzen
             {
                 for (int y = 0; y < resY; y++)
@@ -64,7 +64,7 @@ namespace Raytracer
             {
                 if (entities[l] == null) continue;
 
-                currentDist = entities[l].get_intersection(ray); //, out Vector n_tmp, out Material material_tmp
+                currentDist = entities[l].get_intersection(ray); 
 
                 if (currentDist < t && currentDist > 1e-6)
                 {
@@ -140,11 +140,17 @@ namespace Raytracer
                         {
                             double angle_refl_light = Vector.angle(lights[i].Direction(intersection), reflected_ray.Direction)/2;
                             double angle_n_light = Vector.angle(lights[i].Direction(intersection), n);
-                            specular += lights[i].Intensity(intersection) * specularIntensity(angle_refl_light, material.SpecularReflectivity, material.Smoothness) * lights[i].Col;
-                            diffuse += lights[i].Intensity(intersection) * diffuseIntensity(angle_n_light, material.DiffuseReflectivity) * lights[i].Col;
+                            if(material.SpecularReflectivity >= 1e-6)
+                            {
+                                specular += lights[i].Intensity(intersection) * specularIntensity(angle_refl_light, material.SpecularReflectivity, material.Smoothness) * lights[i].Col;
+                            }
+                            if(material.DiffuseReflectivity >= 1e-6)
+                            {
+                                diffuse  += lights[i].Intensity(intersection) * diffuseIntensity (angle_n_light   , material.DiffuseReflectivity)                       * lights[i].Col;
+                            }
                         }
                     }
-                    RaytracerColor result = material.Col * (diffuse + reflected_col + specular);
+                    RaytracerColor result = material.Col* (diffuse + reflected_col + specular);
                     return result;
                 }
             }

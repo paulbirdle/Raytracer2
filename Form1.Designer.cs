@@ -80,7 +80,7 @@
             this.DepthSelector.Size = new System.Drawing.Size(111, 26);
             this.DepthSelector.TabIndex = 7;
             this.DepthSelector.Value = new decimal(new int[] {
-            6,
+            2,
             0,
             0,
             0});

@@ -113,6 +113,7 @@ namespace Raytracer
                 {
                     for (int y = 0; y < resY; y++)
                     {
+                        if(col[x,y] == null) throw new Exception("asdlfkj");
                         outputBM.SetPixel(x, y, col[x, y].Col);
                         continue;
                     }

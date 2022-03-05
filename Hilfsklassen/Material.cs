@@ -98,7 +98,7 @@ namespace Raytracer
         }
         public static Material Matte
         {
-            get { return new Material(new RaytracerColor(Color.Green), 0, 80, 0.05, 0.9); }
+            get { return new Material(new RaytracerColor(Color.Gray),0 ,20 ,0.2 ,0.8 ); }
         }
     }
 }
