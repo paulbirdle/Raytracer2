@@ -32,13 +32,14 @@ namespace Raytracer
 
         public RaytracerColor[,] render(int depth)
         {
-            RaytracerColor[,] color = new RaytracerColor[cam.resX, cam.resY];
+            int resY = cam.resY;
+            int resX = cam.resX;
+            RaytracerColor[,] color = new RaytracerColor[resX, resY];
             Vector p = cam.Position;
             Vector v = cam.ULCorner;
             Vector r = cam.Step_Right;
             Vector d = cam.Step_Down;
-            int resY = cam.resY;
-            int resX = cam.resX;
+            Ray ray;
             
             ParallelOptions opt = new ParallelOptions();
             opt.MaxDegreeOfParallelism = -1; // max Anzahl Threads, man kann also cpu auslastung ugf. festlegen, -1 ist unbegrenzt (halt hardware begrenzt)
@@ -47,11 +48,43 @@ namespace Raytracer
             {
                 for (int y = 0; y < resY; y++)
                 {
-                      Ray ray = cam.get_Rays(x, y);
-                      color[x, y] = calculateRays(ray, depth);
+                    ray = cam.get_Rays(x, y);
+                    //Ray ray = new Ray(v, p);
+                    color[x, y] = calculateRays(ray, depth);
+                    //v += d;
                 }
+                //v += r - resY * d;
             });
             return color;
+        }
+
+        public Bitmap renderBM(int depth)
+        {
+            int resY = cam.resY;
+            int resX = cam.resX;
+            Bitmap bitmap = new Bitmap(resX, resY);
+            Vector p = cam.Position;
+            Vector v = cam.ULCorner;
+            Vector r = cam.Step_Right;
+            Vector d = cam.Step_Down;
+
+            ParallelOptions opt = new ParallelOptions();
+            opt.MaxDegreeOfParallelism = -1; // max Anzahl Threads, man kann also cpu auslastung ugf. festlegen, -1 ist unbegrenzt (halt hardware begrenzt)
+
+            Parallel.For(0, resX, opt, x => // parallel mehrere Threads nutzen
+            {
+                for (int y = 0; y < resY; y++)
+                {
+                    Ray ray = cam.get_Rays(x, y);
+                    //Ray ray = new Ray(v, p);
+                    Color col = calculateRays(ray, depth).Col;
+                    bitmap.SetPixel(x, y, col);
+                    //v += d;
+                    continue;
+                }
+                //v += r - resY * d;
+            });
+            return bitmap;
         }
 
         private int firstIntersection(Ray ray, out Vector intersection, out double t, out Vector n, out Material material)
@@ -66,7 +99,7 @@ namespace Raytracer
 
                 currentDist = entities[l].get_intersection(ray); 
 
-                if (currentDist < t && currentDist > 1e-6)
+                if (currentDist < t && currentDist > 1e-10)
                 {
                     t = currentDist;
                     collisionEntity = l;
@@ -110,7 +143,7 @@ namespace Raytracer
             else //depth > 0
             {
                 int l = firstIntersection(ray, out Vector intersection, out _, out Vector n, out Material material);
-                if(l == -1) //nichts getroffen
+                if(l == -1 || n == null) //nichts getroffen
                 {
                     return ambientColor;
                 }
@@ -119,7 +152,7 @@ namespace Raytracer
                     Vector v = ray.Direction;
                     Ray reflected_ray = new Ray((-v).reflect_at(n), intersection);
                     RaytracerColor reflected_col;
-                    if (material.Reflectivity < 1e-6)
+                    if (material.Reflectivity < 1e-10)
                     {
                         reflected_col = RaytracerColor.Black;
                     }
@@ -136,17 +169,28 @@ namespace Raytracer
                     for (int i = 0; i < lights.Length; i++)
                     {
                         if(lights[i] == null) continue;
-                        if(lights[i].is_visible(intersection + 1e-6*n, entities))
+
+                        if (n == null)
+                        {
+                            throw new Exception(" ");
+                        }
+                        if (lights[i].is_visible(intersection + 1e-10*n, entities))
                         {
                             double angle_refl_light = Vector.angle(lights[i].Direction(intersection), reflected_ray.Direction)/2;
                             double angle_n_light = Vector.angle(lights[i].Direction(intersection), n);
-                            if(material.SpecularReflectivity >= 1e-6)
+
+                            if(Math.Abs(angle_n_light) > Math.PI/2) //TODO
+                            {
+                                angle_n_light = Vector.angle(lights[i].Direction(intersection), -n);
+                            }
+
+                            if(material.SpecularReflectivity >= 1e-10)
                             {
                                 specular += lights[i].Intensity(intersection) * specularIntensity(angle_refl_light, material.SpecularReflectivity, material.Smoothness) * lights[i].Col;
                             }
-                            if(material.DiffuseReflectivity >= 1e-6)
+                            if(material.DiffuseReflectivity >= 1e-10)
                             {
-                                diffuse  += lights[i].Intensity(intersection) * diffuseIntensity (angle_n_light   , material.DiffuseReflectivity)                       * lights[i].Col;
+                                diffuse  += lights[i].Intensity(intersection) * diffuseIntensity(angle_n_light, material.DiffuseReflectivity) * lights[i].Col;
                             }
                         }
                     }

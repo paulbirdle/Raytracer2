@@ -20,12 +20,13 @@ namespace Raytracer
             {
                 throw new Exception("Das ist kein Viereck");
             }
-            n = getNormal();
-            if (Math.Abs((corners[3]-corners[2])*n) > 1e-6)
+            if (Math.Abs((corners[3]-corners[2])*n) > 1e-10)
             {
                 throw new Exception("Die Ecken liegen nicht in einer Ebene");
             }
             this.corners = corners;
+            this.material = material;
+            n = getNormal();
         }
 
         public Quadrilateral(Vector corner1, Vector corner2, Vector corner3, Vector corner4, Material material)
@@ -33,13 +34,13 @@ namespace Raytracer
             corners = new Vector[4] { corner1, corner2, corner3, corner4 };
             this.material = material;
             n = getNormal();
-            if (Math.Abs((corners[3] - corners[2]) * n) > 1e-6)
+            if (Math.Abs((corners[3] - corners[2]) * n) > 1e-10)
             {
                 throw new Exception("Die Ecken liegen nicht in einer Ebene");
             }
         }
 
-        public Vector getNormal()
+        private Vector getNormal()
         {
             return ((corners[0] - corners[1]) ^ (corners[0] - corners[2])).normalize();
         }
@@ -51,14 +52,20 @@ namespace Raytracer
             Vector tri = corners[0];
 
             double scalprod = v * this.n;
-            if (Math.Abs(scalprod) < 1e-6)//ray parallel zu Viereck
+            if (Math.Abs(scalprod) < 1e-10)//ray parallel zu Viereck
             {
-                n = new Vector();
-                material = new Material();
+                n = null;
+                material = null;
                 return -1;
             }
 
             double t = (tri - x) * this.n / scalprod;
+            if(t < 1e-10)
+            {
+                n = null;
+                material = null;
+                return -1;
+            }
             Vector intersection = ray.position_at_time(t);
 
             Vector n_side;
@@ -66,10 +73,10 @@ namespace Raytracer
             {   //checke ob intersection auf der richtigen Seite von corners[i] - corners[i+1] liegt:
                 n_side = this.n ^ (corners[i] - corners[(i + 1) % 4]).normalize();
 
-                if ((intersection - corners[i]) * n_side * ((corners[(i + 2) % 4] - corners[i]) * n_side) < 1e-6)
+                if ((intersection - corners[i]) * n_side * ((corners[(i + 2) % 4] - corners[i]) * n_side) < 1e-10)
                 {
-                    n = new Vector();
-                    material = new Material();
+                    n = null;
+                    material = null;
                     return -1;
                 }
             }
@@ -86,12 +93,13 @@ namespace Raytracer
             Vector tri = corners[0];
 
             double scalprod = v * this.n;
-            if (Math.Abs(scalprod) < 1e-6)//ray parallel zu Viereck
+            if (Math.Abs(scalprod) < 1e-10)//ray parallel zu Viereck
             {
                 return -1;
             }
 
             double t = (tri - x) * this.n / scalprod;
+            if (t < 1e-10) return -1;
             Vector intersection = ray.position_at_time(t);
 
             Vector n_side;
@@ -99,7 +107,7 @@ namespace Raytracer
             {   //checke ob intersection auf der richtigen Seite von corners[i] - corners[i+1] liegt:
                 n_side = this.n ^ (corners[i] - corners[(i + 1) % 4]).normalize();
 
-                if ((intersection - corners[i]) * n_side * ((corners[(i + 2) % 4] - corners[i]) * n_side) < 1e-6)
+                if ((intersection - corners[i]) * n_side * ((corners[(i + 2) % 4] - corners[i]) * n_side) < 1e-10)
                 {
                     return -1;
                 }

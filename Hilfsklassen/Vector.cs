@@ -46,13 +46,17 @@ namespace Raytracer
             return v[i];
         }
 
-        public static Vector operator *(double a, Vector w)
+        public static Vector operator *(double a, Vector ww)
         {
-            return new Vector(a * w.X, a * w.Y, a * w.Z);
+            return new Vector(a * ww.X, a * ww.Y, a * ww.Z);
         }
 
         public static Vector operator *(Vector w, double a)
         {
+            if (w == null)
+            {
+                throw new Exception(" ");
+            }
             return a * w;
         }
 
@@ -68,11 +72,19 @@ namespace Raytracer
 
         public static Vector operator -(Vector v, Vector w)
         {
+            if (w == null)
+            {
+                throw new Exception(" ");
+            }
             return v + (-1) * w;
         }
 
         public static Vector operator -(Vector v)
         {
+            if (v == null)
+            {
+                throw new Exception(" ");
+            }
             return (-1) * v;
         }
 
@@ -88,6 +100,10 @@ namespace Raytracer
 
         public static double angle (Vector v, Vector w)
         {
+            if (v == null || w == null)
+            {
+                throw new Exception(" ");
+            }
             return Math.Acos(v * w / (v.norm() * w.norm()));
         }
 
@@ -109,13 +125,21 @@ namespace Raytracer
 
         public Vector normalize()
         {
+            if (this == null)
+            {
+                throw new Exception(" ");
+            }
             return this / norm();
         }
 
         public Vector reflect_at(Vector v) //reflektiert this an v und gibt reflektierten Vektor zurück
         {
+            if (this == null || v == null)
+            {
+                throw new Exception(" ");
+            }
             v = v.normalize();
-            v *= (v * this);
+            v *= v * this;
             return this + 2*(v-this);
         }
     }

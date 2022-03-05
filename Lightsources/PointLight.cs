@@ -21,7 +21,7 @@ namespace Raytracer
             return 1.0;
         }
 
-        public override Vector Direction(Vector point)
+        public override Vector Direction(Vector point)//to lightsource
         {
             return (position - point).normalize();
         }

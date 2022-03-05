@@ -82,7 +82,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Compile Include="Entities\Cuboid.cs" />
+    <Compile Include="Entities\EntityGroup.cs" />
     <Compile Include="Hilfsklassen\SceneContainer.cs" />
+    <Compile Include="Hitentities\Hitbox.cs" />
+    <Compile Include="Hitentities\Hitentity.cs" />
+    <Compile Include="Hitentities\HitQuadrilateral.cs" />
     <Compile Include="Lightsources\CandleLight.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Form1.cs">
