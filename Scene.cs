@@ -13,11 +13,7 @@ namespace Raytracer
         Entity[] entities;
         Lightsource[] lights;
         RaytracerColor ambientColor;
-        int count = 0;
-        public int countout()
-        {
-            return count;
-        }
+
         public Scene(Camera cam, Entity[] entities, Lightsource[] lights, RaytracerColor ambientColor)
         {
             this.cam = cam;
@@ -36,7 +32,6 @@ namespace Raytracer
 
         public RaytracerColor[,] render(int depth)
         {
-            count = 0;
             RaytracerColor[,] color = new RaytracerColor[cam.resX, cam.resY];
             Vector p = cam.Position;
             Vector v = cam.ULCorner;
@@ -47,30 +42,16 @@ namespace Raytracer
             
             ParallelOptions opt = new ParallelOptions();
             opt.MaxDegreeOfParallelism = -1; // max Anzahl Threads, man kann also cpu auslastung ugf. festlegen, -1 ist unbegrenzt (halt hardware begrenzt)
-
-            Parallel.For(0,resX, opt,x => // parallel mehrere Threads nutzen, bis zu 4x schneller, weil max Cpu ausnutzng
+            
+            Parallel.For(0,resX, opt,x => // parallel mehrere Threads nutzen
             {
                 for (int y = 0; y < resY; y++)
                 {
                       Ray ray = cam.get_Rays(x, y);
-                      count++;
                       color[x, y] = calculateRays(ray, depth);
                 }
             });
             return color;
-            /*
-            for(int x = 0; x < resX; x++) // hier ohne multithreading
-            { 
-                for (int y = 0; y < resY; y++)
-                {
-                    //ray = new Ray(v, p);
-                    ray = cam.get_Rays(x,y);
-                    count++;
-                    color[x,y] = calculateRays(ray, depth);
-                    //v += d;
-                }
-                //v += r - resY * d;
-            }*/
         }
 
         private int firstIntersection(Ray ray, out Vector intersection, out double t, out Vector n, out Material material)
@@ -78,36 +59,32 @@ namespace Raytracer
             t = double.PositiveInfinity;
             double currentDist;
             int collisionEntity = -1;
-            Vector n_ = new Vector();
-            Material material_ = new Material();
 
             for(int l = 0; l < entities.Length; l++)
             {
                 if (entities[l] == null) continue;
 
-                currentDist = entities[l].get_intersection(ray, out Vector n_tmp, out Material material_tmp);
+                currentDist = entities[l].get_intersection(ray); 
 
                 if (currentDist < t && currentDist > 1e-6)
                 {
                     t = currentDist;
                     collisionEntity = l;
-                    n_ = n_tmp;
-                    material_ = material_tmp;
                 }
             }
 
             if (collisionEntity == -1)//nichts getroffen
             {
-                intersection = new Vector();
-                n = new Vector();
-                material = new Material();
+                intersection = null; // schneller als neue Instanzen zu erstellen
+                n = null;
+                material = null;
+
                 return -1;
             }
             else //etwas getroffen
             {
                 intersection = ray.position_at_time(t);
-                n = n_;
-                material = material_;
+                entities[collisionEntity].get_intersection(ray, out n, out material);
                 return collisionEntity;
             }
         }
@@ -141,7 +118,6 @@ namespace Raytracer
                 {
                     Vector v = ray.Direction;
                     Ray reflected_ray = new Ray((-v).reflect_at(n), intersection);
-                    count++;
                     RaytracerColor reflected_col;
                     if (material.Reflectivity < 1e-6)
                     {
@@ -149,6 +125,7 @@ namespace Raytracer
                     }
                     else
                     {
+                        if (material.Reflectivity > 1 || material.Reflectivity < 0) throw new Exception(" hier fehler");
                         reflected_col = material.Reflectivity * calculateRays(reflected_ray, depth - 1);
                     }
 
@@ -159,16 +136,21 @@ namespace Raytracer
                     for (int i = 0; i < lights.Length; i++)
                     {
                         if(lights[i] == null) continue;
-                        count++;
                         if(lights[i].is_visible(intersection + 1e-6*n, entities))
                         {
                             double angle_refl_light = Vector.angle(lights[i].Direction(intersection), reflected_ray.Direction)/2;
                             double angle_n_light = Vector.angle(lights[i].Direction(intersection), n);
-                            specular += lights[i].Intensity(intersection) * specularIntensity(angle_refl_light, material.SpecularReflectivity, material.Smoothness) * lights[i].Col;
-                            diffuse += lights[i].Intensity(intersection) * diffuseIntensity(angle_n_light, material.DiffuseReflectivity) * lights[i].Col;
+                            if(material.SpecularReflectivity >= 1e-6)
+                            {
+                                specular += lights[i].Intensity(intersection) * specularIntensity(angle_refl_light, material.SpecularReflectivity, material.Smoothness) * lights[i].Col;
+                            }
+                            if(material.DiffuseReflectivity >= 1e-6)
+                            {
+                                diffuse  += lights[i].Intensity(intersection) * diffuseIntensity (angle_n_light   , material.DiffuseReflectivity)                       * lights[i].Col;
+                            }
                         }
                     }
-                    RaytracerColor result = material.Col * (diffuse + reflected_col + specular);
+                    RaytracerColor result = material.Col* (diffuse + reflected_col + specular);
                     return result;
                 }
             }

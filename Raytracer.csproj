@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Compile Include="Hilfsklassen\SceneContainer.cs" />
     <Compile Include="Lightsources\CandleLight.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Form1.cs">

@@ -92,5 +92,13 @@ namespace Raytracer
         {
             get { return new Material(RaytracerColor.White, 0, 0); }
         }
+        public static Material MetalicRed
+        {
+            get { return new Material(new RaytracerColor(Color.Red), 1, 70, 0.7, 0.15); }
+        }
+        public static Material Matte
+        {
+            get { return new Material(new RaytracerColor(Color.Gray),0 ,20 ,0.2 ,0.8 ); }
+        }
     }
 }

@@ -9,14 +9,17 @@ namespace Raytracer
     class Vector 
     {
         private double[] v;
+        public static int numVec = 0;
 
         public Vector(double x, double y, double z)
         {
+            numVec++;
             v = new double[3] { x, y, z };
         }
 
         public Vector()
         {
+            numVec++;
             v = new double[3] { 0, 0, 0 };
         }
 

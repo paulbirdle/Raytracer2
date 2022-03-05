@@ -11,16 +11,18 @@ namespace Raytracer
     {
         private Vector direction; //normalized
         private Vector start;
-
+        public static int numRay = 0;
         public Ray(Vector direction, Vector start)
         {
+            numRay++;
             this.direction = direction.normalize();
             this.start = start;
         }
 
         public Ray(Vector direction, Vector start, bool normalized)
         {
-            if(normalized == true)
+            numRay++;
+            if (normalized == true)
             {
                 this.direction = direction;
                 this.start = start;
@@ -34,6 +36,7 @@ namespace Raytracer
 
         public Ray()
         {
+            numRay++;
             start = new Vector();
             direction = new Vector();
         }
