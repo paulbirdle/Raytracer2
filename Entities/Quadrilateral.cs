@@ -84,7 +84,7 @@ namespace Raytracer
 
             for (int i = 0; i < 4; i++)
             {   //checke ob intersection auf der richtigen Seite von corners[i] - corners[i+1] liegt:
-                if ((intersection - corners[i]) * n_side[i] /** ((corners[(i + 2) % 4] - corners[i]) * n_side)*/ > -1e-10)
+                if ((intersection - corners[i]) * n_side[i] > -1e-10)
                 {
                     n = null;
                     material = null;
@@ -115,7 +115,7 @@ namespace Raytracer
 
             for (int i = 0; i < 4; i++)
             {   //checke ob intersection auf der richtigen Seite von corners[i] - corners[i+1] liegt:
-                if ((intersection - corners[i]) * n_side[i] /** ((corners[(i + 2) % 4] - corners[i]) * n_side)*/ > -1e-10)
+                if ((intersection - corners[i]) * n_side[i] > -1e-10)
                 {
                     return -1;
                 }

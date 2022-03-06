@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Compile Include="Hilfsklassen\Complex.cs" />
     <Compile Include="Entities\Cuboid.cs" />
     <Compile Include="Entities\cylinder.cs" />
     <Compile Include="Entities\EntityGroup.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Hilfsklassen\Material.cs" />
     <Compile Include="Lightsources\PointLight.cs" />
     <Compile Include="Lightsources\ParallelLight.cs" />
+    <Compile Include="Hilfsklassen\Poly.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Hilfsklassen\Ray.cs" />
@@ -112,6 +114,7 @@
     <Compile Include="Entities\Sphere.cs" />
     <Compile Include="Entities\Triangle.cs" />
     <Compile Include="Hilfsklassen\Vector.cs" />
+    <Compile Include="Entities\Torus.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

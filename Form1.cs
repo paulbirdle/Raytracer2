@@ -6,8 +6,8 @@ using System.Windows.Forms;
 using System.Timers;
 
 //TODO: 
-//seltsames Rauschen im Bild beheben, vielleicht Rundungsfehler?
-//Cuboid fertigschreiben, vielleicht Cylinder etc. beginnen
+//seltsames Rauschen im Bild beheben, liegt an Multithreading
+//vielleicht Cylinder etc. beginnen
 //Hitboxen für Scene3
 //render gibt gleich Bitmap zurück (schwierig mit dem Multithreading)
 //Progressbar

@@ -103,6 +103,36 @@ namespace Raytracer
             get { return new RaytracerColor(Color.Teal); }
         }
 
+        public static RaytracerColor Red
+        {
+            get { return new RaytracerColor(Color.Red); }
+        }
+
+        public static RaytracerColor Green
+        {
+            get { return new RaytracerColor(Color.Green); }
+        }
+
+        public static RaytracerColor Blue
+        {
+            get { return new RaytracerColor(Color.Blue); }
+        }
+
+        public static RaytracerColor Yellow
+        {
+            get { return new RaytracerColor(Color.Yellow); }
+        }
+
+        public static RaytracerColor Orange
+        {
+            get { return new RaytracerColor(Color.Orange); }
+        }
+
+        public static RaytracerColor Pink
+        {
+            get { return new RaytracerColor(Color.Pink); }
+        }
+
 
         public RaytracerColor darken(double percent)
         {
