@@ -31,25 +31,25 @@ namespace Raytracer
 
             double discr = b * b / 4 - c;
 
-            if (discr < 1e-6)//quadratische Gleichung hat keine Lösung
+            if (discr < 1e-10)//quadratische Gleichung hat keine Lösung
             {
-                n = new Vector();
-                material = new Material();
+                n = null;
+                material = null;
                 return -1;
             }
             double sqrt = Math.Sqrt(discr);
             double t1 = -b / 2 - sqrt;      //sonst: die beiden Lösungen (Schnittpunkte) der quadratischen Gleichung
             double t2 = -b / 2 + sqrt;
 
-            if(t1 < 1e-6 && t2 < 1e-6) //Kugel hinter ray
+            if(t1 < 1e-10 && t2 < 1e-10) //Kugel hinter ray
             {
-                n = new Vector();
-                material = new Material();
+                n = null;
+                material = null;
                 return -1;
             }
-            else if(t1 < 1e-6 && t2 > 0) //start in der Kugel
+            else if(t1 < 1e-10 && t2 > 0) //start in der Kugel
             {
-                n = (ray.position_at_time(t2) - center).normalize();
+                n = (center - ray.position_at_time(t2)).normalize();
                 material = this.material;
                 return t2;
             }
@@ -70,7 +70,7 @@ namespace Raytracer
 
             double discr = b * b / 4 - c;
 
-            if (discr < 1e-6)//quadratische Gleichung hat keine Lösung
+            if (discr < 1e-10)//quadratische Gleichung hat keine Lösung
             {
                 return -1;
             }
@@ -78,11 +78,11 @@ namespace Raytracer
             double t1 = -b / 2 - sqrt;      //sonst: die beiden Lösungen (Schnittpunkte) der quadratischen Gleichung
             double t2 = -b / 2 + sqrt;
 
-            if (t1 < 1e-6 && t2 < 1e-6) //Kugel hinter ray
+            if (t1 < 1e-10 && t2 < 1e-10) //Kugel hinter ray
             {
                 return -1;
             }
-            else if (t1 < 1e-6 && t2 > 0) //start in der Kugel
+            else if (t1 < 1e-10 && t2 > 0) //start in der Kugel
             {
                 return t2;
             }

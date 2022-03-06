@@ -53,6 +53,10 @@ namespace Raytracer
 
         public Vector position_at_time(double t)
         {
+            if (direction == null)
+            {
+                throw new Exception(" ");
+            }
             return start + t * direction;
         }
 

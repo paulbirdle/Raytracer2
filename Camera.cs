@@ -35,13 +35,21 @@ namespace Raytracer
 
             if(direction*up != 0)
             {
-                this.up = (this.up - this.up * this.direction * this.direction).normalize();
+                if(this.direction == null)
+                {
+                    throw new Exception(" ");
+                }
+                this.up = (this.up - (this.up * this.direction) * this.direction).normalize();
                 //throw new Exception("Up falsch");
             }
 
             right = direction ^ up;
             right = right.normalize();
 
+            if (right == null || -right == null || this.up == null)
+            {
+                throw new Exception(" ");
+            }
             ULcorner = direction + Math.Tan(xangle / 2.0) * (-right) + Math.Tan(yangle / 2.0) * this.up;
             double stepLength = 2.0 * Math.Tan(xangle / 2.0) / resx;
             step_right = stepLength * right;
@@ -74,6 +82,10 @@ namespace Raytracer
 
         public Ray get_Rays(int x, int y)
         {
+            if (step_right == null || step_down == null)
+            {
+                throw new Exception(" ");
+            }
             Vector v = ULcorner + x * step_right + y * step_down; //Virtuelles Rechteck
             return new Ray(v, position);
         }

@@ -65,18 +65,28 @@ namespace Raytracer
 
             Ray.numRay = 0;
             Vector.numVec = 0;
-            double[] statistic = new double[2];
+            double[] statistic = new double[3];
+
             DateTime before = DateTime.Now;
             RaytracerColor[,] col = scene.render(depth);
+            //Bitmap BM = scene.renderBM(depth);
             DateTime after = DateTime.Now;
-
             TimeSpan duration = after - before;
             statistic[0] = duration.TotalSeconds;
+
             before = DateTime.Now;
-            save(convertToBitmap(col, resX, resY, ssaa));
+            Bitmap BM = convertToBitmap(col, resX, resY, ssaa);
             after = DateTime.Now;
             duration = after - before;
             statistic[1] = duration.TotalSeconds;
+            //statistic[1] = 0;
+
+            before = DateTime.Now;
+            save(BM);
+            after = DateTime.Now;
+            duration = after - before;
+            statistic[2] = duration.TotalSeconds;
+            
             displayStatistics(statistic);
         }
 
@@ -99,7 +109,8 @@ namespace Raytracer
         private void displayStatistics(double[] stats)
         {
             statistics.Text = "Renderdauer   :  " + stats[0].ToString() + " s";
-            statistics.Text += "\nAnzeigedauer  :  " + stats[1].ToString() + "s";
+            statistics.Text += "\nBitmapkonvertierung  :  " + stats[1].ToString() + "s";
+            statistics.Text += "\nAnzeigedauer  :  " + stats[2].ToString() + "s";
             statistics.Text += "\nAnzahl Rays    :  " + Ray.numRay.ToString();
             statistics.Text += "\nAnzahl Vectors:  " + Vector.numVec.ToString();
         }

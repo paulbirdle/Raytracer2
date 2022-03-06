@@ -167,7 +167,7 @@ namespace Raytracer
 
         public bool is_orthogonal()
         {
-            return (transpose(this)*this - Id()).norm() < 1e-6;
+            return (transpose(this)*this - Id()).norm() < 1e-10;
         }
     }
 }

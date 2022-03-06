@@ -44,14 +44,18 @@ namespace Raytracer
             Vector tri = corners[0];
 
             double scalprod = v * this.n;
-            if (Math.Abs(scalprod) < 1e-6)//ray parallel zu Dreieck
+            if (Math.Abs(scalprod) < 1e-10)//ray parallel zu Dreieck
             {
-                n = new Vector();
-                material = new Material();
+                n = null;
+                material = null;
                 return -1;
             }
 
             double t = (tri - x) * this.n / scalprod;
+            if (v == null)
+            {
+                throw new Exception(" ");
+            }
             Vector intersection = x + t * v;
 
             Vector n_side;
@@ -59,10 +63,10 @@ namespace Raytracer
             {   //checke ob intersection auf der richtigen Seite von corners[i] - corners[i+1] liegt:
                 n_side = this.n ^ (corners[i] - corners[(i + 1) % 3]).normalize();
 
-                if((intersection-corners[i])*n_side*((corners[(i + 2) % 3] - corners[i])*n_side) < 1e-6)
+                if((intersection-corners[i])*n_side*((corners[(i + 2) % 3] - corners[i])*n_side) < 1e-10)
                 {
-                    n = new Vector();
-                    material = new Material();
+                    n = null;
+                    material = null;
                     return -1;
                 }
             }
@@ -79,12 +83,16 @@ namespace Raytracer
             Vector tri = corners[0];
 
             double scalprod = v * this.n;
-            if (Math.Abs(scalprod) < 1e-6)//ray parallel zu Dreieck
+            if (Math.Abs(scalprod) < 1e-10)//ray parallel zu Dreieck
             {
                 return -1;
             }
 
             double t = (tri - x) * this.n / scalprod;
+            if (v == null)
+            {
+                throw new Exception(" ");
+            }
             Vector intersection = x + t * v;
 
             Vector n_side;
@@ -92,7 +100,7 @@ namespace Raytracer
             {   //checke ob intersection auf der richtigen Seite von corners[i] - corners[i+1] liegt:
                 n_side = this.n ^ (corners[i] - corners[(i + 1) % 3]).normalize();
 
-                if ((intersection - corners[i]) * n_side * ((corners[(i + 2) % 3] - corners[i]) * n_side) < 1e-6)
+                if ((intersection - corners[i]) * n_side * ((corners[(i + 2) % 3] - corners[i]) * n_side) < 1e-10)
                 {
                     return -1;
                 }
