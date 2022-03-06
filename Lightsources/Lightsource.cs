@@ -1,25 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
-
-namespace Raytracer
+﻿namespace Raytracer
 {
     class Lightsource
     {
-        RaytracerColor color;
-
         public Lightsource(RaytracerColor color)
         {
-            this.color = color;
+            this.Col = color;
         }
 
-        public RaytracerColor Col
-        {
-            get { return color; }
-        }
+        public RaytracerColor Col { get; }
 
         public virtual Vector Direction(Vector point)//to light
         {

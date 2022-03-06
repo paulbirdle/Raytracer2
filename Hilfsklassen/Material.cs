@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace Raytracer
 {
     class Material
     {
-        RaytracerColor color;
-        protected double reflectivity;   //0: reflektiert nicht         1: reflektiert 100%
-        protected double smoothness;     //0: mega grob                 infty: perfekt glatt
-        protected double specularReflectivity; //0-1
-        protected double diffuseReflectivity;  //0-1
+        private readonly RaytracerColor color;
+        private readonly double reflectivity;   //0: reflektiert nicht         1: reflektiert 100%
+        private readonly double smoothness;     //0: mega grob                 infty: perfekt glatt
+        private readonly double specularReflectivity; //0-1
+        private readonly double diffuseReflectivity;  //0-1
 
 
         public Material()

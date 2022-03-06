@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Raytracer
+﻿namespace Raytracer
 {
     class PointLight : Lightsource
     {
-        private Vector position;
+        private readonly Vector position;
 
         public PointLight(Vector position, RaytracerColor color)
             :base(color)

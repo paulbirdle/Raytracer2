@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 
@@ -9,10 +6,10 @@ namespace Raytracer
 {
     class Scene
     {
-        Camera cam;
-        Entity[] entities;
-        Lightsource[] lights;
-        RaytracerColor ambientColor;
+        private readonly Camera cam;
+        private readonly Entity[] entities;
+        private readonly Lightsource[] lights;
+        private readonly RaytracerColor ambientColor;
 
         public Scene(Camera cam, Entity[] entities, Lightsource[] lights, RaytracerColor ambientColor)
         {
@@ -111,7 +108,6 @@ namespace Raytracer
                 intersection = null; // schneller als neue Instanzen zu erstellen
                 n = null;
                 material = null;
-
                 return -1;
             }
             else //etwas getroffen
@@ -143,7 +139,7 @@ namespace Raytracer
             else //depth > 0
             {
                 int l = firstIntersection(ray, out Vector intersection, out _, out Vector n, out Material material);
-                if(l == -1 || n == null) //nichts getroffen
+                if(l == -1) //nichts getroffen
                 {
                     return ambientColor;
                 }
@@ -158,7 +154,7 @@ namespace Raytracer
                     }
                     else
                     {
-                        if (material.Reflectivity > 1 || material.Reflectivity < 0) throw new Exception(" hier fehler");
+                        //if (material.Reflectivity > 1 || material.Reflectivity < 0) throw new Exception(" hier fehler");
                         reflected_col = material.Reflectivity * calculateRays(reflected_ray, depth - 1);
                     }
 
@@ -170,10 +166,6 @@ namespace Raytracer
                     {
                         if(lights[i] == null) continue;
 
-                        if (n == null)
-                        {
-                            throw new Exception(" ");
-                        }
                         if (lights[i].is_visible(intersection + 1e-10*n, entities))
                         {
                             double angle_refl_light = Vector.angle(lights[i].Direction(intersection), reflected_ray.Direction)/2;

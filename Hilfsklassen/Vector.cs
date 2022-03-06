@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Raytracer
 {
     class Vector 
     {
-        private double[] v;
+        private readonly double[] v;
         public static int numVec = 0;
 
         public Vector(double x, double y, double z)
@@ -41,22 +37,18 @@ namespace Raytracer
             set { v[2] = value; }
         }
 
-        public double get(int i)
+        public double Get(int i)
         {
             return v[i];
         }
 
-        public static Vector operator *(double a, Vector ww)
+        public static Vector operator *(double a, Vector w)
         {
-            return new Vector(a * ww.X, a * ww.Y, a * ww.Z);
+            return new Vector(a * w.X, a * w.Y, a * w.Z);
         }
 
         public static Vector operator *(Vector w, double a)
         {
-            if (w == null)
-            {
-                throw new Exception(" ");
-            }
             return a * w;
         }
 
@@ -72,19 +64,11 @@ namespace Raytracer
 
         public static Vector operator -(Vector v, Vector w)
         {
-            if (w == null)
-            {
-                throw new Exception(" ");
-            }
             return v + (-1) * w;
         }
 
         public static Vector operator -(Vector v)
         {
-            if (v == null)
-            {
-                throw new Exception(" ");
-            }
             return (-1) * v;
         }
 
@@ -100,14 +84,10 @@ namespace Raytracer
 
         public static double angle (Vector v, Vector w)
         {
-            if (v == null || w == null)
-            {
-                throw new Exception(" ");
-            }
             return Math.Acos(v * w / (v.norm() * w.norm()));
         }
 
-        public static Vector rotate (Vector to_be_rotated, Vector axis, double angle)
+        public static Vector Rotate (Vector to_be_rotated, Vector axis, double angle)
         {
             Matrix A = Matrix.Rotation(axis, angle);
             return A * to_be_rotated;
@@ -118,26 +98,18 @@ namespace Raytracer
             return Math.Sqrt(this * this);
         }
 
-        public double squareNorm()
+        public double SquareNorm()
         {
             return this * this;
         }
 
         public Vector normalize()
         {
-            if (this == null)
-            {
-                throw new Exception(" ");
-            }
             return this / norm();
         }
 
         public Vector reflect_at(Vector v) //reflektiert this an v und gibt reflektierten Vektor zurück
         {
-            if (this == null || v == null)
-            {
-                throw new Exception(" ");
-            }
             v = v.normalize();
             v *= v * this;
             return this + 2*(v-this);

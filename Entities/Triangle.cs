@@ -9,10 +9,12 @@ namespace Raytracer
 {
     class Triangle : Entity
     {
-        private Vector[] corners;
-        private Material material;
-        private Vector n;
-        
+        private readonly Vector[] corners;
+        private readonly Material material;
+        private readonly Vector n;
+
+        private readonly Vector[] n_side; //zeigt immer nach außen
+
 
         public Triangle(Vector[] corners, Material material)
         {
@@ -23,6 +25,7 @@ namespace Raytracer
             this.corners = corners;
             this.material = material;
             n = getNormal();
+            n_side = Get_n_side();
         }
 
         public Triangle(Vector corner1, Vector corner2, Vector corner3, Material material)
@@ -30,7 +33,18 @@ namespace Raytracer
             corners = new Vector[3] { corner1, corner2, corner3 };
             this.material = material;
             n = getNormal();
+            n_side = Get_n_side();
         }
+        public Vector[] Get_n_side()
+        {
+            Vector[] res = new Vector[3];
+            for (int i = 0; i < 3; i++)
+            {
+                res[i] = n ^ (corners[i] - corners[(i + 1) % 3]).normalize();
+            }
+            return res;
+        }
+
 
         public Vector getNormal()
         {
@@ -52,18 +66,17 @@ namespace Raytracer
             }
 
             double t = (tri - x) * this.n / scalprod;
-            if (v == null)
+            if(t < 1e-10)
             {
-                throw new Exception(" ");
+                n = null;
+                material = null;
+                return -1;
             }
-            Vector intersection = x + t * v;
+            Vector intersection = ray.position_at_time(t);
 
-            Vector n_side;
             for (int i = 0; i < 3; i++)
             {   //checke ob intersection auf der richtigen Seite von corners[i] - corners[i+1] liegt:
-                n_side = this.n ^ (corners[i] - corners[(i + 1) % 3]).normalize();
-
-                if((intersection-corners[i])*n_side*((corners[(i + 2) % 3] - corners[i])*n_side) < 1e-10)
+                if((intersection-corners[i])*n_side[i]/**((corners[(i + 2) % 3] - corners[i])*n_side)*/ > -1e-10)
                 {
                     n = null;
                     material = null;
@@ -82,25 +95,19 @@ namespace Raytracer
             Vector v = ray.Direction;
             Vector tri = corners[0];
 
-            double scalprod = v * this.n;
+            double scalprod = v * n;
             if (Math.Abs(scalprod) < 1e-10)//ray parallel zu Dreieck
             {
                 return -1;
             }
 
-            double t = (tri - x) * this.n / scalprod;
-            if (v == null)
-            {
-                throw new Exception(" ");
-            }
+            double t = (tri - x) * n / scalprod;
+            if (t < 1e-10) return -1;
             Vector intersection = x + t * v;
 
-            Vector n_side;
             for (int i = 0; i < 3; i++)
             {   //checke ob intersection auf der richtigen Seite von corners[i] - corners[i+1] liegt:
-                n_side = this.n ^ (corners[i] - corners[(i + 1) % 3]).normalize();
-
-                if ((intersection - corners[i]) * n_side * ((corners[(i + 2) % 3] - corners[i]) * n_side) < 1e-10)
+                if ((intersection - corners[i]) * n_side[i] /** ((corners[(i + 2) % 3] - corners[i]) * n_side)*/ > -1e-10)
                 {
                     return -1;
                 }
