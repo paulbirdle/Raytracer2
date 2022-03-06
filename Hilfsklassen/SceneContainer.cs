@@ -103,5 +103,16 @@ namespace Raytracer
             Scene theScene = new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
             return theScene;
         }
+        public static Scene cylinderS(int resX, int resY)
+        {
+            Entity[] entities = new Entity[1];
+            Lightsource[] l = new Lightsource[1];
+            entities[0] = new Cylinder(new Vector(0, 0, -5), new Vector(0, 0, 5), 1);
+            l[0] = new PointLight(new Vector(-5, -5, -5), RaytracerColor.White);
+            Camera c = new Camera(new Vector(-20, 0, 0), new Vector(1, 0, 0), new Vector(0, 0, 1), Math.PI / 3, resX, resY);
+
+            Scene scene = new Scene(c,entities,l);
+            return scene;
+        }
     }
 }
