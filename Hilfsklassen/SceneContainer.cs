@@ -5,7 +5,6 @@ namespace Raytracer
 {
     class SceneContainer
     {
-
         public static Scene scene1(int resX, int resY)
         {
             Camera theCamera = new Camera(new Vector(0, 0, 0), new Vector(1, 0, 0), new Vector(0, 0, 1), Math.PI / 8, resX, resY);
