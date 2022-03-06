@@ -1,22 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
-
-namespace Raytracer
+﻿namespace Raytracer
 {
     class Ray
     {
-        private Vector direction; //normalized
-        private Vector start;
         public static int numRay = 0;
         public Ray(Vector direction, Vector start)
         {
             numRay++;
-            this.direction = direction.normalize();
-            this.start = start;
+            Direction = direction.normalize();
+            Start = start;
         }
 
         public Ray(Vector direction, Vector start, bool normalized)
@@ -24,40 +15,30 @@ namespace Raytracer
             numRay++;
             if (normalized == true)
             {
-                this.direction = direction;
-                this.start = start;
+                Direction = direction;
+                Start = start;
             }
             else
             {
-                this.direction = direction.normalize();
-                this.start = start;
+                Direction = direction.normalize();
+                Start = start;
             }
         }
 
         public Ray()
         {
             numRay++;
-            start = new Vector();
-            direction = new Vector();
+            Start = null;
+            Direction = null;
         }
 
-        public Vector Direction
-        {
-            get { return direction; }
-        }
+        public Vector Direction { get; }
 
-        public Vector Start
-        {
-            get { return start; }
-        }
+        public Vector Start { get; }
 
         public Vector position_at_time(double t)
         {
-            if (direction == null)
-            {
-                throw new Exception(" ");
-            }
-            return start + t * direction;
+            return Start + t * Direction;
         }
 
     }

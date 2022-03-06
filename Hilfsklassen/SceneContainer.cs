@@ -5,7 +5,6 @@ namespace Raytracer
 {
     class SceneContainer
     {
-
         public static Scene scene1(int resX, int resY)
         {
             Camera theCamera = new Camera(new Vector(0, 0, 0), new Vector(1, 0, 0), new Vector(0, 0, 1), Math.PI / 8, resX, resY);
@@ -60,8 +59,10 @@ namespace Raytracer
             }
 
             double a = s_s + dist;
-            Hitbox hitbox = new Hitbox(new Vector(0, 0, a), new Vector(0, 0, 1), new Vector(1, 0, 0), new double[3] { 2*a, 2*a, 2*a });
-            theEntities[3] = new EntityGroup(group, hitbox);
+            Hitbox hitbox = new Hitbox(new Vector(0, 0, a), new Vector(0, 0, 1), new Vector(1, 0, 0), new double[3] { 2*a + 10, 2*a, 2*a });
+            double radius = Math.Sqrt(3) * dist + s_s;
+            Hitsphere hitsphere = new Hitsphere(new Vector(0, 0, a), radius);
+            theEntities[3] = new EntityGroup(group, hitsphere);
 
             Scene theScene = new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
             return theScene;

@@ -1,25 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Raytracer
 {
     class Camera
     {
-        private Vector position;
-        private Vector direction;
-        private Vector up; // senkrecht auf direction
-        private Vector right;
-        private double xangle;
-        private double yangle;
-        private int resx;
-        private int resy;
+        private readonly Vector position;
+        private readonly Vector direction;
+        private readonly Vector up; // senkrecht auf direction
+        private readonly Vector right;
+        private readonly double xangle;
+        private readonly double yangle;
+        private readonly int resx;
+        private readonly int resy;
 
-        private Vector ULcorner;
-        private Vector step_down;
-        private Vector step_right;
+        private readonly Vector ULcorner;
+        private readonly Vector step_down;
+        private readonly Vector step_right;
 
 
         public Camera(Vector position, Vector direction, Vector up, double xangle, int resx, int resy)
@@ -35,10 +31,6 @@ namespace Raytracer
 
             if(direction*up != 0)
             {
-                if(this.direction == null)
-                {
-                    throw new Exception(" ");
-                }
                 this.up = (this.up - (this.up * this.direction) * this.direction).normalize();
                 //throw new Exception("Up falsch");
             }
@@ -46,10 +38,6 @@ namespace Raytracer
             right = direction ^ up;
             right = right.normalize();
 
-            if (right == null || -right == null || this.up == null)
-            {
-                throw new Exception(" ");
-            }
             ULcorner = direction + Math.Tan(xangle / 2.0) * (-right) + Math.Tan(yangle / 2.0) * this.up;
             double stepLength = 2.0 * Math.Tan(xangle / 2.0) / resx;
             step_right = stepLength * right;
@@ -59,33 +47,25 @@ namespace Raytracer
         public int resX
         {
             get { return resx; }
-            set { resx = value; }
         }
 
         public int resY
         {
             get { return resy; }
-            set { resy = value; }
         }
 
         public double xAngle
         {
             get { return xangle; }
-            set { xangle = value; }
         }
 
         public double yAngle
         {
             get { return yangle; }
-            set { yangle = value; }
         }
 
         public Ray get_Rays(int x, int y)
         {
-            if (step_right == null || step_down == null)
-            {
-                throw new Exception(" ");
-            }
             Vector v = ULcorner + x * step_right + y * step_down; //Virtuelles Rechteck
             return new Ray(v, position);
         }

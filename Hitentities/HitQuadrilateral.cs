@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Raytracer
 {
     class HitQuadrilateral : Hitentity
     {
-        private Vector[] corners;
-        private Vector n;
+        private readonly Vector[] corners;
+        private readonly Vector n;
+
+        private readonly Vector[] n_side; //zeigt immer nach außen
 
         public HitQuadrilateral(Vector[] corners)
         {
@@ -23,21 +21,29 @@ namespace Raytracer
             }
             this.corners = corners;
             n = getNormal();
+            n_side = Get_n_side();
         }
 
         public HitQuadrilateral(Vector corner1, Vector corner2, Vector corner3, Vector corner4)
         {
             corners = new Vector[4] { corner1, corner2, corner3, corner4 };
-            if (corners[2] == null || corners[3] == null)
-            {
-                throw new Exception(" ");
-            }
             n = getNormal();
+            n_side = Get_n_side();
             if (Math.Abs((corners[3] - corners[2]) * n) > 1e-10)
             {
                 throw new Exception("Die Ecken liegen nicht in einer Ebene");
             }
             
+        }
+
+        public Vector[] Get_n_side()
+        {
+            Vector[] res = new Vector[4];
+            for (int i = 0; i < 4; i++)
+            {
+                res[i] = n ^ (corners[i] - corners[(i + 1) % 4]).normalize();
+            }
+            return res;
         }
 
         public Vector getNormal()
@@ -51,7 +57,7 @@ namespace Raytracer
             Vector v = ray.Direction;
             Vector tri = corners[0];
 
-            double scalprod = v * this.n;
+            double scalprod = v * n;
             if (Math.Abs(scalprod) < 1e-10)//ray parallel zu Viereck
             {
                 return false;
@@ -61,12 +67,9 @@ namespace Raytracer
             if (t < 1e-10) return false;
             Vector intersection = ray.position_at_time(t);
 
-            Vector n_side;
             for (int i = 0; i < 4; i++)
             {   //checke ob intersection auf der richtigen Seite von corners[i] - corners[i+1] liegt:
-                n_side = n ^ (corners[i] - corners[(i + 1) % 4]).normalize(); // zeigt nach außen
-
-                if (((intersection - corners[i]) * n_side) /** (((corners[(i + 2) % 4] - corners[i]) * n_side))*/ > -1e-10)
+                if ((intersection - corners[i]) * n_side[i] /** (((corners[(i + 2) % 4] - corners[i]) * n_side))*/ > -1e-10)
                 {
                     return false;
                 }

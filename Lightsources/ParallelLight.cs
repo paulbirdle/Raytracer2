@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Raytracer
+﻿namespace Raytracer
 {
     class ParallelLight : Lightsource
     {
-        private Vector direction; //to light
+        private readonly Vector direction; //to light
 
         public ParallelLight(Vector direction, RaytracerColor color)
             : base(color)
@@ -32,7 +26,7 @@ namespace Raytracer
             for (int l = 0; l < entities.Length; l++)
             {
                 if (entities[l] == null) continue;
-                if (entities[l].get_intersection(ray) >= 0) return false;
+                if (entities[l].get_intersection(ray) > 1e-10) return false;
             }
             return true;
         }

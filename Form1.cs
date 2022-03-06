@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Timers;
+
+//TODO: 
+//seltsames Rauschen im Bild beheben, vielleicht Rundungsfehler?
+//Cuboid fertigschreiben, vielleicht Cylinder etc. beginnen
+//Hitboxen für Scene3
+//render gibt gleich Bitmap zurück (schwierig mit dem Multithreading)
+//Progressbar
+//
 
 namespace Raytracer
 {

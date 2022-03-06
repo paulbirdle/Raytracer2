@@ -9,15 +9,19 @@ namespace Raytracer
 {
     class Sphere : Entity
     {
-        private double radius;
-        private Vector center;
-        private Material material;
+        private readonly double radius;
+        private readonly Vector center;
+        private readonly Material material;
+
+        private readonly double squarerad;
 
         public Sphere(Vector center, double radius, Material material) 
         {
             this.radius = Math.Abs(radius);
             this.center = center;
             this.material = material;
+
+            squarerad = radius * radius;
         }
 
         public override double get_intersection(Ray ray, out Vector n, out Material material)
@@ -26,10 +30,10 @@ namespace Raytracer
             Vector direction = ray.Direction;
             Vector v_to_start = start - center;
 
-            double b = 2 * (direction * v_to_start);
-            double c = v_to_start * v_to_start - radius * radius;
+            double b = direction * v_to_start;
+            double c = v_to_start * v_to_start - squarerad;
 
-            double discr = b * b / 4 - c;
+            double discr = b * b - c;
 
             if (discr < 1e-10)//quadratische Gleichung hat keine Lösung
             {
@@ -38,8 +42,8 @@ namespace Raytracer
                 return -1;
             }
             double sqrt = Math.Sqrt(discr);
-            double t1 = -b / 2 - sqrt;      //sonst: die beiden Lösungen (Schnittpunkte) der quadratischen Gleichung
-            double t2 = -b / 2 + sqrt;
+            double t1 = -b - sqrt;      //sonst: die beiden Lösungen (Schnittpunkte) der quadratischen Gleichung
+            double t2 = -b + sqrt;
 
             if(t1 < 1e-10 && t2 < 1e-10) //Kugel hinter ray
             {
@@ -65,18 +69,18 @@ namespace Raytracer
             Vector direction = ray.Direction;
             Vector v_to_start = start - center;
 
-            double b = 2 * (direction * v_to_start);
-            double c = v_to_start * v_to_start - radius * radius;
+            double b = direction * v_to_start;
+            double c = v_to_start * v_to_start - squarerad;
 
-            double discr = b * b / 4 - c;
+            double discr = b * b - c;
 
             if (discr < 1e-10)//quadratische Gleichung hat keine Lösung
             {
                 return -1;
             }
             double sqrt = Math.Sqrt(discr);
-            double t1 = -b / 2 - sqrt;      //sonst: die beiden Lösungen (Schnittpunkte) der quadratischen Gleichung
-            double t2 = -b / 2 + sqrt;
+            double t1 = -b - sqrt;      //sonst: die beiden Lösungen (Schnittpunkte) der quadratischen Gleichung
+            double t2 = -b + sqrt;
 
             if (t1 < 1e-10 && t2 < 1e-10) //Kugel hinter ray
             {

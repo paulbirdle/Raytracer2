@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Raytracer
+﻿namespace Raytracer
 {
     class EntityGroup : Entity
     {
-        private Entity[] entities;
-        private Hitentity hitentity;
-        private int size;
+        private readonly Entity[] entities;
+        private readonly Hitentity hitentity;
+        private readonly int size;
 
         public EntityGroup(Entity[] entities, Hitentity hitentity)
         {

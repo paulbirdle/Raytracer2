@@ -1,10 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Entities",
-    "\\Hilfsklassen",
-    "\\Lightsources"
+    "\\Properties"
   ],
-  "SelectedNode": "\\Entities\\Cuboid.cs",
+  "SelectedNode": "\\Raytracer.sln",
   "PreviewInSolutionExplorer": false
 }
