@@ -16,12 +16,13 @@ namespace Raytracer
         public Cuboid(Vector center, Vector up, Vector front, double[] lengths, Material material)
         {
             this.center = center;
+            normals = new Vector[3];
             normals[0] = up.normalize();
             normals[2] = front.normalize();
             this.material = new Material[1] { material };
             multiple_materials = false;
 
-            normals[1] = up ^ front;
+            normals[1] = normals[2] ^ normals[0];
             if (lengths.Length == 3) a = lengths;
             corners = Get_Corners();
             sides = Get_Quads();
@@ -30,12 +31,13 @@ namespace Raytracer
         public Cuboid(Vector center, Vector up, Vector front, double[] lengths, Material[] materials)
         {
             this.center = center;
+            normals = new Vector[3];
             normals[0] = up.normalize();
             normals[2] = front.normalize();
             material = materials;
             multiple_materials = true;
 
-            normals[1] = up ^ front;
+            normals[1] = normals[2] ^ normals[0];
             if (lengths.Length == 3) a = lengths;
             corners = Get_Corners();
             sides = Get_Quads();
@@ -49,20 +51,20 @@ namespace Raytracer
             {
                 Material mat = material[0];
                 ret[0] = new Quadrilateral(corners[0], corners[1], corners[3], corners[2], mat); //oben
-                ret[1] = new Quadrilateral(corners[3], corners[1], corners[5], corners[7], mat); //rechts
-                ret[2] = new Quadrilateral(corners[2], corners[3], corners[6], corners[6], mat); //vorne
-                ret[3] = new Quadrilateral(corners[4], corners[5], corners[7], corners[6], mat); //unten
-                ret[4] = new Quadrilateral(corners[0], corners[2], corners[4], corners[6], mat); //links
-                ret[5] = new Quadrilateral(corners[1], corners[0], corners[5], corners[4], mat); //hinten
+                ret[1] = new Quadrilateral(corners[0], corners[1], corners[5], corners[4], mat); //rechts
+                ret[2] = new Quadrilateral(corners[0], corners[4], corners[6], corners[2], mat); //vorne
+                ret[3] = new Quadrilateral(corners[7], corners[5], corners[4], corners[6], mat); //unten
+                ret[4] = new Quadrilateral(corners[7], corners[6], corners[2], corners[3], mat); //links
+                ret[5] = new Quadrilateral(corners[7], corners[3], corners[1], corners[5], mat); //hinten
             }
             else
             {
                 ret[0] = new Quadrilateral(corners[0], corners[1], corners[3], corners[2], material[0]); //oben
-                ret[1] = new Quadrilateral(corners[3], corners[1], corners[5], corners[7], material[1]); //rechts
-                ret[2] = new Quadrilateral(corners[2], corners[3], corners[6], corners[6], material[2]); //vorne
-                ret[3] = new Quadrilateral(corners[4], corners[5], corners[7], corners[6], material[3]); //unten
-                ret[4] = new Quadrilateral(corners[0], corners[2], corners[4], corners[6], material[4]); //links
-                ret[5] = new Quadrilateral(corners[1], corners[0], corners[5], corners[4], material[5]); //hinten
+                ret[1] = new Quadrilateral(corners[0], corners[1], corners[5], corners[4], material[1]); //rechts
+                ret[2] = new Quadrilateral(corners[0], corners[4], corners[6], corners[2], material[2]); //vorne
+                ret[3] = new Quadrilateral(corners[7], corners[5], corners[4], corners[6], material[3]); //unten
+                ret[4] = new Quadrilateral(corners[7], corners[6], corners[2], corners[3], material[4]); //links
+                ret[5] = new Quadrilateral(corners[7], corners[3], corners[1], corners[5], material[5]); //hinten
             }
             return ret;
         }
@@ -76,7 +78,7 @@ namespace Raytracer
                 {
                     for (int k = 0; k < 2; k++)
                     {
-                        ret[i + 2 * j + 4 * k] = center + Math.Pow(-1, i) * a[0] / 2.0 * up + Math.Pow(-1, j) * a[1] / 2.0 * right + Math.Pow(-1, k) * a[2] / 2.0 * front;
+                        ret[k + 2 * j + 4 * i] = center + Math.Pow(-1, i) * a[0] / 2.0 * normals[0] + Math.Pow(-1, j) * a[1] / 2.0 * normals[1] + Math.Pow(-1, k) * a[2] / 2.0 * normals[2];
                     }
                 }
             }
@@ -113,13 +115,14 @@ namespace Raytracer
                     side = i;
                 }
             }
-            if (tmin == double.PositiveInfinity)
+            if (tmin == double.PositiveInfinity) //nicht getroffen
             {
                 n = null;
                 material = null;
                 return -1;
             }
-            material = this.material[side];
+            if (multiple_materials == false) material = this.material[0];
+            else material = this.material[side];
             n = normals[side % 3];
             if (side >= 3) n *= -1;
             return tmin;

@@ -7,7 +7,7 @@ using System.Timers;
 
 //TODO: 
 //seltsames Rauschen im Bild beheben, liegt an Multithreading
-//Cuboid fertigschreiben, vielleicht Cylinder etc. beginnen
+//vielleicht Cylinder etc. beginnen
 //Hitboxen für Scene3
 //render gibt gleich Bitmap zurück (schwierig mit dem Multithreading)
 //Progressbar
