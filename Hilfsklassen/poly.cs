@@ -5,8 +5,90 @@ namespace Raytracer
 {
 	class Poly
 	{
+		public static double[] solveRealQuarticRoots(double a, double b, double c, double d, double e)
+		{
+			double s1 = 2 * c * c * c - 9 * b * c * d + 27 * (a * d * d + b * b * e) - 72 * a * c * e;
+			double q1 = c * c - 3 * b * d + 12 * a * e;
+			double discrim1 = -4 * q1 * q1 * q1 + s1 * s1;
+			if (discrim1 > 0)
+			{
+				double s2 = s1 + Math.Sqrt(discrim1);
+				double q2 = Math.Pow(s2 / 2, 1 / 3);
+				double s3 = q1 / (3 * a * q2) + q2 / (3 * a);
+				double discrim2 = (b * b) / (4 * a * a) - (2 * c) / (3 * a) + s3;
+				if (discrim2 > 0)
+				{
+					double s4 = Math.Sqrt(discrim2);
+					double s5 = (b * b) / (2 * a * a) - (4 * c) / (3 * a) - s3;
+					double s6 = (-(b * b * b) / (a * a * a) + (4 * b * c) / (a * a) - (8 * d) / a) / (4 * s4);
+					double discrim3 = (s5 - s6);
+					double discrim4 = (s5 + s6);
+					// actual root values, may not be set
+					double r1 = 0, r2 = 0, r3 = 0, r4 = 0;
 
-		static double CubicRoot(double n)
+					if (discrim3 > 0)
+					{
+						double sqrt1 = Math.Sqrt(s5 - s6);
+						r1 = -b / (4 * a) - s4 / 2 + sqrt1 / 2;
+						r2 = -b / (4 * a) - s4 / 2 - sqrt1 / 2;
+					}
+					else if (discrim3 == 0)
+					{
+						// repeated root case
+						r1 = -b / (4 * a) - s4 / 2;
+					}
+					if (discrim4 > 0)
+					{
+						double sqrt2 = Math.Sqrt(s5 + s6);
+						r3 = -b / (4 * a) + s4 / 2 + sqrt2 / 2;
+						r4 = -b / (4 * a) + s4 / 2 - sqrt2 / 2;
+					}
+					else if (discrim4 == 0)
+					{
+						r3 = -b / (4 * a) + s4 / 2;
+					}
+					if (discrim3 > 0 && discrim4 > 0) return new double[4]{ r1,r2,r3,r4};
+
+					else if (discrim3 > 0 && discrim4 == 0) return new double[3] { r1,r2,r3};
+
+					else if (discrim3 > 0 && discrim4 < 0) return new double[2] { r1,r2};
+
+					else if (discrim3 == 0 && discrim4 > 0) return new double[3] { r1,r3,r4};
+
+					else if (discrim3 == 0 && discrim4 == 0) return new double[2] { r1,r3};
+
+					else if (discrim3 == 0 && discrim4 < 0) return new double[1] { r1};
+
+					else if (discrim3 < 0 && discrim4 > 0) return new double[2] { r3,r4};
+
+					else if (discrim3 < 0 && discrim4 == 0) return new double[1] { r3};
+
+					//else if (discrim3 < 0 && discrim4 < 0) return new double[0];
+				}
+			}
+			return new double[0];
+		}
+
+
+			public static Complex[] SolveCubic(double a2, double a1, double a0) //zeros of f = t^3 + a2*t^2 + a1*t + a0 
+		{
+			double p = a1 - a2 * a2 / 3;
+			double q = a0 - a1 * a2 / 3 + 2 * a1 * a1 / 27; //f(t-a2/3) = g = t^3 + pt + q
+
+			double D = q * q / 4 + p * p * p / 27;
+			Complex sqrtD = Complex.Sqrt(D);
+
+			Complex u = Complex.CubeRoot(-q / 2 + sqrtD);
+			Complex v = -p / 3 * u;
+
+			Complex xi = Complex.Exp(Complex.i * 2 * Math.PI / 3);
+			Complex xi2 = xi * xi;
+
+			return new Complex[3] { u + v, xi * u + xi2 * v, xi2 * u + xi * v };
+		}
+
+
+		/*static double CubicRoot(double n)
 		{
 			return Math.Pow(Math.Abs(n), 1 / 3) * Math.Sign(n);
 		}
@@ -98,7 +180,7 @@ namespace Raytracer
 
 				return 1;
 			}
-		}
+		}*/
 
 		//---------------------------------------------------------------------------
 		// Solve quartic equation x^4 + a*x^3 + b*x^2 + c*x + d
@@ -113,9 +195,24 @@ namespace Raytracer
 			// y^3 − b*y^2 + (ac−4d)*y − a^2*d−c^2+4*b*d = 0
 
 			//int iZeroes = solveP3(out double[] x3, a3, b3, c3);
-			List<double> x = SolveCubic(a3, b3, c3);
-			double[] x3 = x.ToArray();
-			int iZeroes = x3.Length;
+
+			//ziemlich kompliziert:
+			Complex[] x = SolveCubic(a3, b3, c3);
+			int iZeroes = 0;
+			for(int i = 0; i < 3; i++)
+			{
+				Complex z_ = x[i];
+				if (Math.Abs(z_.Im) < 1e-6 || Math.Abs(z_.Im) < 1e-3 * Math.Abs(z_.Re)) iZeroes++;
+			}
+			if (iZeroes == 0 || iZeroes == 2) throw new Exception(" ");
+			double[] x3 = new double[iZeroes];
+			int count = 0;
+			for(int i = 0; i < 3; i++)
+			{
+				Complex z_ = x[i];
+				if (Math.Abs(z_.Im) < 1e-6) x3[count] = z_.Re; count++;
+			}
+
 
 			double q1, q2, p1, p2, D, sqD, y;
 

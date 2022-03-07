@@ -41,21 +41,16 @@ namespace Raytracer
             double c = 2 * b_ * c_ - 8 * R * R * y * z;
             double d = c_ * c_ - 4 * R * R * y.SquareNorm();
 
-            Complex[] t_ = Poly.solve_quartic(a, b, c, d);
+            double[] t_ = Poly.solveRealQuarticRoots(1, a, b, c, d);
 
             double tmin = double.PositiveInfinity;
-            Complex t0;
             double t;
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < t_.Length; i++)
             {
-                t0 = t_[i];
-                if (Math.Abs(t0.Im) < 1e-6)//t0 reell
+                t = t_[i];
+                if (t > 1e-6 && t < tmin)
                 {
-                    t = t0.Re;
-                    if (t > 1e-6 && t < tmin)
-                    {
-                        tmin = t;
-                    }
+                    tmin = t;
                 }
             }
             t = tmin;
@@ -82,21 +77,16 @@ namespace Raytracer
             double c = 2 * b_ * c_ - 8 * R * R * y * z;
             double d = c_ * c_ - 4 * R * R * y.SquareNorm();
 
-            Complex[] t_ = Poly.solve_quartic(a, b, c, d);
+            double[] t_ = Poly.solveRealQuarticRoots(1, a, b, c, d);
 
             double tmin = double.PositiveInfinity;
-            Complex t0;
             double t;
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < t_.Length; i++)
             {
-                t0 = t_[i];
-                if (Math.Abs(t0.Im) < 1e-6)//t0 reell
+                t = t_[i];
+                if (t > 1e-6 && t < tmin)
                 {
-                    t = t0.Re;
-                    if (t > 1e-6 && t < tmin)
-                    {
-                        tmin = t;
-                    }
+                    tmin = t;
                 }
             }
             t = tmin;
