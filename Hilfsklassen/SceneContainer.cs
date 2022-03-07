@@ -122,5 +122,19 @@ namespace Raytracer
             Scene scene = new Scene(c,entities,l);
             return scene;
         }
+
+        public static Scene scene5(int resX, int resY)
+        {
+            Camera cam = new Camera(new Vector(100, 0, 0), new Vector(-1, 0, 0), new Vector(0, 0, 1), Math.PI / 4, resX, resY);
+
+            PointLight light = new PointLight(new Vector(30, 20, 40), RaytracerColor.White);
+            Lightsource[] lights = new Lightsource[1] { light };
+
+            Torus torus = new Torus(new Vector(0, 0, 0), new Vector(0, 0, 1), 10, 3, new Material(RaytracerColor.Red, 0.5, 100, 0.5, 0.8));
+            Sphere sphere = new Sphere(new Vector(-200, 0, 0), 150, new Material(RaytracerColor.Blue, 0.3, 20, 0.5, 0.7));
+            Entity[] entities = new Entity[2] { torus, sphere };
+
+            return new Scene(cam, entities, lights);
+        }
     }
 }
