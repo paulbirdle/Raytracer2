@@ -82,7 +82,7 @@ namespace Raytracer
             Lightsource[] theLights = new Lightsource[2];
             int lights = 15;
             int range = 50;
-            theLights[0] = new CandleLight(new Vector(-lights-10,-lights,lights), range,new RaytracerColor(Color.Green));
+            theLights[0] = new CandleLight(new Vector(-lights-10,-lights,lights), range,new RaytracerColor(Color.Blue));
             theLights[1] = new CandleLight(new Vector(lights, -lights, lights), range, new RaytracerColor(Color.White));
 
             int b_s = 50; // background_size
@@ -132,7 +132,8 @@ namespace Raytracer
             double height = 4;
             double left_right = 7;
             double r = 4;
-            Quadrilateral portalShape = new Quadrilateral(new Vector(psize - left_right, r,height), new Vector(-psize - left_right , -r, height), new Vector(-psize - left_right, -r, 2*psize + height), new Vector(psize - left_right, r, 2 * psize + height),Material.Matte);
+             Quadrilateral portalShape = new Quadrilateral(new Vector(psize - left_right, r,height), new Vector(-psize - left_right , -r, height), new Vector(-psize - left_right, -r, 2*psize + height), new Vector(psize - left_right, r, 2 * psize + height),Material.Matte);
+            //Sphere portalShape = new Sphere(new Vector(-6, 7, 9), psize, Material.Iron);
             Portal portal = new Portal(portalShape, baseScene);
 
 
@@ -186,6 +187,9 @@ namespace Raytracer
             Camera c = standardCamera(Math.PI /4, resX, resY);
             return new Scene(c, e, l);
         }
+
+
+
         public static Entity standardfloor(double size, RaytracerColor color)
         {
             Material bgm = new Material(color, 0, 100, 0.05, 0.7);
