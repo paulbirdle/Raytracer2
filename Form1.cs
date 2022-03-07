@@ -61,6 +61,10 @@ namespace Raytracer
             {
                 scene = SceneContainer.scene3(resX * ssaa, resY * ssaa);
             }
+            else if(scene_to_Render == 4)
+            {
+                scene = SceneContainer.scene4(resX * ssaa, resY * ssaa);
+            }
             else
             {
                 throw new Exception("Wähl eine existierende Scene aus");

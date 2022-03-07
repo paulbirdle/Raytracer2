@@ -39,7 +39,7 @@ namespace Raytracer
             Ray ray;
             
             ParallelOptions opt = new ParallelOptions();
-            opt.MaxDegreeOfParallelism = -1; // max Anzahl Threads, man kann also cpu auslastung ugf. festlegen, -1 ist unbegrenzt (halt hardware begrenzt)
+            opt.MaxDegreeOfParallelism = 1; // max Anzahl Threads, man kann also cpu auslastung ugf. festlegen, -1 ist unbegrenzt (halt hardware begrenzt)
             
             Parallel.For(0,resX, opt,x => // parallel mehrere Threads nutzen
             {

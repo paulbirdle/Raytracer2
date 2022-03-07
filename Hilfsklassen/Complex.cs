@@ -8,7 +8,7 @@ namespace Raytracer
 {
     class Complex
     {
-        double[] x;
+        private double[] x;
 
         public Complex()
         {
@@ -75,6 +75,11 @@ namespace Raytracer
         public Complex Conj
         {
             get { return new Complex(this.Re, -this.Im); }
+        }
+
+        public double Norm
+        {
+            get { return x[0] * x[0] + x[1] * x[1]; }
         }
 
 
