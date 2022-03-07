@@ -17,14 +17,14 @@ namespace Raytracer
             theEntities[0] = new Sphere(new Vector(20, 0, 0), 1, MirrorRed);
             theEntities[1] = new Sphere(new Vector(19, -2, 1), 1, MattGreen);
             theEntities[2] = new Sphere(new Vector(18.7, 1.5, 1.3), 0.3, RoughYellow);
-            /*theEntities[3] = new Cuboid(new Vector(30, -4, -2), new Vector(0, 0, 1), new Vector(-1, 0, 0), new double[3] { 1, 1.5, 2 }, 
+            theEntities[3] = new Cuboid(new Vector(30, -4, -2), new Vector(0, 0, 1), new Vector(-1, 0, 0), new double[3] { 1, 1.5, 2 }, 
                 new Material[6]{
                 new Material(RaytracerColor.Pink, 0.7, 100, 0.5, 0.7),
                 new Material(RaytracerColor.Yellow, 0.7, 100, 0.5, 0.7),
                 new Material(RaytracerColor.Orange, 0.7, 100, 0.5, 0.7),
                 new Material(RaytracerColor.Yellow, 0.7, 100, 0.5, 0.7),
                 new Material(RaytracerColor.Orange, 0.7, 100, 0.5, 0.7),
-                new Material(RaytracerColor.Pink, 0.7, 100, 0.5, 0.7) });*/
+                new Material(RaytracerColor.Pink, 0.7, 100, 0.5, 0.7) });
 
             Lightsource[] theLights = new Lightsource[1];
             theLights[0] = new PointLight(new Vector(15, 5, 7), RaytracerColor.White);
@@ -111,19 +111,16 @@ namespace Raytracer
             Scene theScene = new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
             return theScene;
         }
-
-        public static Scene scene4(int resX, int resY)
+        public static Scene cylinderS(int resX, int resY)
         {
-            Camera cam = new Camera(new Vector(100, 0, 0), new Vector(-1, 0, 0), new Vector(0, 0, 1), Math.PI / 4, resX, resY);
+            Entity[] entities = new Entity[1];
+            Lightsource[] l = new Lightsource[1];
+            entities[0] = new Cylinder(new Vector(0, 0, -5), new Vector(0, 0, 5), 1);
+            l[0] = new PointLight(new Vector(-5, -5, -5), RaytracerColor.White);
+            Camera c = new Camera(new Vector(-20, 0, 0), new Vector(1, 0, 0), new Vector(0, 0, 1), Math.PI / 3, resX, resY);
 
-            PointLight light = new PointLight(new Vector(30, 20, 40), RaytracerColor.White);
-            Lightsource[] lights = new Lightsource[1] { light };
-
-            Torus torus = new Torus(new Vector(0, 0, 0), new Vector(0, 0, 1), 10, 3, new Material(RaytracerColor.Red, 0.5, 100, 0.5, 0.8));
-            Sphere sphere = new Sphere(new Vector(-200, 0, 0), 150, new Material(RaytracerColor.Blue, 0.3, 20, 0.5, 0.7));
-            Entity[] entities = new Entity[2] { torus, sphere };
-
-            return new Scene(cam, entities, lights);
+            Scene scene = new Scene(c,entities,l);
+            return scene;
         }
     }
 }
