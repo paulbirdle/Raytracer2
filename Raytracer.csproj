@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Compile Include="Entities\Disk.cs" />
     <Compile Include="Hilfsklassen\Complex.cs" />
     <Compile Include="Entities\Cuboid.cs" />
     <Compile Include="Entities\Cylinder.cs" />
