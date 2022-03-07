@@ -25,35 +25,96 @@ namespace Raytracer
 
         public override double get_intersection(Ray ray)
         {
-            Vector s = ray.Start;
+            Vector x = ray.Start;
             Vector v = ray.Direction;
 
-            double a = s * n;
-            double b = v * n;
-            Vector u = s - a * n - center;
-            Vector w = v - b * n;
-            double A = b * b + w * w;
-            double B = 2 * u * w + 2 * a * b;
-            double C = u*u + R * R - r * r + a * a;
+            Vector u = x - center;
+            double B = v * n;
+            Vector y = u - u * n * n; //u auf Ebene projiziert
+            Vector z = v - B * n;          //v auf Ebene projiziert
 
-            //double aa = A * A;
-            double aa = 2 * B / A;
-            double bb = B * B / A*A + 2 * C/A - 4 * R * R * w * w/A*A;
-            double cc = 2 * B * C/A*A - 4 * R * R * 2 * u * w/A*A;
-            double dd = C * C/A*A - 4 * R * R * u * u/A*A;
+            double b_ = 2 * u * v;
+            double c_ = u.SquareNorm() + R * R - r * r;
 
-            Complex[] z = Poly.solve_quartic(aa,bb,cc,dd);
+            double a = 2 * b_;
+            double b = b_ * b_ + 2 * c_ - 4 * R * R * z.SquareNorm();
+            double c = 2 * b_ * c_ - 8 * R * R * y * z;
+            double d = c_ * c_ - 4 * R * R * y.SquareNorm();
 
-            //x = s + t*v
-            //(x*n)^2 + (norm((x-x*n*n)-center)-R)^2 = r^2
+            Complex[] t_ = Poly.solve_quartic(a, b, c, d);
 
-            //r^2 = (a + t*b)^2 + ||u||^2 + 2*t*u*w + t^2*||w||^2-2R||u+t*w|| + R^2
+            double tmin = double.PositiveInfinity;
+            Complex t0;
+            double t;
+            for (int i = 0; i < 4; i++)
+            {
+                t0 = t_[i];
+                if (Math.Abs(t0.Im) < 1e-6)//t0 reell
+                {
+                    t = t0.Re;
+                    if (t > 1e-6 && t < tmin)
+                    {
+                        tmin = t;
+                    }
+                }
+            }
+            t = tmin;
 
-            //2R||u+t*w||   = (a + t*b)^2 + ||u||^2 + 2*t*u*w + t^2*||w||^2 + R^2 - r^2
-            //              = ||u||^2+R^2-r^2+a^2 + t*(2*u*w+2*a*b) + t^2*(b^2+||w||^2)
-            //              = C + Bt + At^2
-            //4R^2(||u||^2 + 2*t*u*w + t^2*||w||^2) = C^2 + t*(2*B*C) + t^2*(B^2 + 2*A*C) + t^3(2*A*B) + t^4(A^2)
-            //<==>  0 = aat^4 + bbt^3 + cct^2 + ddt + ee
+            if (t == double.PositiveInfinity) return -1; //alle Lösungen komplex --> kein Schnittpunkt
+            return t;
+        }
+
+        public override double get_intersection(Ray ray, out Vector n, out Material material)
+        {
+            Vector x = ray.Start;
+            Vector v = ray.Direction;
+
+            Vector u = x - center;
+            double B = v * this.n;
+            Vector y = u - u * this.n * this.n; //u auf Ebene projiziert
+            Vector z = v - B * this.n;          //v auf Ebene projiziert
+
+            double b_ = 2 * u * v;
+            double c_ = u.SquareNorm() + R * R - r * r;
+
+            double a = 2 * b_;
+            double b = b_ * b_ + 2 * c_ - 4 * R * R * z.SquareNorm();
+            double c = 2 * b_ * c_ - 8 * R * R * y * z;
+            double d = c_ * c_ - 4 * R * R * y.SquareNorm();
+
+            Complex[] t_ = Poly.solve_quartic(a, b, c, d);
+
+            double tmin = double.PositiveInfinity;
+            Complex t0;
+            double t;
+            for (int i = 0; i < 4; i++)
+            {
+                t0 = t_[i];
+                if (Math.Abs(t0.Im) < 1e-6)//t0 reell
+                {
+                    t = t0.Re;
+                    if (t > 1e-6 && t < tmin)
+                    {
+                        tmin = t;
+                    }
+                }
+            }
+            t = tmin;
+
+            if (t == double.PositiveInfinity)//alle Lösungen komplex --> kein Schnittpunkt
+            {
+                n = null;
+                material = null;
+                return -1;
+            }
+
+            Vector intersection = ray.position_at_time(t);
+            Vector proj = intersection - (intersection - center) * this.n * this.n;
+            Vector on_circle = center + R * (proj - center).normalize();
+
+            material = this.material;
+            n = (intersection - on_circle).normalize();
+            return t;
         }
     }
 }
