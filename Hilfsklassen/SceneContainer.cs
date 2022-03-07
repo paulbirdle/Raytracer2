@@ -31,7 +31,6 @@ namespace Raytracer
 
             return new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
         }
-
         public static Scene scene2(int resX, int resY)
         {
             Camera theCamera = new Camera(new Vector(-500, -400, 214), new Vector(5, 4, -2), new Vector(1, 1, 4.5), Math.PI / 2.9, resX, resY);
@@ -43,16 +42,16 @@ namespace Raytracer
             //theLights[2] = new CandleLight(new Vector(0,-500,1000),300,new RaytracerColor(Color.White));
 
             int b_s = 50; // background_size
-            Material bgm = new Material(new RaytracerColor(Color.White), 0.5, 10, 0, 0.6);
+            Material bgm = new Material(new RaytracerColor(Color.White), 0, 10, 0, 0.6);
             theEntities[0] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(-b_s, b_s, 0), new Vector(-b_s, -b_s, 0), new Vector(b_s, -b_s, 0), new Material(new RaytracerColor(Color.White), 0.8, 10, 0, 0.6)); // "Boden"
-            theEntities[1] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(b_s, b_s, b_s), new Vector(b_s, -b_s, b_s), new Vector(b_s, -b_s, 0), bgm); // "rechte Wand"
-            theEntities[2] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(-b_s, b_s, 0), new Vector(-b_s, b_s, b_s), new Vector(b_s, b_s, b_s), bgm); // "linke Wand"
+          //  theEntities[1] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(b_s, b_s, b_s), new Vector(b_s, -b_s, b_s), new Vector(b_s, -b_s, 0), bgm); // "rechte Wand"
+          //  theEntities[2] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(-b_s, b_s, 0), new Vector(-b_s, b_s, b_s), new Vector(b_s, b_s, b_s), bgm); // "linke Wand"
 
             double s_s = 6; // sphere_size natuerlich :)
             double dist = 8;
             //int c = 3;
             int c = 0;
-            Material materialS = Material.Matte;
+            Material materialS = Material.MetalicRed;
             Entity[] group = new Entity[8];
             for (int i = 0; i < 2; i++)
             {
@@ -74,9 +73,8 @@ namespace Raytracer
 
             Scene theScene = new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
             return theScene;
-        }
-
-        public static Scene scene3(int resX, int resY) // Ball Mirrored Multiple times
+        }//8Balls
+        public static Scene scene3(int resX, int resY) // Balls Mirrored Multiple times
         {
             Camera theCamera = new Camera(new Vector(-8,-49,10),new Vector(0,5,0), new Vector(0,0,1), Math.PI/1.5,resX,resY);
 
@@ -84,8 +82,8 @@ namespace Raytracer
             Lightsource[] theLights = new Lightsource[2];
             int lights = 15;
             int range = 50;
-            theLights[0] = new CandleLight(new Vector(-lights-10,-lights,lights), range,new RaytracerColor(Color.FromArgb(255, 50, 50)));
-            theLights[1] = new CandleLight(new Vector(lights, -lights, lights), range, new RaytracerColor(Color.FromArgb(50, 50, 255)));
+            theLights[0] = new CandleLight(new Vector(-lights-10,-lights,lights), range,new RaytracerColor(Color.Blue));
+            theLights[1] = new CandleLight(new Vector(lights, -lights, lights), range, new RaytracerColor(Color.White));
 
             int b_s = 50; // background_size
             Material bgm = new Material(new RaytracerColor(Color.White), 0, 100, 0.05, 0.7);
@@ -111,19 +109,7 @@ namespace Raytracer
             Scene theScene = new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
             return theScene;
         }
-        public static Scene cylinderS(int resX, int resY)
-        {
-            Entity[] entities = new Entity[1];
-            Lightsource[] l = new Lightsource[1];
-            entities[0] = new Cylinder(new Vector(0, 0, -5), new Vector(0, 0, 5), 1);
-            l[0] = new PointLight(new Vector(-5, -5, -5), RaytracerColor.White);
-            Camera c = new Camera(new Vector(-20, 0, 0), new Vector(1, 0, 0), new Vector(0, 0, 1), Math.PI / 3, resX, resY);
-
-            Scene scene = new Scene(c,entities,l);
-            return scene;
-        }
-
-        public static Scene scene5(int resX, int resY)
+        public static Scene scene4(int resX, int resY)
         {
             Camera cam = new Camera(new Vector(100, 0, 0), new Vector(-1, 0, 0), new Vector(0, 0, 1), Math.PI / 4, resX, resY);
 
@@ -136,6 +122,94 @@ namespace Raytracer
             Entity[] entities = new Entity[2] { torus, sphere };
 
             return new Scene(cam, entities, lights);
+        }
+        public static Scene scene5(int resX, int resY) //portal scene
+        {
+            Scene baseScene = scene3(resX, resY);
+          
+            
+            double psize = 4;
+            double height = 4;
+            double left_right = 7;
+            double r = 4;
+             Quadrilateral portalShape = new Quadrilateral(new Vector(psize - left_right, r,height), new Vector(-psize - left_right , -r, height), new Vector(-psize - left_right, -r, 2*psize + height), new Vector(psize - left_right, r, 2 * psize + height),Material.Matte);
+            //Sphere portalShape = new Sphere(new Vector(-6, 7, 9), psize, Material.Iron);
+            Portal portal = new Portal(portalShape, baseScene);
+
+
+            bool portal_set = false;
+            Entity[] entities = baseScene.giveEntities();
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (entities[i] is Sphere|| entities[i] is EntityGroup || entities[i] is Portal)
+                {
+                   entities[i] = null;
+                    if(portal_set == false)
+                    {
+                        entities[i] = portal;
+                        portal_set = true;
+                    }
+                }
+            }
+
+            Camera cam= baseScene.giveCamera();
+            Lightsource[] lights = baseScene.giveLights();
+            Scene scene;
+            scene = new Scene(cam, entities, lights);
+            return scene;
+        }
+        public static Scene scene6(int resX, int resY) // Random scene
+        {
+            Lightsource[] l = standardlights(50, 1, 30);
+            Entity[] e = new Entity[40];
+            e[0] = standardfloor(10, RaytracerColor.White);
+            int gesetzt = 0;
+            Random r = new Random();
+            while ( gesetzt < e.Length-1)
+            {
+                for(int i = 0; i<e.Length; i++)
+                {
+                    if(e[i] is null)
+                    {
+                        int size = 60;
+                        int x = r.Next(-size, size);
+                        int y = r.Next(-size, size);
+                        int z = r.Next(-size, size);
+                        double erg = x ^ 2 + y ^ 2 + z ^ 2;
+                        if (Math.Sqrt(erg)< size)
+                        {
+                            e[i] = new Sphere(new Vector(x/10, y/10, z/10+2), r.NextDouble(), Material.MetalicRed);
+                            gesetzt++;
+                        }
+                    }
+                }
+            }
+            Camera c = standardCamera(Math.PI /4, resX, resY);
+            return new Scene(c, e, l);
+        }
+
+
+
+        public static Entity standardfloor(double size, RaytracerColor color)
+        {
+            Material bgm = new Material(color, 0, 100, 0.05, 0.7);
+            return new Quadrilateral(new Vector(size, size, 0), new Vector(-size, size, 0), new Vector(-size, -size, 0), new Vector(size, -size, 0), bgm); // "Boden"
+        }
+        public static Lightsource[] standardlights(double lengthscale, int anz, double dist_of_ground)
+        {
+            Lightsource[] theLights = new Lightsource[4];
+            double lights = dist_of_ground;
+            double range = lengthscale;
+            theLights[0] = new CandleLight(new Vector(lights, lights, lights), range, new RaytracerColor(Color.White));
+            theLights[1] = new CandleLight(new Vector(lights, -lights, lights), range, new RaytracerColor(Color.White));
+            theLights[2] = new CandleLight(new Vector(-lights, lights, lights), range, new RaytracerColor(Color.White));
+            theLights[3] = new CandleLight(new Vector(-lights, -lights, lights), range, new RaytracerColor(Color.White));
+            return theLights;
+        }
+        public static Camera standardCamera(double xAngle, int resX,int resY)
+        {
+            Camera c = new Camera(new Vector(-100, 0, 50), new Vector(2, 0, -1), new Vector(0, 0, 1), xAngle, resX, resY);
+            return c;
         }
     }
 }

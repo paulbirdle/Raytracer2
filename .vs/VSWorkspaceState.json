@@ -1,8 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Properties"
+    "\\Entities",
+    "\\Hilfsklassen",
+    "\\Lightsources"
   ],
-  "SelectedNode": "\\Raytracer.sln",
+  "SelectedNode": "\\Form1.cs",
   "PreviewInSolutionExplorer": false
 }

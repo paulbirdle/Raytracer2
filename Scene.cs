@@ -11,20 +11,19 @@ namespace Raytracer
         private readonly Lightsource[] lights;
         private readonly RaytracerColor ambientColor;
 
-        public Scene(Camera cam, Entity[] entities, Lightsource[] lights, RaytracerColor ambientColor)
-        {
-            this.cam = cam;
-            this.entities = entities;
-            this.lights = lights;
-            this.ambientColor = ambientColor;
-        }
-
         public Scene(Camera cam, Entity[] entities, Lightsource[] lights)
         {
             this.cam = cam;
             this.entities = entities;
             this.lights = lights;
             this.ambientColor = new RaytracerColor(Color.FromArgb(20, 20, 20)); //standard: grau
+        }
+        public Scene(Camera cam, Entity[] entities, Lightsource[] lights, RaytracerColor ambientColor)
+        {
+            this.cam = cam;
+            this.entities = entities;
+            this.lights = lights;
+            this.ambientColor = ambientColor;
         }
 
         public RaytracerColor[,] render(int depth)
@@ -36,21 +35,19 @@ namespace Raytracer
             Vector v = cam.ULCorner;
             Vector r = cam.Step_Right;
             Vector d = cam.Step_Down;
-            Ray ray;
+
             
             ParallelOptions opt = new ParallelOptions();
-            opt.MaxDegreeOfParallelism = 1; // max Anzahl Threads, man kann also cpu auslastung ugf. festlegen, -1 ist unbegrenzt (halt hardware begrenzt)
+            opt.MaxDegreeOfParallelism = -1; // max Anzahl Threads, man kann also cpu auslastung ugf. festlegen, -1 ist unbegrenzt (halt hardware begrenzt)
             
             Parallel.For(0,resX, opt,x => // parallel mehrere Threads nutzen
             {
                 for (int y = 0; y < resY; y++)
                 {
+                    Ray ray; // muss hier initialisiert werden, sonst reden sich die Threads gegenseitig rein -> Renderfehler
                     ray = cam.get_Rays(x, y);
-                    //Ray ray = new Ray(v, p);
                     color[x, y] = calculateRays(ray, depth);
-                    //v += d;
                 }
-                //v += r - resY * d;
             });
             return color;
         }
@@ -118,7 +115,7 @@ namespace Raytracer
             }
         }
 
-        private RaytracerColor calculateRays(Ray ray, int depth)
+        public RaytracerColor calculateRays(Ray ray, int depth)
         {
             if(depth < 0)
             {
@@ -126,15 +123,7 @@ namespace Raytracer
             }
             if(depth == 0)
             {
-                int l = firstIntersection(ray, out _, out _, out _, out Material material);
-                /*if(l == -1)//nichts getroffen
-                {*/
-                    return ambientColor;
-                /*}
-                else //etwas getroffen
-                {
-                    return material.Col;
-                }*/
+                return ambientColor;
             }
             else //depth > 0
             {
@@ -142,6 +131,13 @@ namespace Raytracer
                 if(l == -1) //nichts getroffen
                 {
                     return ambientColor;
+                }
+
+                else if(entities[l] is Portal)
+                {
+                    Portal portal = ((Portal)entities[l]);
+                    RaytracerColor result = portal.look_into_Dimension(ray, depth);
+                    return result;
                 }
                 else //etwas getroffen
                 {
@@ -201,5 +197,23 @@ namespace Raytracer
         {
             return diffuseReflectivity * Math.Cos(angle);
         }
+
+        public Entity[] giveEntities()
+        {
+            return entities;
+        }
+        public Lightsource[] giveLights()
+        {
+            return lights;
+        }
+        public Camera giveCamera()
+        {
+            return cam;
+        }
+        public RaytracerColor giveAmbientColor()
+        {
+            return ambientColor;
+        }
+
     }
 }

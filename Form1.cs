@@ -63,11 +63,15 @@ namespace Raytracer
             }
             else if (scene_to_Render == 4)
             {
-                scene = SceneContainer.cylinderS(resX * ssaa, resY * ssaa);
+                scene = SceneContainer.scene4(resX * ssaa, resY * ssaa);
             }
             else if(scene_to_Render == 5)
             {
                 scene = SceneContainer.scene5(resX * ssaa, resY * ssaa);
+            }
+            else if (scene_to_Render == 6)
+            {
+                scene = SceneContainer.scene6(resX * ssaa, resY * ssaa);
             }
             else
             {
