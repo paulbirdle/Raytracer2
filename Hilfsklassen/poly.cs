@@ -5,7 +5,7 @@ namespace Raytracer
 {
 	class Poly
 	{
-		public static double[] solveRealQuarticRoots(double a, double b, double c, double d, double e)
+		/*public static double[] solveRealQuarticRoots(double a, double b, double c, double d, double e)
 		{
 			double s1 = 2 * c * c * c - 9 * b * c * d + 27 * (a * d * d + b * b * e) - 72 * a * c * e;
 			double q1 = c * c - 3 * b * d + 12 * a * e;
@@ -67,10 +67,123 @@ namespace Raytracer
 				}
 			}
 			return new double[0];
+		}*/
+
+		public static double QuarticNumerically(double a, double b, double c, double d, double x0) //x^4+ax^3+bx^2+cx+d
+		{
+			double x = x0;
+			double dx = double.PositiveInfinity;
+			int count = 0;
+
+			while(Math.Abs(dx) > 1e-8 || count < 5)
+			{
+				count++;
+				if (count > 100) return double.NaN;
+
+				double x2 = x * x;
+				double x3 = x2 * x;
+				double x4 = x3 * x;
+
+				double f = x4 + a * x3 + b * x2 + c * x + d;
+				double f_ = 4 * x3 + 3 * b * x2 + 2 * b * x + c;
+				if (Math.Abs(f_) < 1e-10) return double.NaN;
+				
+				dx = f/f_;
+				x -= dx;
+			}
+			return x;
+		}
+
+		public static double CubicNumerically(double a, double b, double c, double x0)
+		{
+			double x = x0;
+			double dx = double.PositiveInfinity;
+			int count = 0;
+
+			while (Math.Abs(dx) > 1e-8 || count < 5)
+			{
+				count++;
+				if (count > 100) return double.NaN;
+
+				double x2 = x * x;
+				double x3 = x2 * x;
+
+				double f = x3 + a * x2 + b * x + c;
+				double f_ = 3 * x2 + 2 * a * x + b;
+				if (Math.Abs(f_) < 1e-10) return double.NaN;
+
+				dx = f / f_;
+				x -= dx;
+			}
+			return x;
+		}
+
+		public static double[] DivQuart(double[] a, double x0) // return coefficients of (x^4+a1x^3+a2x^2+a3x+a4) / (x-x0) = x^3+ex^2+fx+g
+		{
+			double[] ret = new double[3];
+			ret[0] = a[0] + x0;
+			ret[1] = a[1] + x0 * ret[0];
+			ret[2] = a[2] + x0 * ret[1];
+
+			double rem = a[3] + x0 * ret[2];
+			if (Math.Abs(rem) > 1e-6) throw new Exception(" ");
+			return ret;
+		}
+
+		public static double[] DivCube(double[] a, double x0)
+		{
+			double[] ret = new double[2];
+			ret[0] = a[0] + x0;
+			ret[1] = a[1] + x0 * ret[0];
+
+			double rem = a[2] + x0 * ret[1];
+			if (Math.Abs(rem) > 1e-6) throw new Exception(" ");
+			return ret;
+		}
+
+		public static double GetRoot(double a, double b, double c, double d, double x0)//x^4 + ax^3 + bx^2 + cx + d
+		{
+			double x1 = QuarticNumerically(a, b, c, d, x0);
+			if (x1 == double.NaN) return -1;
+
+			double[] cub = DivQuart(new double[4] { a, b, c, d }, x1);
+
+			double x2 = CubicNumerically(cub[0], cub[1], cub[2], x0);
+			if (x2 == double.NaN) throw new Exception("");
+
+			double[] quad = DivCube(cub, x2);
+			double D = quad[0] * quad[0] / 4 - quad[1];
+
+			double ret;
+
+			if (D < 0)
+			{
+				ret = PosMin(new double[2] { x1, x2 });
+			}
+			else
+			{
+				double sqrt = Math.Sqrt(D);
+				ret = PosMin(new double[4] { x1, x2, -quad[0] / 2 + sqrt, -quad[0] / 2 - sqrt });
+			}
+			return ret;
+		}
+
+		public static double PosMin(double[] x)
+		{
+			double xmin = double.PositiveInfinity;
+			double x_;
+			for(int i = 0; i < x.Length; i++)
+			{
+				x_ = x[i];
+				if (x_ <= 1e-6) continue;
+				if (x_ < xmin) xmin = x_;
+			}
+			if (xmin == double.PositiveInfinity) return -1;
+			return xmin;
 		}
 
 
-			public static Complex[] SolveCubic(double a2, double a1, double a0) //zeros of f = t^3 + a2*t^2 + a1*t + a0 
+		public static Complex[] SolveCubic(double a2, double a1, double a0) //zeros of f = t^3 + a2*t^2 + a1*t + a0 
 		{
 			double p = a1 - a2 * a2 / 3;
 			double q = a0 - a1 * a2 / 3 + 2 * a1 * a1 / 27; //f(t-a2/3) = g = t^3 + pt + q
@@ -185,7 +298,7 @@ namespace Raytracer
 		//---------------------------------------------------------------------------
 		// Solve quartic equation x^4 + a*x^3 + b*x^2 + c*x + d
 		// (attention - this function returns dynamically allocated array. It has to be released afterwards)
-		public static Complex[] solve_quartic(double a, double b, double c, double d)
+		/*public static Complex[] solve_quartic(double a, double b, double c, double d)
 		{
 			double a3 = -b;
 			double b3 = a * c - 4 * d;
@@ -295,6 +408,6 @@ namespace Raytracer
 			}
 
 			return retval;
-		}
+		}*/
 	}
 }

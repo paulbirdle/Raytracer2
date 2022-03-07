@@ -174,5 +174,17 @@ namespace Raytracer
             }
             return outputBM;
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Scene scene = SceneContainer.scene4(640, 360);
+            Torus torus = (Torus)(scene.giveEntities()[0]);
+
+            Vector start = scene.giveCamera().Position;
+            Vector end = torus.Center + 0*torus.rr*torus.N;
+            Ray ray = new Ray(end-start, start);
+
+            double t = torus.get_intersection(ray);
+        }
     }
 }

@@ -14,6 +14,26 @@ namespace Raytracer
         private readonly double R;
         private readonly double r;
 
+        public Vector Center
+        {
+            get { return center; }
+        }
+
+        public Vector N
+        {
+            get { return n; }
+        }
+
+        public double RR
+        {
+            get { return R; }
+        }
+
+        public double rr
+        {
+            get { return r; }
+        }
+
         public Torus(Vector center, Vector n, double R, double r, Material material)
         {
             this.center = center;
@@ -41,7 +61,11 @@ namespace Raytracer
             double c = 2 * b_ * c_ - 8 * R * R * y * z;
             double d = c_ * c_ - 4 * R * R * y.SquareNorm();
 
-            double[] t_ = Poly.solveRealQuarticRoots(1, a, b, c, d);
+            double t = Poly.GetRoot(a, b, c, d, 0);
+
+            return t;
+
+            /*double[] t_ = Poly.solveRealQuarticRoots(1, a, b, c, d);
 
             double tmin = double.PositiveInfinity;
             double t;
@@ -56,7 +80,7 @@ namespace Raytracer
             t = tmin;
 
             if (t == double.PositiveInfinity) return -1; //alle Lösungen komplex --> kein Schnittpunkt
-            return t;
+            return t;*/
         }
 
         public override double get_intersection(Ray ray, out Vector n, out Material material)
@@ -77,7 +101,24 @@ namespace Raytracer
             double c = 2 * b_ * c_ - 8 * R * R * y * z;
             double d = c_ * c_ - 4 * R * R * y.SquareNorm();
 
-            double[] t_ = Poly.solveRealQuarticRoots(1, a, b, c, d);
+            double t = Poly.GetRoot(a, b, c, d, 0);
+
+            if(t == -1)
+            {
+                n = null;
+                material = null;
+                return -1;
+            }
+
+            Vector intersection = ray.position_at_time(t);
+            Vector proj = intersection - (intersection - center) * this.n * this.n;
+            Vector on_circle = center + R * (proj - center).normalize();
+
+            material = this.material;
+            n = (intersection - on_circle).normalize();
+            return t;
+
+            /*double[] t_ = Poly.solveRealQuarticRoots(1, a, b, c, d);
 
             double tmin = double.PositiveInfinity;
             double t;
@@ -96,15 +137,7 @@ namespace Raytracer
                 n = null;
                 material = null;
                 return -1;
-            }
-
-            Vector intersection = ray.position_at_time(t);
-            Vector proj = intersection - (intersection - center) * this.n * this.n;
-            Vector on_circle = center + R * (proj - center).normalize();
-
-            material = this.material;
-            n = (intersection - on_circle).normalize();
-            return t;
+            }*/
         }
     }
 }
