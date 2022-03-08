@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Raytracer
 {
-    class Torus : Entity
+    class Torus : Entity //TODO: Hitbox
     {
         private readonly Material material;
         private readonly Vector center;
@@ -18,17 +14,14 @@ namespace Raytracer
         {
             get { return center; }
         }
-
         public Vector N
         {
             get { return n; }
         }
-
         public double RR
         {
             get { return R; }
         }
-
         public double rr
         {
             get { return r; }
@@ -50,7 +43,7 @@ namespace Raytracer
 
             Vector u = x - center;
             double B = v * n;
-            Vector y = u - u * n * n; //u auf Ebene projiziert
+            Vector y = u - u * n * n;       //u auf Ebene projiziert
             Vector z = v - B * n;          //v auf Ebene projiziert
 
             double b_ = 2 * u * v;
@@ -61,26 +54,7 @@ namespace Raytracer
             double c = 2 * b_ * c_ - 8 * R * R * y * z;
             double d = c_ * c_ - 4 * R * R * y.SquareNorm();
 
-            double t = Poly.GetRoot(a, b, c, d, 0);
-
-            return t;
-
-            /*double[] t_ = Poly.solveRealQuarticRoots(1, a, b, c, d);
-
-            double tmin = double.PositiveInfinity;
-            double t;
-            for (int i = 0; i < t_.Length; i++)
-            {
-                t = t_[i];
-                if (t > 1e-6 && t < tmin)
-                {
-                    tmin = t;
-                }
-            }
-            t = tmin;
-
-            if (t == double.PositiveInfinity) return -1; //alle Lösungen komplex --> kein Schnittpunkt
-            return t;*/
+            return Poly.GetSmallestPositiveRoot(new double[4] { a, b, c, d });
         }
 
         public override double get_intersection(Ray ray, out Vector n, out Material material)
@@ -101,9 +75,9 @@ namespace Raytracer
             double c = 2 * b_ * c_ - 8 * R * R * y * z;
             double d = c_ * c_ - 4 * R * R * y.SquareNorm();
 
-            double t = Poly.GetRoot(a, b, c, d, 0);
+            double t = Poly.GetSmallestPositiveRoot(new double[4] { a, b, c, d });
 
-            if(t == -1)
+            if(t < 0)
             {
                 n = null;
                 material = null;
@@ -117,27 +91,6 @@ namespace Raytracer
             material = this.material;
             n = (intersection - on_circle).normalize();
             return t;
-
-            /*double[] t_ = Poly.solveRealQuarticRoots(1, a, b, c, d);
-
-            double tmin = double.PositiveInfinity;
-            double t;
-            for (int i = 0; i < t_.Length; i++)
-            {
-                t = t_[i];
-                if (t > 1e-6 && t < tmin)
-                {
-                    tmin = t;
-                }
-            }
-            t = tmin;
-
-            if (t == double.PositiveInfinity)//alle Lösungen komplex --> kein Schnittpunkt
-            {
-                n = null;
-                material = null;
-                return -1;
-            }*/
         }
     }
 }

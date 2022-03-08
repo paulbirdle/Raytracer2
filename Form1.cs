@@ -6,7 +6,6 @@ using System.Windows.Forms;
 using System.Timers;
 
 //TODO: 
-//seltsames Rauschen im Bild beheben, liegt an Multithreading
 //vielleicht Cylinder etc. beginnen
 //Hitboxen für Scene3
 //render gibt gleich Bitmap zurück (schwierig mit dem Multithreading)
@@ -177,14 +176,19 @@ namespace Raytracer
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Scene scene = SceneContainer.scene4(640, 360);
+            /*Scene scene = SceneContainer.scene4(640, 360);
             Torus torus = (Torus)(scene.giveEntities()[0]);
 
             Vector start = scene.giveCamera().Position;
             Vector end = torus.Center + 0*torus.rr*torus.N;
             Ray ray = new Ray(end-start, start);
 
-            double t = torus.get_intersection(ray);
+            double t = torus.get_intersection(ray);*/
+
+            //Complex[] roots = Poly.SolveCubic(new double[3] { 10, -2, 9 });
+
+            Complex[] roots = Poly.SolveQuartic(new double[4] { 8, 12, 20, 2 });
+
         }
     }
 }

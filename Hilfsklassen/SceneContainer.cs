@@ -30,7 +30,7 @@ namespace Raytracer
             theLights[0] = new PointLight(new Vector(15, 5, 7), RaytracerColor.White);
 
             return new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
-        }
+        } //Drei Kugeln und Cuboid Test
         public static Scene scene2(int resX, int resY)
         {
             Camera theCamera = new Camera(new Vector(-500, -400, 214), new Vector(5, 4, -2), new Vector(1, 1, 4.5), Math.PI / 2.9, resX, resY);
@@ -116,14 +116,13 @@ namespace Raytracer
             PointLight light = new PointLight(new Vector(30, 20, 40), RaytracerColor.White);
             Lightsource[] lights = new Lightsource[1] { light };
 
-            Torus torus = new Torus(new Vector(0, 0, 0), new Vector(0, 0, 1), 10, 3, new Material(RaytracerColor.Red, 0.5, 100, 0.5, 0.8));
+            Torus torus = new Torus(new Vector(0, 0, 0), new Vector(0.7, 0.3, 1), 10, 5, new Material(RaytracerColor.Red, 0.5, 100, 0.5, 0.8));
             Sphere sphere = new Sphere(new Vector(-200, 0, 0), 150, new Material(RaytracerColor.Blue, 0.3, 20, 0.5, 0.7));
-            Disk disk = new Disk(new Vector(0, -20, 0), new Vector(1, 0.5, 0.5), 15, new Material(RaytracerColor.Red, 0.7, 5000, 0.4, 0.7));
+            //Disk disk = new Disk(new Vector(0, -20, 0), new Vector(1, 0.5, 0.5), 15, new Material(RaytracerColor.Red, 0.7, 5000, 0.4, 0.7));
             Entity[] entities = new Entity[2] { torus, sphere };
 
             return new Scene(cam, entities, lights);
-        }
-
+        } //Torus
         public static Scene scene5(int resX, int resY) //portal scene
         {
             Scene baseScene = scene3(resX, resY);
@@ -188,8 +187,6 @@ namespace Raytracer
             Camera c = standardCamera(Math.PI /4, resX, resY);
             return new Scene(c, e, l);
         }
-
-
 
         public static Entity standardfloor(double size, RaytracerColor color)
         {
