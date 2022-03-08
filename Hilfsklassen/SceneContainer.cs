@@ -133,7 +133,7 @@ namespace Raytracer
             double height = 4;
             double left_right = 7;
             double r = 4;
-             Quadrilateral portalShape = new Quadrilateral(new Vector(psize - left_right, r,height), new Vector(-psize - left_right , -r, height), new Vector(-psize - left_right, -r, 2*psize + height), new Vector(psize - left_right, r, 2 * psize + height),Material.Matte);
+            Quadrilateral portalShape = new Quadrilateral(new Vector(psize - left_right, r,height), new Vector(-psize - left_right , -r, height), new Vector(-psize - left_right, -r, 2*psize + height), new Vector(psize - left_right, r, 2 * psize + height),Material.Matte);
             //Sphere portalShape = new Sphere(new Vector(-6, 7, 9), psize, Material.Iron);
             Portal portal = new Portal(portalShape, baseScene);
 
@@ -161,7 +161,7 @@ namespace Raytracer
         }
         public static Scene scene6(int resX, int resY) // Random scene
         {
-            Lightsource[] l = standardlights(50, 1, 30);
+            Lightsource[] l = standardlights(50, 2, 30);
             Entity[] e = new Entity[40];
             e[0] = standardfloor(10, RaytracerColor.White);
             int gesetzt = 0;
@@ -177,15 +177,15 @@ namespace Raytracer
                         int y = r.Next(-size, size);
                         int z = r.Next(-size, size);
                         double erg = x ^ 2 + y ^ 2 + z ^ 2;
-                        if (Math.Sqrt(erg)< size)
+                        if (Math.Sqrt(erg) < size)
                         {
-                            e[i] = new Sphere(new Vector(x/10, y/10, z/10+2), r.NextDouble(), Material.MetalicRed);
+                            e[i] = new Sphere(new Vector(x / 10, y / 10, z / 10 + size/(10*2)), r.NextDouble(), Material.Random);
                             gesetzt++;
                         }
                     }
                 }
             }
-            Camera c = standardCamera(Math.PI /4, resX, resY);
+            Camera c = standardCamera(Math.PI /12, resX, resY);
             return new Scene(c, e, l);
         }
 
@@ -198,18 +198,34 @@ namespace Raytracer
         }
         public static Lightsource[] standardlights(double lengthscale, int anz, double dist_of_ground)
         {
-            Lightsource[] theLights = new Lightsource[4];
+            Lightsource[] theLights = new Lightsource[anz];
             double lights = dist_of_ground;
             double range = lengthscale;
-            theLights[0] = new CandleLight(new Vector(lights, lights, lights), range, new RaytracerColor(Color.White));
-            theLights[1] = new CandleLight(new Vector(lights, -lights, lights), range, new RaytracerColor(Color.White));
-            theLights[2] = new CandleLight(new Vector(-lights, lights, lights), range, new RaytracerColor(Color.White));
-            theLights[3] = new CandleLight(new Vector(-lights, -lights, lights), range, new RaytracerColor(Color.White));
+            for(int i = 0; i<anz; i++)
+            {
+                switch(i)
+                {
+                    case 0:
+                        theLights[0] = new CandleLight(new Vector(-lights, -lights, lights), range, new RaytracerColor(Color.White));
+                        break;
+                    case 1:
+                        theLights[1] = new CandleLight(new Vector(-lights, lights, lights), range, new RaytracerColor(Color.White));
+                        break;
+                    case 2:
+                        theLights[2] = new CandleLight(new Vector(lights, -lights, lights), range, new RaytracerColor(Color.White));
+                        break;
+                    case 3:
+                        theLights[3] = new CandleLight(new Vector(lights, lights, lights), range, new RaytracerColor(Color.White));
+                        break;
+                }
+            }
+
+
             return theLights;
         }
         public static Camera standardCamera(double xAngle, int resX,int resY)
         {
-            Camera c = new Camera(new Vector(-100, 0, 50), new Vector(2, 0, -1), new Vector(0, 0, 1), xAngle, resX, resY);
+            Camera c = new Camera(new Vector(-100, 0, 30), new Vector(100, 0, -27), new Vector(0, 0, 1), xAngle, resX, resY);
             return c;
         }
     }

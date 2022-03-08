@@ -132,7 +132,6 @@ namespace Raytracer
                 {
                     return ambientColor;
                 }
-
                 else if(entities[l] is Portal)
                 {
                     Portal portal = ((Portal)entities[l]);

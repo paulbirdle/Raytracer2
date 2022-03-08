@@ -24,7 +24,10 @@ namespace Raytracer
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            int scene_displayed_at_startup = 6;
+            SceneSelector.Value = scene_displayed_at_startup;
+            double[] stats = new double[4] { 0, 0, 0, 0 };
+            displayStatistics(stats);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -114,6 +117,15 @@ namespace Raytracer
             {"4k", new int[2]{3840, 2160} },
             {"8k", new int[2]{7680, 4320} },
         };
+        Dictionary<int, string> sceneDictionary = new Dictionary<int, string>
+        {
+            {1, "3 Ball Scene"},
+            {2, "8 Ball Scene with entityGroup"},
+            {3, "Infinity Mirror"},
+            {4, "Torus and Disk test Scene"},
+            {5, "Portal Scene"},
+            {6, "completely Random Spheres"},
+        };
 
         private void save(Bitmap map)
         {
@@ -123,11 +135,16 @@ namespace Raytracer
 
         private void displayStatistics(double[] stats)
         {
-            statistics.Text = "Renderdauer   :  " + stats[0].ToString() + " s";
-            statistics.Text += "\nBitmapkonvertierung  :  " + stats[1].ToString() + "s";
-            statistics.Text += "\nAnzeigedauer  :  " + stats[2].ToString() + "s";
-            statistics.Text += "\nAnzahl Rays    :  " + Ray.numRay.ToString();
-            statistics.Text += "\nAnzahl Vectors:  " + Vector.numVec.ToString();
+            int rdau = 20 - stats[0].ToString().Length;
+            int konv = 20 - stats[1].ToString().Length; 
+            int anzd = 20 - stats[2].ToString().Length;
+            int anzR = 21 - Ray.numRay.ToString().Length;
+            int anzV = 21 - Vector.numVec.ToString().Length;
+            statistics.Text = "Renderdauer               :  " + stats[0].ToString().PadLeft(rdau) + " s";
+            statistics.Text += "\n\nBitmapkonvertierung  :  " + stats[1].ToString().PadLeft(konv) + "s";
+            statistics.Text += "\n\nAnzeigedauer               :  " + stats[2].ToString().PadLeft(anzd) + "s";
+            statistics.Text += "\n\nAnzahl Rays                  :  " + Ray.numRay.ToString().PadLeft(anzR);
+            statistics.Text += "\n\nAnzahl Vectors              :  " + Vector.numVec.ToString().PadLeft(anzV);
         }
 
         private Bitmap convertToBitmap(RaytracerColor[,] col, int resX, int resY, int ssaa)
@@ -185,6 +202,12 @@ namespace Raytracer
             Ray ray = new Ray(end-start, start);
 
             double t = torus.get_intersection(ray);
+        }
+
+        private void SceneSelector_ValueChanged(object sender, EventArgs e)
+        {
+            SceneDescription.Text = "Scene description: ";
+            SceneDescription.Text += "\n"+ sceneDictionary[(int)SceneSelector.Value];
         }
     }
 }
