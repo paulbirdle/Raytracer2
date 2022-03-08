@@ -6,7 +6,7 @@ namespace Raytracer
     class RaytracerColor
     {
         Color color;
-
+        
         public RaytracerColor(Color color)
         {
             this.color = color;

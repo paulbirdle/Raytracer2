@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
-using System.Timers;
 
 //TODO: 
 //vielleicht Cylinder etc. beginnen
 //Hitboxen für Scene3
 //render gibt gleich Bitmap zurück (schwierig mit dem Multithreading)
-//Progressbar
-//
+//Progressbar (auch schwierig mit dem Multithreading)
+//Effitienteres Antialiasing z.B. nur bei Kanten in höherer Auflösung Rendern
+//Blur-Material oder generel mal ein Bild Unscharf machen
+//Helligkeit für Lightsource
+//Transparente Objekte mit oder ohne Brechungsindex
+//Große Lightsources, weiche Schatten
 
 namespace Raytracer
 {
@@ -23,11 +26,15 @@ namespace Raytracer
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            int scene_displayed_at_startup = 6;
+            SceneSelector.Value = scene_displayed_at_startup;
+            double[] stats = new double[4] { 0, 0, 0, 0 };
+            displayStatistics(stats);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (SceneSelector.Value > sceneDictionary.Count) return;
             int scene = (int)SceneSelector.Value;
             int depth = (int)DepthSelector.Value;
             string res = (string)ResolutionSelector.SelectedItem;
@@ -46,36 +53,7 @@ namespace Raytracer
             int ssaa = kantenglaettung; // Faktor: vielfaches der Ausgaberesolution, also Faktor fuer die Renderaufloesung;
             if (ssaa % 2 != 0 && ssaa != 1) throw new Exception("Nur vielfache von 2 oder nur 1 fuer Kantenglättung moeglich!");
 
-
-            Scene scene;
-            if (scene_to_Render == 1)
-            {
-                scene = SceneContainer.scene1(resX * ssaa, resY * ssaa); // höhere Renderauflösung wird übergeben
-            }
-            else if (scene_to_Render == 2)
-            {
-                scene = SceneContainer.scene2(resX * ssaa, resY * ssaa);
-            }
-            else if (scene_to_Render == 3)
-            {
-                scene = SceneContainer.scene3(resX * ssaa, resY * ssaa);
-            }
-            else if (scene_to_Render == 4)
-            {
-                scene = SceneContainer.scene4(resX * ssaa, resY * ssaa);
-            }
-            else if(scene_to_Render == 5)
-            {
-                scene = SceneContainer.scene5(resX * ssaa, resY * ssaa);
-            }
-            else if (scene_to_Render == 6)
-            {
-                scene = SceneContainer.scene6(resX * ssaa, resY * ssaa);
-            }
-            else
-            {
-                throw new Exception("Wähl eine existierende Scene aus");
-            }
+            Scene scene = sceneSelection((int)SceneSelector.Value, resX * ssaa, resY * ssaa);
 
             Ray.numRay = 0;
             Vector.numVec = 0;
@@ -89,7 +67,7 @@ namespace Raytracer
             statistic[0] = duration.TotalSeconds;
 
             before = DateTime.Now;
-            Bitmap BM = convertToBitmap(col, resX, resY, ssaa);
+            Bitmap BM = convertToBitmap(col, col.GetLength(0)/ssaa, col.GetLength(1)/ssaa, ssaa); // um andere Resolution am Ende z.b fuer Smartphone zuzulassen
             after = DateTime.Now;
             duration = after - before;
             statistic[1] = duration.TotalSeconds;
@@ -104,6 +82,47 @@ namespace Raytracer
             displayStatistics(statistic);
         }
 
+        private Scene sceneSelection(int index_of_Scene, int resX,int resY)
+        {
+            Scene scene;
+            if (index_of_Scene == 1)
+            {
+                return scene = SceneContainer.scene1(resX, resY); // höhere Renderauflösung wird übergeben
+            }
+            else if (index_of_Scene == 2)
+            {
+                return scene = SceneContainer.scene2(resX, resY);
+            }
+            else if (index_of_Scene == 3)
+            {
+                return scene = SceneContainer.scene3(resX, resY);
+            }
+            else if (index_of_Scene == 4)
+            {
+                return scene = SceneContainer.scene4(resX, resY);
+            }
+            else if (index_of_Scene == 5)
+            {
+                return scene = SceneContainer.scene5(resX, resY);
+            }
+            else if (index_of_Scene == 6)
+            {
+                return scene = SceneContainer.scene6(resX, resY);
+            }
+            else if (index_of_Scene == 7)
+            {
+                return scene = SceneContainer.scene7(resX, resY);
+            }
+            else if (index_of_Scene == 8)
+            {
+                return scene = SceneContainer.scene8(resX, resY);
+            }
+            else
+            {
+                throw new Exception("Wähl eine existierende Scene aus");
+            }
+        }
+
         Dictionary<string, int[]> resDictionary = new Dictionary<string, int[]>
         {
             {"360p", new int[2]{640, 360} },
@@ -114,6 +133,18 @@ namespace Raytracer
             {"8k", new int[2]{7680, 4320} },
         };
 
+        Dictionary<int, string> sceneDictionary = new Dictionary<int, string>
+        {
+            {1, "3 Ball Scene"},
+            {2, "8 Ball Scene with entityGroup"},
+            {3, "Infinity Mirror"},
+            {4, "Torus and Disk test Scene"},
+            {5, "Portal Scene"},
+            {6, "completely Random Spheres"},
+            {7, "Smartphone render"},
+            {8, "General Testing Scene"}
+        };
+
         private void save(Bitmap map)
         {
             map.Save("scene.png", ImageFormat.Png);
@@ -122,11 +153,16 @@ namespace Raytracer
 
         private void displayStatistics(double[] stats)
         {
-            statistics.Text = "Renderdauer   :  " + stats[0].ToString() + " s";
-            statistics.Text += "\nBitmapkonvertierung  :  " + stats[1].ToString() + "s";
-            statistics.Text += "\nAnzeigedauer  :  " + stats[2].ToString() + "s";
-            statistics.Text += "\nAnzahl Rays    :  " + Ray.numRay.ToString();
-            statistics.Text += "\nAnzahl Vectors:  " + Vector.numVec.ToString();
+            int rdau = 20 - stats[0].ToString().Length;
+            int konv = 20 - stats[1].ToString().Length; 
+            int anzd = 20 - stats[2].ToString().Length;
+            int anzR = 21 - Ray.numRay.ToString().Length;
+            int anzV = 21 - Vector.numVec.ToString().Length;
+            statistics.Text = "Renderdauer               :  " + stats[0].ToString().PadLeft(rdau) + " s";
+            statistics.Text += "\n\nBitmapkonvertierung  :  " + stats[1].ToString().PadLeft(konv) + "s";
+            statistics.Text += "\n\nAnzeigedauer               :  " + stats[2].ToString().PadLeft(anzd) + "s";
+            statistics.Text += "\n\nAnzahl Rays                  :  " + Ray.numRay.ToString().PadLeft(anzR);
+            statistics.Text += "\n\nAnzahl Vectors              :  " + Vector.numVec.ToString().PadLeft(anzV);
         }
 
         private Bitmap convertToBitmap(RaytracerColor[,] col, int resX, int resY, int ssaa)
@@ -188,6 +224,21 @@ namespace Raytracer
             //Complex[] roots = Poly.SolveCubic(new double[3] { 10, -2, 9 });
 
             Complex[] roots = Poly.SolveQuartic(new double[4] { 8, 12, 20, 2 });
+
+        }
+
+        private void SceneSelector_ValueChanged(object sender, EventArgs e)
+        {
+            if((int)SceneSelector.Value <= sceneDictionary.Count)
+            {
+                SceneDescription.Text = "Scene description: ";
+                SceneDescription.Text += "\n" + sceneDictionary[(int)SceneSelector.Value];
+            }
+            else
+            {
+                SceneDescription.Text = "Scene description: ";
+                SceneDescription.Text += "\nNo Scene " + SceneSelector.Value.ToString() + " exists";
+            }
 
         }
     }

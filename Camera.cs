@@ -29,16 +29,15 @@ namespace Raytracer
             this.resx = resx;
             this.resy = resy;
 
-            if(direction*up != 0)
+            if(this.direction*this.up != 0)
             {
                 this.up = (this.up - (this.up * this.direction) * this.direction).normalize();
-                //throw new Exception("Up falsch");
             }
 
-            right = direction ^ up;
+            right = this.direction ^ this.up;
             right = right.normalize();
 
-            ULcorner = direction + Math.Tan(xangle / 2.0) * (-right) + Math.Tan(yangle / 2.0) * this.up;
+            ULcorner = this.direction + Math.Tan(xangle / 2.0) * (-right) + Math.Tan(yangle / 2.0) * this.up;
             double stepLength = 2.0 * Math.Tan(xangle / 2.0) / resx;
             step_right = stepLength * right;
             step_down = -stepLength * this.up;
@@ -88,6 +87,16 @@ namespace Raytracer
         public Vector Position
         {
             get { return position; }
+        }
+
+        public Vector Direction
+        {
+            get { return direction; }
+        }
+
+        public Vector Up
+        {
+            get { return up; }
         }
     }
 }

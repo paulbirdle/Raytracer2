@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace Raytracer
 {
@@ -9,7 +10,7 @@ namespace Raytracer
         private readonly double smoothness;     //0: mega grob                 infty: perfekt glatt
         private readonly double specularReflectivity; //0-1
         private readonly double diffuseReflectivity;  //0-1
-
+        private readonly static Random r = new Random();
 
         public Material()
         {
@@ -94,6 +95,10 @@ namespace Raytracer
         public static Material Matte
         {
             get { return new Material(new RaytracerColor(Color.Gray),0 ,20 ,0.2 ,0.8 ); }
+        }
+        public static Material Random
+        {
+            get { return new Material(new RaytracerColor(Color.FromArgb(r.Next(0, 255), r.Next(0, 255), r.Next(0, 255))), r.NextDouble(), r.Next(0,300), r.NextDouble(), r.NextDouble()); }
         }
     }
 }
