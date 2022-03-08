@@ -24,14 +24,13 @@ namespace Raytracer
                     throw new Exception("KEIN PORTAL IM PORTAL");
                 }
             }
-
         }
-        public override double get_intersection(Ray ray, out Vector n, out Material material)
-        {
-            n = null;
-            material = null;
-            return -1;
-        }
+        //public override double get_intersection(Ray ray, out Vector n, out Material material)
+        //{
+        //    n = null;
+        //    material = null;
+        //    return -1;
+        //}
         public override double get_intersection(Ray ray)
         {
             return portalShape.get_intersection(ray);

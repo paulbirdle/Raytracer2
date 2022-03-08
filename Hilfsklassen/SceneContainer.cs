@@ -5,7 +5,7 @@ namespace Raytracer
 {
     class SceneContainer
     {
-        public static Scene scene1(int resX, int resY)
+        public static Scene scene1(int resX, int resY) // 3Balls with poly
         {
             Camera theCamera = new Camera(new Vector(0, 0, 0), new Vector(1, 0, 0), new Vector(0, 0, 1), Math.PI / 8, resX, resY);
 
@@ -31,34 +31,27 @@ namespace Raytracer
 
             return new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
         }
-        public static Scene scene2(int resX, int resY)
+        public static Scene scene2(int resX, int resY) // 8Balls with hitbox
         {
-            Camera theCamera = new Camera(new Vector(-500, -400, 214), new Vector(5, 4, -2), new Vector(1, 1, 4.5), Math.PI / 2.9, resX, resY);
+            Camera theCamera = new Camera(new Vector(-200, -160, 70), new Vector(5, 4, -1.2), new Vector(0, 0, 3.5), Math.PI / 4.5, resX, resY);
 
             Entity[] theEntities = new Entity[11];
             Lightsource[] theLights = new Lightsource[3];
-            //theLights[0] = new ParallelLight(new Vector(-50, -15, 100)-new Vector(0,0,0), new RaytracerColor(Color.White));
-            theLights[1] = new PointLight(new Vector(-40, -90, 40), RaytracerColor.White);
-            //theLights[2] = new CandleLight(new Vector(0,-500,1000),300,new RaytracerColor(Color.White));
+            theLights[1] = new PointLight(new Vector(-40, -90, 40), new RaytracerColor(Color.LightGoldenrodYellow));
 
             int b_s = 50; // background_size
             Material bgm = new Material(new RaytracerColor(Color.White), 0, 10, 0, 0.6);
-            theEntities[0] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(-b_s, b_s, 0), new Vector(-b_s, -b_s, 0), new Vector(b_s, -b_s, 0), new Material(new RaytracerColor(Color.White), 0.8, 10, 0, 0.6)); // "Boden"
-          //  theEntities[1] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(b_s, b_s, b_s), new Vector(b_s, -b_s, b_s), new Vector(b_s, -b_s, 0), bgm); // "rechte Wand"
-          //  theEntities[2] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(-b_s, b_s, 0), new Vector(-b_s, b_s, b_s), new Vector(b_s, b_s, b_s), bgm); // "linke Wand"
-
+            theEntities[0] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(-b_s, b_s, 0), new Vector(-b_s, -b_s, 0), new Vector(b_s, -b_s, 0), new Material(new RaytracerColor(Color.White), 0, 70, 0.2, 0.8));
+            
             double s_s = 6; // sphere_size natuerlich :)
             double dist = 8;
-            //int c = 3;
             int c = 0;
-            Material materialS = Material.MetalicRed;
+            Material materialS = Material.PolishedMetal;
             Entity[] group = new Entity[8];
             for (int i = 0; i < 2; i++)
             {
                 for (int j = 0; j < 2; j++)
                 {
-                    //theEntities[c] = new Sphere(new Vector(Math.Pow(-1, i) * dist, Math.Pow(-1, j) * dist, s_s), s_s, materialS);
-                    //theEntities[c + 1] = new Sphere(new Vector(Math.Pow(-1, i) * dist, Math.Pow(-1, j) * dist, s_s + 2 * dist), s_s, materialS);
                     group[c] = new Sphere(new Vector(Math.Pow(-1, i) * dist, Math.Pow(-1, j) * dist, s_s), s_s, materialS);
                     group[c + 1] = new Sphere(new Vector(Math.Pow(-1, i) * dist, Math.Pow(-1, j) * dist, s_s + 2 * dist), s_s, materialS);
                     c += 2;
@@ -73,10 +66,10 @@ namespace Raytracer
 
             Scene theScene = new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
             return theScene;
-        }//8Balls
+        }
         public static Scene scene3(int resX, int resY) // Balls Mirrored Multiple times
         {
-            Camera theCamera = new Camera(new Vector(-8,-49,10),new Vector(0,5,0), new Vector(0,0,1), Math.PI/1.5,resX,resY);
+            Camera theCamera = new Camera(new Vector(-10,-10,10),new Vector(0.5,5,0), new Vector(0,1.2,2), Math.PI/1.45,resX,resY);
 
             Entity[] theEntities = new Entity[20];
             Lightsource[] theLights = new Lightsource[2];
@@ -109,7 +102,7 @@ namespace Raytracer
             Scene theScene = new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
             return theScene;
         }
-        public static Scene scene4(int resX, int resY)
+        public static Scene scene4(int resX, int resY) // Torus and Disk test Scene
         {
             Camera cam = new Camera(new Vector(100, 0, 0), new Vector(-1, 0, 0), new Vector(0, 0, 1), Math.PI / 4, resX, resY);
 
@@ -123,11 +116,9 @@ namespace Raytracer
 
             return new Scene(cam, entities, lights);
         }
-
-        public static Scene scene5(int resX, int resY) //portal scene
+        public static Scene scene5(int resX, int resY) // Portal scene
         {
             Scene baseScene = scene3(resX, resY);
-          
             
             double psize = 4;
             double height = 4;
@@ -188,8 +179,25 @@ namespace Raytracer
             Camera c = standardCamera(Math.PI /12, resX, resY);
             return new Scene(c, e, l);
         }
-
-
+        public static Scene scene7(int resX, int resY) // Smartphone Hintergrund
+        {
+            Scene baseScene  = scene3(resX,resY);
+            Camera c = baseScene.giveCamera();
+            Entity[] e = baseScene.giveEntities();
+            Lightsource[] l = baseScene.giveLights();
+            RaytracerColor r = baseScene.giveAmbientColor();
+            c = new Camera(c.Position, c.Direction, c.Up, c.yAngle, resY, resX); // res tauschen fuer hochkantes Bild
+            return new Scene(c, e, l, r); 
+        }
+        public static Scene scene8(int resX, int resY) // General Testing Scene
+        {
+            Entity[] e = new Entity[3];
+            e[0] = standardfloor(10, RaytracerColor.White);
+            e[1] = new Cylinder(new Vector(0, 0, 10), new Vector(3, 3, 2), 3,Material.MetalicRed);
+            Lightsource[] l = standardlights(50, 2, 10);
+            Camera c = standardCamera(Math.PI / 5, resX, resY);
+            return new Scene(c, e, l);
+        }
 
         public static Entity standardfloor(double size, RaytracerColor color)
         {

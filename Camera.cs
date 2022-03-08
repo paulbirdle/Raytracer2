@@ -88,5 +88,15 @@ namespace Raytracer
         {
             get { return position; }
         }
+
+        public Vector Direction
+        {
+            get { return direction; }
+        }
+
+        public Vector Up
+        {
+            get { return up; }
+        }
     }
 }
