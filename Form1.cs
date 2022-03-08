@@ -14,6 +14,7 @@ using System.Windows.Forms;
 //Helligkeit für Lightsource
 //Transparente Objekte mit oder ohne Brechungsindex
 //Große Lightsources, weiche Schatten
+//Spotlight
 
 namespace Raytracer
 {

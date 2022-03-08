@@ -10,6 +10,20 @@ namespace Raytracer
         private readonly double R;
         private readonly double r;
 
+        private readonly Hitsphere hitsphere;
+
+        
+
+        public Torus(Vector center, Vector n, double R, double r, Material material)
+        {
+            this.center = center;
+            this.n = n.normalize();
+            this.R = Math.Abs(R);
+            this.r = Math.Abs(r);
+            this.material = material;
+            hitsphere = new Hitsphere(center, this.R + this.r);
+        }
+
         public Vector Center
         {
             get { return center; }
@@ -27,17 +41,9 @@ namespace Raytracer
             get { return r; }
         }
 
-        public Torus(Vector center, Vector n, double R, double r, Material material)
-        {
-            this.center = center;
-            this.n = n.normalize();
-            this.R = Math.Abs(R);
-            this.r = Math.Abs(r);
-            this.material = material;
-        }
-
         public override double get_intersection(Ray ray)
         {
+            if (!hitsphere.hits(ray)) return -1;
             Vector x = ray.Start;
             Vector v = ray.Direction;
 

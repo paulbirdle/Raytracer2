@@ -87,7 +87,7 @@ namespace Raytracer
 			Complex beta = (p + alphaSquared) / 2 + sqrtD_;
 			Complex alpha = -q / (beta - r / beta);											//Vorzeichen von alpha
 
-			Complex[] shouldBeZero = new Complex[2] { p + alphaSquared - beta - r / beta, q / alpha + beta - r / beta };
+			//Complex[] shouldBeZero = new Complex[2] { p + alphaSquared - beta - r / beta, q / alpha + beta - r / beta };
 			
 			Complex D1 = alpha * alpha / 4 - beta;											//quadratische Gleichungen lösen
 			Complex sqrtD1 = Complex.Pow(D1, 1 / 2.0);
