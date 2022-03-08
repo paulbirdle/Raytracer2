@@ -65,6 +65,7 @@ namespace Raytracer
 
         public override double get_intersection(Ray ray, out Vector n, out Material material)
         {
+            if (!hitsphere.hits(ray)) return -1;
             Vector x = ray.Start;
             Vector v = ray.Direction;
 
