@@ -13,18 +13,18 @@ namespace Raytracer
             Material MattGreen = new Material(new RaytracerColor(Color.Green), 0.3, 30, 0.7, 0.6);
             Material RoughYellow = new Material(new RaytracerColor(Color.Yellow), 0.5, 10, 0.7, 0.3);
 
-            Entity[] theEntities = new Entity[4];
+            Entity[] theEntities = new Entity[3];
             theEntities[0] = new Sphere(new Vector(20, 0, 0), 1, MirrorRed);
             theEntities[1] = new Sphere(new Vector(19, -2, 1), 1, MattGreen);
             theEntities[2] = new Sphere(new Vector(18.7, 1.5, 1.3), 0.3, RoughYellow);
-            theEntities[3] = new Cuboid(new Vector(30, -4, -2), new Vector(0, 0, 1), new Vector(-1, 0, 0), new double[3] { 1, 1.5, 2 }, 
+            /*theEntities[3] = new Cuboid(new Vector(30, -4, -2), new Vector(0, 0, 1), new Vector(-1, 0, 0), new double[3] { 1, 1.5, 2 }, 
                 new Material[6]{
                 new Material(RaytracerColor.Pink, 0.7, 100, 0.5, 0.7),
                 new Material(RaytracerColor.Yellow, 0.7, 100, 0.5, 0.7),
                 new Material(RaytracerColor.Orange, 0.7, 100, 0.5, 0.7),
                 new Material(RaytracerColor.Yellow, 0.7, 100, 0.5, 0.7),
                 new Material(RaytracerColor.Orange, 0.7, 100, 0.5, 0.7),
-                new Material(RaytracerColor.Pink, 0.7, 100, 0.5, 0.7) });
+                new Material(RaytracerColor.Pink, 0.7, 100, 0.5, 0.7) });*/
 
             Lightsource[] theLights = new Lightsource[1];
             theLights[0] = new PointLight(new Vector(15, 5, 7), RaytracerColor.White);
@@ -104,12 +104,12 @@ namespace Raytracer
         }
         public static Scene scene4(int resX, int resY) // Torus and Disk test Scene
         {
-            Camera cam = new Camera(new Vector(100, 0, 0), new Vector(-1, 0, 0), new Vector(0, 0, 1), Math.PI / 4, resX, resY);
+            Camera cam = new Camera(new Vector(49, 0, 0), new Vector(-1, 0, 0), new Vector(0, 0, 1), Math.PI / 4, resX, resY);
 
             PointLight light = new PointLight(new Vector(30, 20, 40), RaytracerColor.White);
             Lightsource[] lights = new Lightsource[1] { light };
 
-            Torus torus = new Torus(new Vector(0, 0, 0), new Vector(0.7, 0.3, 1), 10, 5, new Material(RaytracerColor.Red, 0.5, 100, 0.5, 0.8));
+            Torus torus = new Torus(new Vector(0, 0, 0), new Vector(0.7, 0.3, 1), 5, 2.5, new Material(RaytracerColor.Red, 0.5, 100, 0.5, 0.8));
             Sphere sphere = new Sphere(new Vector(-200, 0, 0), 150, new Material(RaytracerColor.Blue, 0.3, 20, 0.5, 0.7));
             //Disk disk = new Disk(new Vector(0, -20, 0), new Vector(1, 0.5, 0.5), 15, new Material(RaytracerColor.Red, 0.7, 5000, 0.4, 0.7));
             Entity[] entities = new Entity[2] { torus, sphere };

@@ -73,7 +73,7 @@ namespace Raytracer
 			}
 			if (Math.Abs(r) < 1e-6)//kein konstanter Term
 			{
-				Complex[] cubicRoots = SolveCubic(new double[2] { p, q });
+				Complex[] cubicRoots = SolveCubic(new double[3] { 0, p, q });
 				return new Complex[4] { cubicRoots[0] - s, cubicRoots[1] - s, cubicRoots[2] - s, new Complex(0) - s };
 			}
 

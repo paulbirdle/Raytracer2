@@ -213,19 +213,33 @@ namespace Raytracer
 
         private void button2_Click(object sender, EventArgs e)
         {
-            /*Scene scene = SceneContainer.scene4(640, 360);
-            Torus torus = (Torus)(scene.giveEntities()[0]);
+            //cd C:\RaytracerVideos\<FolderName>
+            //ffmpeg -r 30 -f image2 -s 1080x720 -i img%06d.png -vcodec libx264 -crf 5 -pix_fmt yuv420p scene.mp4
 
-            Vector start = scene.giveCamera().Position;
-            Vector end = torus.Center + 0*torus.rr*torus.N;
-            Ray ray = new Ray(end-start, start);
 
-            double t = torus.get_intersection(ray);*/
+            //MovingCameraScene scene = MovingCameraScene.CircularTrackingShot(SceneContainer.scene1(640, 360), new Vector(20, 0, 0), new Vector(0, 0, 1), Math.PI / 2, 60);
+            //scene.SaveFrames(2);
 
-            //Complex[] roots = Poly.SolveCubic(new double[3] { 10, -2, 9 });
+            int[] res = resDictionary["720p"];
+            Scene scene = SceneContainer.scene4(res[0], res[1]);
+            Vector rotationCenter = new Vector(0, 0, 0);
+            Vector axis = new Vector(0, 0, 1);
+            double angle = 2 * Math.PI;
+            int frames = 480;
+            int depth = 3;
 
-            Complex[] roots = Poly.SolveQuartic(new double[4] { 8, 12, 20, 2 });
+            int fps = 15;
 
+            MovingCameraScene videoScene = MovingCameraScene.CircularTrackingShot(scene, rotationCenter, axis, angle, frames);
+
+            int sec = (int)(DateTime.Now - new DateTime(2022, 3, 9)).TotalSeconds;
+            string foldername = sec.ToString();
+            videoScene.SaveFrames(depth, foldername);
+
+            MessageBox.Show("fertig");
+
+            string ffmpeg1 = @"C:\RaytracerVideos\" + foldername;
+            string ffmeg2 = "ffmpeg - r "+ fps.ToString() + " - f image2 - s " + res[0].ToString() + "x" + res[1].ToString() + " - i img % 06d.png - vcodec libx264 - crf 5 - pix_fmt yuv420p scene.mp4";
         }
 
         private void SceneSelector_ValueChanged(object sender, EventArgs e)

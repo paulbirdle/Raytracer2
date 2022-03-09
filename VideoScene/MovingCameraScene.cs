@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace Raytracer
 {
@@ -35,7 +33,7 @@ namespace Raytracer
             this.xangle = xangle;
             this.resx = resx;
             this.resy = resy;
-            if (!(direction.Length == 1 && n == up.Length && n == xangle.Length)) throw new Exception(" ");
+            if (!(direction.Length == n && n == up.Length && n == xangle.Length)) throw new Exception(" ");
         }
 
         public Scene GetFrame(int k)
@@ -47,6 +45,24 @@ namespace Raytracer
         {
             return GetFrame(k).render(depth);
         }
+
+        public void SaveFrames(int depth, string foldername__)
+        {
+            string folderName = @"C:\RaytracerVideos";
+            
+            string globalPathString = System.IO.Path.Combine(folderName, foldername__);// DateTime.Now.Date.ToString());
+            System.IO.Directory.CreateDirectory(globalPathString);
+            string pathString;
+
+            for(int k = 0; k < n; k++)
+            {
+                string filename = "img" + k.ToString("D6") + ".png";
+                pathString = System.IO.Path.Combine(globalPathString, filename);
+                Bitmap bm = RaytracerColor.convertToBitmap(RenderFrame(k, depth), resx, resy, 1);
+                bm.Save(pathString, ImageFormat.Png);
+            }
+        }
+
 
         public static MovingCameraScene RotateCam(Scene scene, Vector axis, double angle, int frames)
         {

@@ -78,6 +78,52 @@ namespace Raytracer
             }
             return Color.FromArgb(r / length, g / length, b / length);
         }
+
+        public static Bitmap convertToBitmap(RaytracerColor[,] col, int resX, int resY, int ssaa)
+        {
+            Bitmap outputBM = new Bitmap(resX, resY);
+            if (ssaa == 1)
+            {
+                for (int x = 0; x < resX; x++)
+                {
+                    for (int y = 0; y < resY; y++)
+                    {
+                        if (col[x, y] == null) throw new Exception("asdlfkj");
+                        outputBM.SetPixel(x, y, col[x, y].Col);
+                        continue;
+                    }
+                }
+            }
+            else
+            {
+                int actX;
+                int actY;
+                RaytracerColor[] c = new RaytracerColor[ssaa * ssaa]; // in dieses array werden die Farben eines Blocks reingeschrieben, um sie dann als avg auf die BM zu schreiben
+                int i;
+                int j;
+
+                for (int x = 0; x < resX; x++)
+                {
+                    for (int y = 0; y < resY; y++)
+                    {
+                        actX = ssaa * x;
+                        actY = ssaa * y;
+                        for (int s1 = 0; s1 < ssaa; s1++)
+                        {
+                            for (int s2 = 0; s2 < ssaa; s2++)
+                            {
+                                i = actX + s1;
+                                j = actY + s2;
+                                c[ssaa * s1 + s2] = col[i, j];
+                            }
+                        }
+                        outputBM.SetPixel(x, y, RaytracerColor.avg(c));
+                    }
+                }
+            }
+            return outputBM;
+        }
+
         public static RaytracerColor Black
         {
             get { return new RaytracerColor(Color.Black); }
