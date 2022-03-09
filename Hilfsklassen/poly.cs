@@ -76,6 +76,7 @@ namespace Raytracer
 				Complex[] cubicRoots = SolveCubic(new double[2] { p, q });
 				return new Complex[4] { cubicRoots[0] - s, cubicRoots[1] - s, cubicRoots[2] - s, new Complex(0) - s };
 			}
+
 			//allgemeiner Fall
 			double[] resolventCoefficients = new double[3] { 2 * p, p * p - 4 * r, -q * q }; //alpha bestimmen
 			Complex[] CubicRoots = SolveCubic(resolventCoefficients);
