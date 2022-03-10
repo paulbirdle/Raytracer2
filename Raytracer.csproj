@@ -108,7 +108,8 @@
     <Compile Include="Lightsources\PointLight.cs" />
     <Compile Include="Lightsources\ParallelLight.cs" />
     <Compile Include="Hilfsklassen\Poly.cs" />
-    <Compile Include="VideoScene\MovingCameraScene.cs" />
+    <Compile Include="Lightsources\Spotlight.cs" />
+    <Compile Include="VideoScenes\MovingCameraScene.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Hilfsklassen\Ray.cs" />
@@ -118,7 +119,7 @@
     <Compile Include="Entities\Triangle.cs" />
     <Compile Include="Hilfsklassen\Vector.cs" />
     <Compile Include="Entities\Torus.cs" />
-    <Compile Include="VideoScene\VideoScene.cs" />
+    <Compile Include="VideoScenes\VideoScene.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace Raytracer
 {
-    class SceneContainer
+    static class SceneContainer
     {
         public static Scene scene1(int resX, int resY) // 3Balls with poly
         {

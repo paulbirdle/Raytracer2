@@ -50,7 +50,6 @@ namespace Raytracer
 			return new Complex[3] { u1 + v1 - s, xi * u1 + xi2 * v1 - s, xi2 * u1 + xi * v1 - s };
 		}
 
-
 		public static Complex[] SolveQuartic(double[] coeff)
 		{
 			double a = coeff[0];

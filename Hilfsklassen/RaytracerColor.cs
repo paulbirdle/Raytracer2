@@ -12,6 +12,11 @@ namespace Raytracer
             this.color = color;
         }
 
+        public RaytracerColor(int r, int g, int b)
+        {
+            color = Color.FromArgb(Math.Min(r, 255), Math.Min(g, 255), Math.Min(b, 255));
+        }
+
         public Color Col
         {
             get { return color; }
@@ -51,7 +56,7 @@ namespace Raytracer
 
         public static RaytracerColor operator *(double a, RaytracerColor x) //0 <= a <= 1
         {
-            return new RaytracerColor(Color.FromArgb((int)(a * x.R), (int)(a * x.G), (int)(a * x.B)));
+            return new RaytracerColor((int)(a * x.R), (int)(a * x.G), (int)(a * x.B));
         }
 
         public static RaytracerColor operator *(RaytracerColor x, double a) //0 <= a <= 1

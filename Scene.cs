@@ -161,7 +161,8 @@ namespace Raytracer
                     {
                         if(lights[i] == null) continue;
 
-                        if (lights[i].is_visible(intersection + 1e-10*n, entities))
+                        double intensity = lights[i].Intensity(intersection + 1e-10 * n, entities);
+                        if (intensity > 0)
                         {
                             double angle_refl_light = Vector.angle(lights[i].Direction(intersection), reflected_ray.Direction)/2;
                             double angle_n_light = Vector.angle(lights[i].Direction(intersection), n);
@@ -173,11 +174,11 @@ namespace Raytracer
 
                             if(material.SpecularReflectivity >= 1e-10)
                             {
-                                specular += lights[i].Intensity(intersection) * specularIntensity(angle_refl_light, material.SpecularReflectivity, material.Smoothness) * lights[i].Col;
+                                specular += intensity * specularIntensity(angle_refl_light, material.SpecularReflectivity, material.Smoothness) * lights[i].Col;
                             }
                             if(material.DiffuseReflectivity >= 1e-10)
                             {
-                                diffuse  += lights[i].Intensity(intersection) * diffuseIntensity(angle_n_light, material.DiffuseReflectivity) * lights[i].Col;
+                                diffuse  += intensity * diffuseIntensity(angle_n_light, material.DiffuseReflectivity) * lights[i].Col;
                             }
                         }
                     }

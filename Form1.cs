@@ -6,14 +6,15 @@ using System.Windows.Forms;
 
 //TODO: 
 //vielleicht Cylinder etc. beginnen
-//Hitboxen für Scene3
 //render gibt gleich Bitmap zurück (schwierig mit dem Multithreading)
 //Progressbar (auch schwierig mit dem Multithreading)
 //Effitienteres Antialiasing z.B. nur bei Kanten in höherer Auflösung Rendern
 //Blur-Material oder generel mal ein Bild Unscharf machen
-//Helligkeit für Lightsource
 //Transparente Objekte mit oder ohne Brechungsindex
 //Große Lightsources, weiche Schatten
+
+//ERLEDIGT:
+//Helligkeit für Lightsource
 //Spotlight
 
 namespace Raytracer

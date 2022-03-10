@@ -10,30 +10,31 @@
             this.position = position;
         }
 
-        public override double Intensity(Vector point)
+        public PointLight(Vector position, RaytracerColor color, double intensity)
+            : base(color, intensity)
         {
-            return 1.0;
+            this.position = position;
         }
 
-        public override Vector Direction(Vector point)//to lightsource
-        {
-            return (position - point).normalize();
-        }
-
-        public override bool is_visible(Vector point, Entity[] entities)
+        public override double Intensity(Vector point, Entity[] entities)
         {
             Vector v = position - point;
             double tmax = v.norm();
             Ray ray = new Ray(v / tmax, point, true);
 
             double t;
-            for(int l = 0; l < entities.Length; l++)
+            for (int l = 0; l < entities.Length; l++)
             {
-                if(entities[l] == null) continue;
+                if (entities[l] == null) continue;
                 t = entities[l].get_intersection(ray);
-                if (t >= 0 && t < tmax) return false;
+                if (t >= 0 && t < tmax) return 0;
             }
-            return true;
+            return MaxIntensity;
+        }
+
+        public override Vector Direction(Vector point)//to lightsource
+        {
+            return (position - point).normalize();
         }
     }
 }

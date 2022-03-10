@@ -11,8 +11,6 @@ namespace Raytracer
         private readonly Lightsource[] lights;
         private readonly RaytracerColor ambientColor;
 
-        private readonly int n; //Anzahl frames
-
         //Camera verändert sich (bis auf Auflösung):
         private readonly Vector[] position;     //changing in time
         private readonly Vector[] direction;
@@ -23,7 +21,7 @@ namespace Raytracer
 
         public MovingCameraScene(Entity[] entities, Lightsource[] lights, RaytracerColor ambientColor, Vector[] position, Vector[] direction, Vector[] up, double[] xangle, int resx, int resy)
         {
-            n = position.Length;
+            base.n = position.Length;
             this.entities = entities;
             this.lights = lights;
             this.ambientColor = ambientColor;
@@ -34,6 +32,13 @@ namespace Raytracer
             this.resx = resx;
             this.resy = resy;
             if (!(direction.Length == n && n == up.Length && n == xangle.Length)) throw new Exception(" ");
+
+            Scene[] scenes = new Scene[n];
+            for(int i = 0; i < n; i++)
+            {
+                scenes[i] = GetFrame(i);
+            }
+            base.scenes = scenes;
         }
 
         public Scene GetFrame(int k)
@@ -43,7 +48,7 @@ namespace Raytracer
 
         public RaytracerColor[,] RenderFrame(int k, int depth)
         {
-            return GetFrame(k).render(depth);
+            return scenes[k].render(depth);
         }
 
         public void SaveFrames(int depth, string foldername__)

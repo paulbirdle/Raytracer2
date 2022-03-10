@@ -4,24 +4,28 @@
     {
         public Lightsource(RaytracerColor color)
         {
-            this.Col = color;
+            Col = color;
+            MaxIntensity = 1;
+        }
+
+        public Lightsource(RaytracerColor color, double intensity)
+        {
+            Col = color;
+            MaxIntensity = intensity;
         }
 
         public RaytracerColor Col { get; }
+
+        public double MaxIntensity { get; }
 
         public virtual Vector Direction(Vector point)//to light
         {
             return new Vector();
         }
 
-        public virtual double Intensity(Vector point)
+        public virtual double Intensity(Vector point, Entity[] entities)
         {
-            return 0;
-        }
-
-        public virtual bool is_visible(Vector point, Entity[] entities)
-        {
-            return false;
+            return MaxIntensity;
         }
     }
 }
