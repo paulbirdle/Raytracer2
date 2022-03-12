@@ -28,7 +28,7 @@ namespace Raytracer
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            int scene_displayed_at_startup = 6;
+            int scene_displayed_at_startup = 2;
             SceneSelector.Value = scene_displayed_at_startup;
             double[] stats = new double[4] { 0, 0, 0, 0 };
             displayStatistics(stats);
@@ -138,7 +138,7 @@ namespace Raytracer
         Dictionary<int, string> sceneDictionary = new Dictionary<int, string>
         {
             {1, "3 Ball Scene"},
-            {2, "8 Ball Scene with entityGroup"},
+            {2, "Epic Floor mind. 4min\nACHTUNG DAUERT LANG!"},
             {3, "Infinity Mirror"},
             {4, "Torus and Disk test Scene"},
             {5, "Portal Scene"},
@@ -155,11 +155,11 @@ namespace Raytracer
 
         private void displayStatistics(double[] stats)
         {
-            int rdau = 20 - stats[0].ToString().Length;
-            int konv = 20 - stats[1].ToString().Length; 
-            int anzd = 20 - stats[2].ToString().Length;
-            int anzR = 21 - Ray.numRay.ToString().Length;
-            int anzV = 21 - Vector.numVec.ToString().Length;
+            int rdau = 24 - stats[0].ToString().Length;
+            int konv = 24 - stats[1].ToString().Length; 
+            int anzd = 24 - stats[2].ToString().Length;
+            int anzR = 25 - Ray.numRay.ToString().Length;
+            int anzV = 25 - Vector.numVec.ToString().Length;
             statistics.Text = "Renderdauer               :  " + stats[0].ToString().PadLeft(rdau) + " s";
             statistics.Text += "\n\nBitmapkonvertierung  :  " + stats[1].ToString().PadLeft(konv) + "s";
             statistics.Text += "\n\nAnzeigedauer               :  " + stats[2].ToString().PadLeft(anzd) + "s";

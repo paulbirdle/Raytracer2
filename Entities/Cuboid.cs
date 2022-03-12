@@ -127,5 +127,10 @@ namespace Raytracer
             if (side >= 3) n *= -1;
             return tmin;
         }
+
+        public Vector giveCenter()
+        {
+            return center;
+        }
     }
 }

@@ -5,7 +5,7 @@ namespace Raytracer
     class Vector 
     {
         private readonly double[] v;
-        public static int numVec = 0;
+        public static long numVec = 0;
 
         public Vector(double x, double y, double z)
         {

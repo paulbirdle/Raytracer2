@@ -31,38 +31,61 @@ namespace Raytracer
 
             return new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
         }
-        public static Scene scene2(int resX, int resY) // 8Balls with hitbox
+        public static Scene scene2(int resX, int resY) // Epic Floor test
         {
-            Camera theCamera = new Camera(new Vector(-200, -160, 70), new Vector(5, 4, -1.2), new Vector(0, 0, 3.5), Math.PI / 4.5, resX, resY);
+            Camera theCamera = new Camera(new Vector(-400, -50, 200), new Vector(4, 0.5, -1.95), new Vector(0, 0, 1), Math.PI/6, resX, resY);
+            Entity[] theEntities = new Entity[1];
 
-            Entity[] theEntities = new Entity[11];
-            Lightsource[] theLights = new Lightsource[3];
-            theLights[1] = new PointLight(new Vector(-40, -90, 40), new RaytracerColor(Color.LightGoldenrodYellow));
-
-            int b_s = 50; // background_size
-            Material bgm = new Material(new RaytracerColor(Color.White), 0, 10, 0, 0.6);
-            theEntities[0] = new Quadrilateral(new Vector(b_s, b_s, 0), new Vector(-b_s, b_s, 0), new Vector(-b_s, -b_s, 0), new Vector(b_s, -b_s, 0), new Material(new RaytracerColor(Color.White), 0, 70, 0.2, 0.8));
+            Lightsource[] theLights = new Lightsource[2];
+           
+            double intensity = 3;
+            int range = 130;
+            double lights = 130;
+            theLights[0] = new CandleLight(new Vector(-lights-70, -lights-20, lights+40), range, new RaytracerColor(Color.Red), intensity);
+            theLights[1] = new CandleLight(new Vector(-lights-30,  lights, lights), range, new RaytracerColor(Color.Blue), intensity);
+            Random r = new Random();
             
-            double s_s = 6; // sphere_size natuerlich :)
-            double dist = 8;
-            int c = 0;
-            Material materialS = Material.PolishedMetal;
-            Entity[] group = new Entity[8];
-            for (int i = 0; i < 2; i++)
+            double height;
+            int amount = 26; 
+            if (amount % 2 != 0) throw new Exception("Amount muss gerade sein");
+
+            double size = 400;
+            Material floorMaterial = new Material(new RaytracerColor(Color.FromArgb(255, 255, 255)), 0, 20, 0.7, 0.6);
+            int maxHeight = 60;
+
+            Entity[,] cuboids = new Entity[amount, amount]; // greating Cuboids
+            for(int i = 0; i<amount; i++)
             {
-                for (int j = 0; j < 2; j++)
+                for(int j = 0; j<amount; j++)
                 {
-                    group[c] = new Sphere(new Vector(Math.Pow(-1, i) * dist, Math.Pow(-1, j) * dist, s_s), s_s, materialS);
-                    group[c + 1] = new Sphere(new Vector(Math.Pow(-1, i) * dist, Math.Pow(-1, j) * dist, s_s + 2 * dist), s_s, materialS);
-                    c += 2;
+                    height = r.Next(10, maxHeight*10);
+                    cuboids[i,j] = new Cuboid(new Vector(i * (size/amount),j * (size / amount), 0) - new Vector((size - (size/amount))/2, (size - (size / amount)) / 2, 0), new Vector(-1, 0, 0), new Vector(0, 0, -1), new double[3] { size / (amount), size/ (amount), height/10 },floorMaterial);
                 }
             }
 
-            double a = s_s + dist;
-            Hitbox hitbox = new Hitbox(new Vector(0, 0, a), new Vector(0, 0, 1), new Vector(1, 0, 0), new double[3] { 2*a + 10, 2*a, 2*a });
-            double radius = Math.Sqrt(3) * dist + s_s;
-            Hitsphere hitsphere = new Hitsphere(new Vector(0, 0, a), radius);
-            theEntities[3] = new EntityGroup(group, hitsphere);
+            Entity[] groups = new Entity[amount*amount /4];
+            for (int i = 0; i < amount/2; i++)  //into groups of 4
+            {
+                for (int j = 0; j < amount/2; j++)
+                {
+                    Entity[] var = new Cuboid[4];
+                    var[0] = cuboids[i*2, j*2];
+                    var[1] = cuboids[i*2+1, j*2];
+                    var[2] = cuboids[i*2, j*2+1];
+                    var[3] = cuboids[i*2+1, j*2+1];
+                    Hitentity e = new Hitbox(new Vector(i * (2*size / amount), j * (2*size / amount), 0) - new Vector((size - (2*size / amount)) / 2, (size - (2*size / amount)) / 2, 0), new Vector(-1, 0, 0), new Vector(0, 0, -1), new double[3] { 2*size / (amount), 2*size / (amount), maxHeight });
+                    groups[i* (amount/2) + j] = new EntityGroup(var, e);
+                }
+            } 
+
+            Hitentity hitBox = new Hitbox(new Vector(0, 0, 0), new Vector(-1, 0, 0), new Vector(0, 0, 1), new double[3] {size, size, maxHeight});
+            theEntities[0] = new EntityGroup(groups, hitBox);
+           //theEntities[1] = standardfloor(50, RaytracerColor.White);
+           // theEntities[3] = new Cuboid(new Vector(0, 0, 0), new Vector(-1, 0, 0), new Vector(0, 0, 1), new double[3] { size, size, maxHeight }, Material.Matte);
+           // theEntities[2] = new Quadrilateral(new Vector( size / 2, -size / 2, 0), new Vector( size / 2,  size / 2, 0), new Vector( size / 2,  size / 2, size), new Vector( size / 2, -size / 2, size),Material.Mirror);
+           // theEntities[3] = new Quadrilateral(new Vector(-size / 2, -size / 2, 0), new Vector( size / 2, -size / 2, 0), new Vector( size / 2, -size / 2, size), new Vector(-size / 2, -size / 2, size), Material.Mirror);
+           //theEntities[4] = new Quadrilateral(new Vector(-size / 2,  size / 2, 0), new Vector( size / 2,  size / 2, 0), new Vector( size / 2,  size / 2, size), new Vector(-size / 2,  size / 2, size), Material.Mirror);
+           // theEntities[5] = new Quadrilateral(new Vector(-size / 2,  size / 2, 0), new Vector(-size / 2, -size / 2, 0), new Vector(-size / 2, -size / 2, size), new Vector(-size / 2,  size / 2, size), Material.Mirror);
 
             Scene theScene = new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
             return theScene;
@@ -152,7 +175,7 @@ namespace Raytracer
         }
         public static Scene scene6(int resX, int resY) // Random scene
         {
-            Lightsource[] l = standardlights(50, 2, 30);
+            Lightsource[] l = standardlights(50, 2, 30,1);
             Entity[] e = new Entity[40];
             e[0] = standardfloor(10, RaytracerColor.White);
             int gesetzt = 0;
@@ -194,7 +217,7 @@ namespace Raytracer
             Entity[] e = new Entity[3];
             e[0] = standardfloor(10, RaytracerColor.White);
             e[1] = new Cylinder(new Vector(0, 0, 10), new Vector(3, 3, 2), 3,Material.MetalicRed);
-            Lightsource[] l = standardlights(50, 2, 10);
+            Lightsource[] l = standardlights(50, 2, 10,1);
             Camera c = standardCamera(Math.PI / 5, resX, resY);
             return new Scene(c, e, l);
         }
@@ -204,7 +227,7 @@ namespace Raytracer
             Material bgm = new Material(color, 0, 100, 0.05, 0.7);
             return new Quadrilateral(new Vector(size, size, 0), new Vector(-size, size, 0), new Vector(-size, -size, 0), new Vector(size, -size, 0), bgm); // "Boden"
         }
-        public static Lightsource[] standardlights(double lengthscale, int anz, double dist_of_ground)
+        public static Lightsource[] standardlights(double lengthscale, int anz, double dist_of_ground, double intensity)
         {
             Lightsource[] theLights = new Lightsource[anz];
             double lights = dist_of_ground;
@@ -214,16 +237,16 @@ namespace Raytracer
                 switch(i)
                 {
                     case 0:
-                        theLights[0] = new CandleLight(new Vector(-lights, -lights, lights), range, new RaytracerColor(Color.White));
+                        theLights[0] = new CandleLight(new Vector(-lights, -lights, lights), range, new RaytracerColor(Color.White), intensity);
                         break;
                     case 1:
-                        theLights[1] = new CandleLight(new Vector(-lights, lights, lights), range, new RaytracerColor(Color.White));
+                        theLights[1] = new CandleLight(new Vector(-lights, lights, lights), range, new RaytracerColor(Color.White), intensity);
                         break;
                     case 2:
-                        theLights[2] = new CandleLight(new Vector(lights, -lights, lights), range, new RaytracerColor(Color.White));
+                        theLights[2] = new CandleLight(new Vector(lights, -lights, lights), range, new RaytracerColor(Color.White), intensity);
                         break;
                     case 3:
-                        theLights[3] = new CandleLight(new Vector(lights, lights, lights), range, new RaytracerColor(Color.White));
+                        theLights[3] = new CandleLight(new Vector(lights, lights, lights), range, new RaytracerColor(Color.White), intensity);
                         break;
                 }
             }

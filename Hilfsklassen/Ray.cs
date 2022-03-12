@@ -2,7 +2,7 @@
 {
     class Ray
     {
-        public static int numRay = 0;
+        public static long numRay = 0;
         public Ray(Vector direction, Vector start)
         {
             numRay++;
