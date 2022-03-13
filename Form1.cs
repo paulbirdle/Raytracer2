@@ -28,8 +28,9 @@ namespace Raytracer
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            int scene_displayed_at_startup = 2;
-            SceneSelector.Value = scene_displayed_at_startup;
+            int scene_selected_at_startup = 3;
+            SceneSelector.Value = scene_selected_at_startup;
+            displaySceneDescription();
             double[] stats = new double[4] { 0, 0, 0, 0 };
             displayStatistics(stats);
         }
@@ -52,24 +53,53 @@ namespace Raytracer
             int resX = res[0];
             int resY = res[1];
 
-            int ssaa = kantenglaettung; // Faktor: vielfaches der Ausgaberesolution, also Faktor fuer die Renderaufloesung;
-            if (ssaa % 2 != 0 && ssaa != 1) throw new Exception("Nur vielfache von 2 oder nur 1 fuer Kantenglättung moeglich!");
+            int a = kantenglaettung; // Faktor: vielfaches der Ausgaberesolution, also Faktor fuer die Renderaufloesung;
+            if (a % 2 != 0 && a != 1) throw new Exception("Nur vielfache von 2 oder nur 1 fuer Kantenglättung moeglich!");
 
-            Scene scene = sceneSelection((int)SceneSelector.Value, resX * ssaa, resY * ssaa);
+            Scene scene;
+            if ((string)aliasingSelector.SelectedItem == "SSAA")
+            {
+                 scene = sceneSelection((int)SceneSelector.Value, resX * a, resY * a);
+            }
+            else if ((string)aliasingSelector.SelectedItem == "MSAA")
+            {
+                 scene = sceneSelection((int)SceneSelector.Value, resX, resY);
+            }
+            else throw new Exception("Keine Kantenglaettung ausgewaehlt?");
 
             Ray.numRay = 0;
             Vector.numVec = 0;
             double[] statistic = new double[3];
 
             DateTime before = DateTime.Now;
+
+
             RaytracerColor[,] col = scene.render(depth);
-            //Bitmap BM = scene.renderBM(depth);
+
             DateTime after = DateTime.Now;
             TimeSpan duration = after - before;
             statistic[0] = duration.TotalSeconds;
 
+
             before = DateTime.Now;
-            Bitmap BM = convertToBitmap(col, col.GetLength(0)/ssaa, col.GetLength(1)/ssaa, ssaa); // um andere Resolution am Ende z.b fuer Smartphone zuzulassen
+            Bitmap BM = new Bitmap(resX,resY);
+
+            if ((string)aliasingSelector.SelectedItem == "SSAA")
+            {
+                BM = convertToBitmap(col, col.GetLength(0) / a, col.GetLength(1) / a, a); // um andere Resolution am Ende z.b fuer Smartphone zuzulassen
+            }
+            else if ((string)aliasingSelector.SelectedItem == "MSAA")
+            {
+                if(a == 1)
+                {
+                    BM = convertToBitmap(col, resX, resY, 1);
+                }
+                else
+                {
+                   // BM = showAlias(aliasDetection(col, resX, resY));
+                    BM = convertToBitmap(scene.msaa(col, aliasDetection(col, resX, resY), a, depth), resX, resY, 1);
+                }
+            }
             after = DateTime.Now;
             duration = after - before;
             statistic[1] = duration.TotalSeconds;
@@ -212,6 +242,63 @@ namespace Raytracer
             return outputBM;
         }
 
+        private Boolean[,] aliasDetection(RaytracerColor[,] col, int resX, int resY)
+        {
+            double threshhold = 5; // ganz guter Wert i guess;
+            int sizeLayer = 2;
+            Boolean[,] edges = new Boolean[resX, resY];
+
+            for(int x = 0; x < resX - sizeLayer; x++)
+            {
+                for(int y = 0; y < resY - sizeLayer; y++)
+                {
+                    edges[x, y] = false;
+                    int iG = Math.Min(Math.Min(col[x, y].G, col[x + 1, y].G), Math.Min(col[x + 1, y].G, col[x + 1, y + 1].G));
+                    int iGM = Math.Max(Math.Max(col[x, y].G, col[x + 1, y].G), Math.Max(col[x + 1, y].G, col[x + 1, y + 1].G));
+                    if(iGM - iG > threshhold)
+                    {
+                        edges[x, y] = true;
+                        continue;
+                    }
+                    int iR = Math.Min(Math.Min(col[x, y].R, col[x + 1, y].R), Math.Min(col[x + 1, y].R, col[x + 1, y + 1].R));
+                    int iRM = Math.Max(Math.Max(col[x, y].R, col[x + 1, y].R), Math.Max(col[x + 1, y].R, col[x + 1, y + 1].R));
+                    if (iRM - iR > threshhold)
+                    {
+                        edges[x, y] = true;
+                        continue;
+                    }
+                    int iB = Math.Min(Math.Min(col[x, y].B, col[x + 1, y].B), Math.Min(col[x + 1, y].B, col[x + 1, y + 1].B));
+                    int iBM = Math.Min(Math.Min(col[x, y].B, col[x + 1, y].B), Math.Min(col[x + 1, y].B, col[x + 1, y + 1].B));
+                    if (iBM - iB > threshhold)
+                    {
+                        edges[x, y] = true;
+                        continue;
+                    }
+                }
+            }
+            return edges;
+        }
+
+        private Bitmap showAlias(Boolean [,] alias)
+        {
+            Bitmap outputBM = new Bitmap(alias.GetLength(0), alias.GetLength(1));
+            for(int x = 0; x< alias.GetLength(0); x++)
+            {
+                for (int y = 0; y < alias.GetLength(1); y++)
+                {
+                    if(alias[x,y])
+                    {
+                        outputBM.SetPixel(x, y, Color.White);
+                    }
+                    else
+                    {
+                        outputBM.SetPixel(x, y, Color.Black);
+                    }
+                }
+            }
+            return outputBM;
+        }
+
         private void button2_Click(object sender, EventArgs e)
         {
             //cd C:\RaytracerVideos\<FolderName>
@@ -245,7 +332,12 @@ namespace Raytracer
 
         private void SceneSelector_ValueChanged(object sender, EventArgs e)
         {
-            if((int)SceneSelector.Value <= sceneDictionary.Count)
+            displaySceneDescription();
+        }
+
+        private void displaySceneDescription()
+        {
+            if ((int)SceneSelector.Value <= sceneDictionary.Count)
             {
                 SceneDescription.Text = "Scene description: ";
                 SceneDescription.Text += "\n" + sceneDictionary[(int)SceneSelector.Value];
@@ -255,7 +347,7 @@ namespace Raytracer
                 SceneDescription.Text = "Scene description: ";
                 SceneDescription.Text += "\nNo Scene " + SceneSelector.Value.ToString() + " exists";
             }
-
         }
+
     }
 }

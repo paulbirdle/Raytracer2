@@ -31,10 +31,10 @@ namespace Raytracer
             int resY = cam.resY;
             int resX = cam.resX;
             RaytracerColor[,] color = new RaytracerColor[resX, resY];
-            Vector p = cam.Position;
-            Vector v = cam.ULCorner;
-            Vector r = cam.Step_Right;
-            Vector d = cam.Step_Down;
+           // Vector p = cam.Position;
+           // Vector v = cam.ULCorner;
+           // Vector r = cam.Step_Right;
+           // Vector d = cam.Step_Down;
 
             
             ParallelOptions opt = new ParallelOptions();
@@ -79,6 +79,48 @@ namespace Raytracer
                 //v += r - resY * d;
             });
             return bitmap;
+        }
+
+        public RaytracerColor[,] msaa(RaytracerColor[,] col, bool[,] edges, int msaa, int depth)
+        {
+            Camera camera = new Camera(cam.Position, cam.Direction, cam.Up, cam.xAngle, cam.resX * msaa, cam.resY * msaa);
+
+            int resY = cam.resY;
+            int resX = cam.resX;
+            ParallelOptions opt = new ParallelOptions();
+            opt.MaxDegreeOfParallelism = -1; // max Anzahl Threads, man kann also cpu auslastung ugf. festlegen, -1 ist unbegrenzt (halt hardware begrenzt)
+
+            Parallel.For(0, resX, opt, x => // parallel mehrere Threads nutzen
+            {
+                for (int y = 0; y < resY; y++)
+                {
+                    if(edges[x,y])
+                    {
+                        Ray ray; // muss hier initialisiert werden, sonst reden sich die Threads gegenseitig rein -> Renderfehler
+                        int actX;
+                        int actY;
+                        RaytracerColor[] c = new RaytracerColor[msaa* msaa]; // in dieses array werden die Farben eines Blocks reingeschrieben, um sie dann als avg auf die BM zu schreiben
+                        int i;
+                        int j;
+
+                        actX = msaa * x;
+                        actY = msaa * y;
+                        for (int s1 = 0; s1 < msaa; s1++)
+                        {
+                           for (int s2 = 0; s2 < msaa; s2++)
+                           {
+                              i = actX + s1;
+                              j = actY + s2;
+                              ray = camera.get_Rays(i, j);
+                                c[msaa * s1 + s2] = calculateRays(ray, depth);
+                           }
+                        }
+                        col[x,y]= new RaytracerColor(RaytracerColor.avg(c));             
+                    }
+                }
+            });
+
+            return col;
         }
 
         private int firstIntersection(Ray ray, out Vector intersection, out double t, out Vector n, out Material material)

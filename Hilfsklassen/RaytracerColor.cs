@@ -194,5 +194,7 @@ namespace Raytracer
         {
             return RaytracerColor.weighted_avg(White, this, percent);
         }
+        
+
     }
 }
