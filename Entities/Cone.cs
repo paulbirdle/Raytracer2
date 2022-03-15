@@ -25,7 +25,7 @@ namespace Raytracer
             disk = new Disk(tip + h * dir, dir, r, material);
             envelope = new ConeEnvelope(tip, dir, r, h, material);
 
-            group = new EntityGroup(new Entity[2] { disk, envelope }, new Hitsphere(tip + (h/2)*dir, Math.Sqrt(h*h + r*r)/2));
+            group = new EntityGroup(new Entity[2] { disk, envelope }, new Hitsphere(tip + (h/2)*dir, Math.Sqrt(h*h/4 + r*r)));
         }
 
         public override double get_intersection(Ray ray, out Vector n, out Material material)

@@ -11,7 +11,7 @@ namespace Raytracer
         private readonly Lightsource[] lights;
         private readonly RaytracerColor ambientColor;
 
-        int parallelism = -1;
+        readonly int parallelism = -1;
 
         public Scene(Camera cam, Entity[] entities, Lightsource[] lights)
         {
