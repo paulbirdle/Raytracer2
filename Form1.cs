@@ -5,7 +5,7 @@ using System.Drawing.Imaging;
 using System.Windows.Forms;
 
 //TODO: 
-//vielleicht Cylinder etc. beginnen
+//Cylinder, Cone, Quadrilaterals und Cuboid effizienter
 //render gibt gleich Bitmap zurück (schwierig mit dem Multithreading)
 //Progressbar (auch schwierig mit dem Multithreading)
 //Effitienteres Antialiasing z.B. nur bei Kanten in höherer Auflösung Rendern
@@ -71,8 +71,8 @@ namespace Raytracer
             Vector.numVec = 0;
             double[] statistic = new double[3];
 
-            DateTime before = DateTime.Now;
 
+            DateTime before = DateTime.Now;
 
             RaytracerColor[,] col = scene.render(depth);
 

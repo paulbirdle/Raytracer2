@@ -11,6 +11,8 @@ namespace Raytracer
         private readonly Lightsource[] lights;
         private readonly RaytracerColor ambientColor;
 
+        int parallelism = -1;
+
         public Scene(Camera cam, Entity[] entities, Lightsource[] lights)
         {
             this.cam = cam;
@@ -38,7 +40,7 @@ namespace Raytracer
 
             
             ParallelOptions opt = new ParallelOptions();
-            opt.MaxDegreeOfParallelism = -1; // max Anzahl Threads, man kann also cpu auslastung ugf. festlegen, -1 ist unbegrenzt (halt hardware begrenzt)
+            opt.MaxDegreeOfParallelism = parallelism; // max Anzahl Threads, man kann also cpu auslastung ugf. festlegen, -1 ist unbegrenzt (halt hardware begrenzt)
             
             Parallel.For(0,resX, opt,x => // parallel mehrere Threads nutzen
             {
@@ -63,7 +65,7 @@ namespace Raytracer
             Vector d = cam.Step_Down;
 
             ParallelOptions opt = new ParallelOptions();
-            opt.MaxDegreeOfParallelism = -1; // max Anzahl Threads, man kann also cpu auslastung ugf. festlegen, -1 ist unbegrenzt (halt hardware begrenzt)
+            opt.MaxDegreeOfParallelism = parallelism; // max Anzahl Threads, man kann also cpu auslastung ugf. festlegen, -1 ist unbegrenzt (halt hardware begrenzt)
 
             Parallel.For(0, resX, opt, x => // parallel mehrere Threads nutzen
             {
@@ -79,7 +81,7 @@ namespace Raytracer
                 //v += r - resY * d;
             });
             return bitmap;
-        }
+        } //funktioniert noch nicht
 
         public RaytracerColor[,] msaa(RaytracerColor[,] col, bool[,] edges, int msaa, int depth)
         {
@@ -88,7 +90,7 @@ namespace Raytracer
             int resY = cam.resY;
             int resX = cam.resX;
             ParallelOptions opt = new ParallelOptions();
-            opt.MaxDegreeOfParallelism = -1; // max Anzahl Threads, man kann also cpu auslastung ugf. festlegen, -1 ist unbegrenzt (halt hardware begrenzt)
+            opt.MaxDegreeOfParallelism = parallelism; // max Anzahl Threads, man kann also cpu auslastung ugf. festlegen, -1 ist unbegrenzt (halt hardware begrenzt)
 
             Parallel.For(0, resX, opt, x => // parallel mehrere Threads nutzen
             {
