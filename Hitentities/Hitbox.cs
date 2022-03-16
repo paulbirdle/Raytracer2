@@ -2,7 +2,7 @@
 
 namespace Raytracer
 {
-    class Hitbox : Hitentity
+    class Hitbox : Hitentity //besser HitSphere verwenden
     {
         private readonly Vector center;
         private readonly double[] a;

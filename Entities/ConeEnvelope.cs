@@ -12,6 +12,7 @@ namespace Raytracer
 
         private readonly double h2;
         private readonly double r2;
+        private readonly double h2r2_;
 
         public ConeEnvelope(Vector tip, Vector direction, double radius, double height, Material material)
         {
@@ -23,6 +24,7 @@ namespace Raytracer
 
             h2 = h * h;
             r2 = r * r;
+            h2r2_ = 1 / h2 + 1 / r2;
         }
 
         public override double get_intersection(Ray ray, out Vector n, out Material material)
@@ -35,41 +37,17 @@ namespace Raytracer
             Vector x;
             double H;
 
-            double a = Math.Pow(v * dir, 2) * (1 / h2 + 1 / r2) - 1 / r2;
-            double b = 2 * (v * dir) * (s * dir) * (1 / h2 + 1 / r2) - 2 * s * v / r2;
-            double c = Math.Pow(s * dir, 2) * (1 / h2 + 1 / r2) - s.SquareNorm() / r2;
+            double vdir = v * dir;
+            double sdir = s * dir;
 
-            if(Math.Abs(a) < 1e-10) t = -c / b; //lineare Gleichung
+            double a = vdir * vdir * h2r2_ - 1 / r2;
+            double b = 2 * vdir * sdir * h2r2_ - 2 * s * v / r2;
+            double c = sdir * sdir * h2r2_ - s.SquareNorm() / r2;
+
+            if (Math.Abs(a) < 1e-10) t = -c / b; //lineare Gleichung
             else //quadratische Gleichung
             {
-                b /= a;
-                c /= a;
-                double discr = b * b / 4 - c;
-
-                if (discr < 1e-10)//quadratische Gleichung hat keine Lösung
-                {
-                    n = null;
-                    material = null;
-                    return -1;
-                }
-                else //quadratische Gleichung hat Lösung
-                {
-                    double sqrt = Math.Sqrt(discr);
-                    double t1 = -b / 2 - sqrt;      //sonst: die beiden Lösungen (Schnittpunkte) der quadratischen Gleichung
-                    double t2 = -b / 2 + sqrt;
-
-                    if (t1 < 1e-10 && t2 < 1e-10) //Kegel hinter ray
-                    {
-                        n = null;
-                        material = null;
-                        return -1;
-                    }
-                    else if (t1 < 1e-10 && t2 > 0) //start im Kegel
-                    {
-                        t = t2;
-                    }
-                    else t = t1; //Kegel vor ray
-                }
+                t = Poly.GetSmallestPositiveRoot(new double[2] { b / a, c / a });
             }
 
             x = s + t * v;
@@ -96,37 +74,17 @@ namespace Raytracer
             Vector x;
             double H;
 
-            double a = Math.Pow(v * dir, 2) * (1 / h2 + 1 / r2) - 1 / r2;
-            double b = 2 * (v * dir) * (s * dir) * (1 / h2 + 1 / r2) - 2 * s * v / r2;
-            double c = Math.Pow(s * dir, 2) * (1 / h2 + 1 / r2) - s.SquareNorm() / r2;
+            double vdir = v * dir;
+            double sdir = s * dir;
+
+            double a = vdir * vdir * h2r2_ - 1 / r2;
+            double b = 2 * vdir * sdir * h2r2_ - 2 * s * v / r2;
+            double c = sdir * sdir * h2r2_ - s.SquareNorm() / r2;
 
             if (Math.Abs(a) < 1e-10) t = -c / b; //lineare Gleichung
             else //quadratische Gleichung
             {
-                b /= a;
-                c /= a;
-                double discr = b * b / 4 - c;
-
-                if (discr < 1e-10)//quadratische Gleichung hat keine Lösung
-                {
-                    return -1;
-                }
-                else //quadratische Gleichung hat Lösung
-                {
-                    double sqrt = Math.Sqrt(discr);
-                    double t1 = -b / 2 - sqrt;      //sonst: die beiden Lösungen (Schnittpunkte) der quadratischen Gleichung
-                    double t2 = -b / 2 + sqrt;
-
-                    if (t1 < 1e-10 && t2 < 1e-10) //Kegel hinter ray
-                    {
-                        return -1;
-                    }
-                    else if (t1 < 1e-10 && t2 > 0) //start im Kegel
-                    {
-                        t = t2;
-                    }
-                    else t = t1; //Kegel vor ray
-                }
+                t = Poly.GetSmallestPositiveRoot(new double[2] { b / a, c / a });
             }
 
             x = s + t * v;
