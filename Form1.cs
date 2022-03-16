@@ -244,8 +244,8 @@ namespace Raytracer
 
         private Boolean[,] aliasDetection(RaytracerColor[,] col, int resX, int resY)
         {
-            double threshhold = 5; // ganz guter Wert i guess;
-            int sizeLayer = 2;
+            double threshhold = 5; // ganz guter Wert I guess; mhhh muss nochmal sehen
+            int sizeLayer = 2;  // TODO: für größere Werte implementieren
             Boolean[,] edges = new Boolean[resX, resY];
 
             for(int x = 0; x < resX - sizeLayer; x++)
