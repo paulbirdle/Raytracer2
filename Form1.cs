@@ -5,7 +5,7 @@ using System.Drawing.Imaging;
 using System.Windows.Forms;
 
 //TODO: 
-//vielleicht Cylinder etc. beginnen
+//Cylinder, Tetrahedron; Quadrilaterals und Cuboid effizienter
 //render gibt gleich Bitmap zurück (schwierig mit dem Multithreading)
 //Progressbar (auch schwierig mit dem Multithreading)
 //Effitienteres Antialiasing z.B. nur bei Kanten in höherer Auflösung Rendern
@@ -13,9 +13,6 @@ using System.Windows.Forms;
 //Transparente Objekte mit oder ohne Brechungsindex
 //Große Lightsources, weiche Schatten
 
-//ERLEDIGT:
-//Helligkeit für Lightsource
-//Spotlight
 
 namespace Raytracer
 {
@@ -71,8 +68,8 @@ namespace Raytracer
             Vector.numVec = 0;
             double[] statistic = new double[3];
 
-            DateTime before = DateTime.Now;
 
+            DateTime before = DateTime.Now;
 
             RaytracerColor[,] col = scene.render(depth);
 
@@ -114,7 +111,7 @@ namespace Raytracer
             displayStatistics(statistic);
         }
 
-        private Scene sceneSelection(int index_of_Scene, int resX,int resY)
+        private Scene sceneSelection(int index_of_Scene, int resX, int resY)
         {
             Scene scene;
             if (index_of_Scene == 1)
@@ -157,12 +154,14 @@ namespace Raytracer
 
         Dictionary<string, int[]> resDictionary = new Dictionary<string, int[]>
         {
+            {"90p", new int[2]{160, 90} },
+            {"180p", new int[2]{320, 180} },
             {"360p", new int[2]{640, 360} },
             {"720p", new int[2]{1080, 720} },
             {"1080p", new int[2]{1920, 1080} },
             {"1440p", new int[2]{2560, 1440} },
             {"4k", new int[2]{3840, 2160} },
-            {"8k", new int[2]{7680, 4320} },
+            {"8k", new int[2]{7680, 4320} }
         };
 
         Dictionary<int, string> sceneDictionary = new Dictionary<int, string>

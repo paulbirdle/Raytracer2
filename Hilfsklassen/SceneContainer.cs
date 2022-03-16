@@ -134,8 +134,11 @@ namespace Raytracer
 
             Torus torus = new Torus(new Vector(0, 0, 0), new Vector(0.7, 0.3, 1), 5, 2.5, new Material(RaytracerColor.Red, 0.5, 100, 0.5, 0.8));
             Sphere sphere = new Sphere(new Vector(-200, 0, 0), 150, new Material(RaytracerColor.Blue, 0.3, 20, 0.5, 0.7));
-            //Disk disk = new Disk(new Vector(0, -20, 0), new Vector(1, 0.5, 0.5), 15, new Material(RaytracerColor.Red, 0.7, 5000, 0.4, 0.7));
-            Entity[] entities = new Entity[2] { torus, sphere };
+            Cone cone = new Cone(new Vector(0, 0, 7), new Vector(0.2, -0.3, -1), 5, 10, new Material(RaytracerColor.Red, 0.5, 100, 0.5, 0.8));
+            Disk disk = new Disk(new Vector(0, -20, 0), new Vector(1, 0.5, 0.5), 15, new Material(RaytracerColor.Red, 0.7, 5000, 0.4, 0.7));
+            Triangle triangle = new Triangle(new Vector(0, 0, 7), new Vector(1, 1, -7), new Vector(-2, 10, 0), new Material(RaytracerColor.Red, 0.8, 200, 0.7, 0.4));
+            Entity[] entities = new Entity[2] { triangle, sphere };
+            
 
             return new Scene(cam, entities, lights);
         }

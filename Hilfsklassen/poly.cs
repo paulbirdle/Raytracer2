@@ -99,24 +99,46 @@ namespace Raytracer
 
 		public static double GetSmallestPositiveRoot(double[] coeff)
 		{
-			Complex[] z_ = SolveQuartic(coeff);
-			double tmin = double.PositiveInfinity;
-			double t;
-			Complex z;
-			for(int i = 0; i < 4; i++)
+			int n = coeff.Length;
+			if(n == 4)//t^4 + at^3 + bt^2 + ct + d
 			{
-				z = z_[i];
-				if(Math.Abs(z.Im) < 1e-6)
+				Complex[] z_ = SolveQuartic(coeff);
+				double tmin = double.PositiveInfinity;
+				double t;
+				Complex z;
+				for (int i = 0; i < 4; i++)
 				{
-					t = z.Re;
-					if(t > 1e-6 && t < tmin)
+					z = z_[i];
+					if (Math.Abs(z.Im) < 1e-6)
 					{
-						tmin = t;
+						t = z.Re;
+						if (t > 1e-6 && t < tmin)
+						{
+							tmin = t;
+						}
 					}
 				}
+				if (tmin == double.PositiveInfinity) return -1;
+				return tmin;
 			}
-			if (tmin == double.PositiveInfinity) return -1;
-			return tmin;
+			else if(n == 2)//t^2 + at + b
+			{
+				double p = coeff[0];
+				double q = coeff[1];
+
+				double discr = p * p / 4 - q;
+				if (discr < 1e-10) return -1;
+				double sqrt = Math.Sqrt(discr);
+				double t1 = -p / 2 - sqrt;
+				double t2 = -p / 2 + sqrt;
+				if (t2 < 1e-10) return -1;
+				else
+				{
+					if (t1 < 1e-10) return t2;
+					return t1;
+				}
+			}
+			return -1;
 		}
 	}
 }

@@ -13,6 +13,8 @@ namespace Raytracer
         private readonly Vector[] corners;
         private readonly bool multiple_materials;
 
+        private readonly EntityGroup group;
+
         public Cuboid(Vector center, Vector up, Vector front, double[] lengths, Material material)
         {
             this.center = center;
@@ -26,6 +28,8 @@ namespace Raytracer
             if (lengths.Length == 3) a = lengths;
             corners = Get_Corners();
             sides = Get_Quads();
+
+            group = new EntityGroup(sides, new Hitsphere(center, Math.Sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]) / 2));
         }
 
         public Cuboid(Vector center, Vector up, Vector front, double[] lengths, Material[] materials)
@@ -41,6 +45,8 @@ namespace Raytracer
             if (lengths.Length == 3) a = lengths;
             corners = Get_Corners();
             sides = Get_Quads();
+
+            group = new EntityGroup(sides, new Hitsphere(center, Math.Sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]) / 2));
         }
 
 
@@ -87,45 +93,12 @@ namespace Raytracer
 
         public override double get_intersection(Ray ray)
         {
-            double tmin = double.PositiveInfinity;
-            double t;
-            for (int i = 0; i < 6; i++)
-            {
-                t = sides[i].get_intersection(ray);
-                if (t > 1e-10 && t < tmin)
-                {
-                    tmin = t;
-                }
-            }
-            if (tmin == double.PositiveInfinity) return -1;
-            return tmin;
+            return group.get_intersection(ray);
         }
 
         public override double get_intersection(Ray ray, out Vector n, out Material material)
         {
-            double tmin = double.PositiveInfinity;
-            double t;
-            int side = -1;
-            for (int i = 0; i < 6; i++)
-            {
-                t = sides[i].get_intersection(ray);
-                if (t > 1e-10 && t < tmin)
-                {
-                    tmin = t;
-                    side = i;
-                }
-            }
-            if (tmin == double.PositiveInfinity) //nicht getroffen
-            {
-                n = null;
-                material = null;
-                return -1;
-            }
-            if (multiple_materials == false) material = this.material[0];
-            else material = this.material[side];
-            n = normals[side % 3];
-            if (side >= 3) n *= -1;
-            return tmin;
+            return group.get_intersection(ray, out n, out material);
         }
 
         public Vector giveCenter()

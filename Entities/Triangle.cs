@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
 
 namespace Raytracer
 {
@@ -14,6 +9,7 @@ namespace Raytracer
         private readonly Vector n;
 
         private readonly Vector[] n_side; //zeigt immer nach außen
+        private readonly Vector edge1, edge2;
 
 
         public Triangle(Vector[] corners, Material material)
@@ -26,6 +22,8 @@ namespace Raytracer
             this.material = material;
             n = getNormal();
             n_side = Get_n_side();
+            edge1 = corners[1] - corners[0];
+            edge2 = corners[2] - corners[0];
         }
 
         public Triangle(Vector corner1, Vector corner2, Vector corner3, Material material)
@@ -34,7 +32,10 @@ namespace Raytracer
             this.material = material;
             n = getNormal();
             n_side = Get_n_side();
+            edge1 = corners[1] - corners[0];
+            edge2 = corners[2] - corners[0];
         }
+
         public Vector[] Get_n_side()
         {
             Vector[] res = new Vector[3];
@@ -44,14 +45,111 @@ namespace Raytracer
             }
             return res;
         }
-
-
         public Vector getNormal()
         {
             return ((corners[0] - corners[1]) ^ (corners[0] - corners[2])).normalize();
         }
 
         public override double get_intersection(Ray ray, out Vector n, out Material material)
+        {
+            Vector v_ = ray.Direction;
+            Vector s_ = ray.Start;
+
+            Vector h, s, q;
+            double t, a, f, u, v;
+            
+            h = v_ ^ edge2;
+            a = edge1 * h;
+            if (a > -1e-6 && a < 1e-6)//parallel
+            {
+                t = -1;
+            }
+            else
+            {
+                f = 1.0 / a;
+                s = s_ - corners[0];
+                u = f * s * h;
+                if (u < 0.0 || u > 1.0)
+                {
+                    t = -1;
+                }
+                else
+                {
+                    q = s ^ edge1;
+                    v = f * v_ * q;
+                    if (v < 0.0 || u + v > 1.0)
+                    {
+                        t = -1;
+                    }
+                    else
+                    {
+                        t = f * edge2 * q;
+                        if (t < 1e-6) // no ray intersection
+                        {
+                            t = -1;
+                        }
+                    }
+                }
+            }
+
+            if(t == -1)
+            {
+                n = null;
+                material = null;
+                return -1;
+            }
+
+            material = this.material;
+            n = this.n * Math.Sign(-v_ * this.n);
+            return t;
+        }
+
+        public override double get_intersection(Ray ray)
+        {
+            Vector v_ = ray.Direction;
+            Vector s_ = ray.Start;
+
+            Vector h, s, q;
+            double t, a, f, u, v;
+
+            h = v_ ^ edge2;
+            a = edge1 * h;
+            if (a > -1e-6 && a < 1e-6)//parallel
+            {
+                return -1;
+            }
+            else
+            {
+                f = 1.0 / a;
+                s = s_ - corners[0];
+                u = f * s * h;
+                if (u < 0.0 || u > 1.0)
+                {
+                    return -1;
+                }
+                else
+                {
+                    q = s ^ edge1;
+                    v = f * v_ * q;
+                    if (v < 0.0 || u + v > 1.0)
+                    {
+                        return -1;
+                    }
+                    else
+                    {
+                        t = f * edge2 * q;
+                        if (t < 1e-6) // no ray intersection
+                        {
+                            return -1;
+                        }
+                    }
+                }
+            }
+
+            return t;
+        }
+
+        /*public override double get_intersection(Ray ray, out Vector n, out Material material)
         {
             Vector x = ray.Start;
             Vector v = ray.Direction;
@@ -76,7 +174,7 @@ namespace Raytracer
 
             for (int i = 0; i < 3; i++)
             {   //checke ob intersection auf der richtigen Seite von corners[i] - corners[i+1] liegt:
-                if((intersection-corners[i])*n_side[i]/**((corners[(i + 2) % 3] - corners[i])*n_side)*/ > -1e-10)
+                if((intersection-corners[i])*n_side[i] > -1e-10)
                 {
                     n = null;
                     material = null;
@@ -107,13 +205,13 @@ namespace Raytracer
 
             for (int i = 0; i < 3; i++)
             {   //checke ob intersection auf der richtigen Seite von corners[i] - corners[i+1] liegt:
-                if ((intersection - corners[i]) * n_side[i] /** ((corners[(i + 2) % 3] - corners[i]) * n_side)*/ > -1e-10)
+                if ((intersection - corners[i]) * n_side[i] > -1e-10)
                 {
                     return -1;
                 }
             }
 
             return t;
-        }
+        }*/
     }
 }

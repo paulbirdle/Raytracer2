@@ -23,22 +23,14 @@ namespace Raytracer
             Vector v = ray.Direction;
 
             double scalprod = v * n;
-            if (Math.Abs(scalprod) < 1e-10)
-            {
-                return -1;
-            }
+            if (Math.Abs(scalprod) < 1e-10) return -1;
 
             double t = (center - x) * n / scalprod;
-            if (t < 1e-10)
-            {
-                return -1;
-            }
+            if (t < 1e-10) return -1;
+
             Vector intersection = ray.position_at_time(t);
 
-            if((intersection - center).norm() > radius)
-            {
-                return -1;
-            }
+            if ((intersection - center).norm() > radius) return -1;
 
             return t;
         }

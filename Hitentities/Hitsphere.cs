@@ -5,16 +5,12 @@ namespace Raytracer
     class Hitsphere : Hitentity
     {
         private readonly Vector center;
-        private readonly double radius;
-
-        private readonly double squarerad;
+        private readonly double r2;
 
         public Hitsphere(Vector center, double radius)
         {
             this.center = center;
-            this.radius = radius;
-
-            squarerad = radius * radius;
+            r2 = radius * radius;
         }
 
         public override bool hits(Ray ray)
@@ -24,23 +20,9 @@ namespace Raytracer
             Vector v_to_start = start - center;
 
             double b = direction * v_to_start;
-            double c = v_to_start * v_to_start - squarerad;
+            double c = v_to_start * v_to_start - r2;
 
-            double discr = b * b - c;
-
-            if (discr < 1e-10)//quadratische Gleichung hat keine Lösung
-            {
-                return false;
-            }
-            double sqrt = Math.Sqrt(discr);
-            double t1 = -b - sqrt;      //sonst: die beiden Lösungen (Schnittpunkte) der quadratischen Gleichung
-            double t2 = -b + sqrt;
-
-            if (t1 < 1e-10 && t2 < 1e-10) //Kugel hinter ray
-            {
-                return false;
-            }
-            return true;
+            return Poly.GetSmallestPositiveRoot(new double[2] { 2 * b, c }) != -1;
         }
     }
 }

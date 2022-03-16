@@ -105,6 +105,7 @@ namespace Raytracer
 
         public Vector normalize()
         {
+            if (this.SquareNorm() < 1e-10) throw new Exception("");
             return this / norm();
         }
 

@@ -5,17 +5,26 @@
         private readonly Entity[] entities;
         private readonly Hitentity hitentity;
         private readonly int size;
+        private readonly bool hitbox;
 
         public EntityGroup(Entity[] entities, Hitentity hitentity)
         {
             this.entities = entities;
             this.hitentity = hitentity;
             size = entities.Length;
+            hitbox = true;
+        }
+
+        public EntityGroup(Entity[] entities)
+        {
+            this.entities = entities;
+            size = entities.Length;
+            hitbox = false;
         }
 
         public override double get_intersection(Ray ray)
         {
-            if(!hitentity.hits(ray))
+            if(hitbox && !hitentity.hits(ray))
             {
                 return -1;
             }
@@ -33,7 +42,7 @@
 
         public override double get_intersection(Ray ray, out Vector n, out Material material)
         {
-            if (!hitentity.hits(ray))
+            if (hitbox && !hitentity.hits(ray))
             {
                 n = null;
                 material = null;
