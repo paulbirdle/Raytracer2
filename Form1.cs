@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 
 //TODO: 
 //Cylinder, Tetrahedron; Quadrilaterals und Cuboid effizienter
@@ -93,7 +94,7 @@ namespace Raytracer
                 }
                 else
                 {
-                   // BM = showAlias(aliasDetection(col, resX, resY));
+                    //BM = showAlias(aliasDetection(col, resX, resY));
                     BM = convertToBitmap(scene.msaa(col, aliasDetection(col, resX, resY), a, depth), resX, resY, 1);
                 }
             }
@@ -167,7 +168,7 @@ namespace Raytracer
         Dictionary<int, string> sceneDictionary = new Dictionary<int, string>
         {
             {1, "3 Ball Scene"},
-            {2, "Epic Floor mind. 4min\nACHTUNG DAUERT LANG!"},
+            {2, "Epic Floor"},
             {3, "Infinity Mirror"},
             {4, "Torus and Disk test Scene"},
             {5, "Portal Scene"},
@@ -243,32 +244,87 @@ namespace Raytracer
 
         private Boolean[,] aliasDetection(RaytracerColor[,] col, int resX, int resY)
         {
-            double threshhold = 5; // ganz guter Wert I guess; mhhh muss nochmal sehen
-            int sizeLayer = 2;  // TODO: für größere Werte implementieren
-            Boolean[,] edges = new Boolean[resX, resY];
+            double threshhold = 3; // ganz guter Wert I guess; mhhh muss nochmal sehen
+            bool[,] edges = new bool[resX, resY];
 
-            for(int x = 0; x < resX - sizeLayer; x++)
+
+            int minG;
+            int maxG; 
+            int minR;
+            int maxR; 
+            int minB;
+            int maxB;
+
+
+            for (int x = 1; x < resX - 1; x++)
             {
-                for(int y = 0; y < resY - sizeLayer; y++)
+                for (int y = 1; y < resY - 1; y++)
                 {
-                    edges[x, y] = false;
-                    int iG = Math.Min(Math.Min(col[x, y].G, col[x + 1, y].G), Math.Min(col[x + 1, y].G, col[x + 1, y + 1].G));
-                    int iGM = Math.Max(Math.Max(col[x, y].G, col[x + 1, y].G), Math.Max(col[x + 1, y].G, col[x + 1, y + 1].G));
-                    if(iGM - iG > threshhold)
+                    minG = col[x - 1, y - 1].G;
+                    maxG = minG;
+
+                    for (int i = -1; i < 2; i++) // 3x3 Suchfeld
+                    {
+                        for (int j = -1; j < 2; j++)
+                        {
+                            if (col[x + i, y + j].G < minG)
+                            {
+                                minG = col[x + i, y + j].G;
+                            }
+                            if (col[x + i, y + j].G > maxG)
+                            {
+                                maxG = col[x + i, y + j].G;
+                            }
+                        }
+                    }
+                    if (maxG - minG > threshhold)
                     {
                         edges[x, y] = true;
                         continue;
                     }
-                    int iR = Math.Min(Math.Min(col[x, y].R, col[x + 1, y].R), Math.Min(col[x + 1, y].R, col[x + 1, y + 1].R));
-                    int iRM = Math.Max(Math.Max(col[x, y].R, col[x + 1, y].R), Math.Max(col[x + 1, y].R, col[x + 1, y + 1].R));
-                    if (iRM - iR > threshhold)
+
+
+                    minR = col[x - 1, y - 1].R;
+                    maxR = minR;
+
+                    for (int i = -1; i < 2; i++)
+                    {
+                        for (int j = -1; j < 2; j++)
+                        {
+                            if (col[x + i, y + j].R < minR)
+                            {
+                                minR = col[x + i, y + j].R;
+                            }
+                            if (col[x + i, y + j].R > maxR)
+                            {
+                                maxR = col[x + i, y + j].R;
+                            }
+                        }
+                    }
+                    if (maxR - minR > threshhold)
                     {
                         edges[x, y] = true;
                         continue;
                     }
-                    int iB = Math.Min(Math.Min(col[x, y].B, col[x + 1, y].B), Math.Min(col[x + 1, y].B, col[x + 1, y + 1].B));
-                    int iBM = Math.Min(Math.Min(col[x, y].B, col[x + 1, y].B), Math.Min(col[x + 1, y].B, col[x + 1, y + 1].B));
-                    if (iBM - iB > threshhold)
+
+                    minB = col[x - 1, y - 1].B;
+                    maxB = minB;
+
+                    for (int i = -1; i < 2; i++)
+                    {
+                        for (int j = -1; j < 2; j++)
+                        {
+                            if (col[x + i, y + j].B < minB)
+                            {
+                                minB = col[x + i, y + j].B;
+                            }
+                            if (col[x + i, y + j].B > maxB)
+                            {
+                                maxB = col[x + i, y + j].B;
+                            }
+                        }
+                    }
+                    if (maxB - minB > threshhold)
                     {
                         edges[x, y] = true;
                         continue;

@@ -10,6 +10,7 @@ namespace Raytracer
 
         private Vector[] corners;
         private HitQuadrilateral[] sides;
+        private readonly Hitsphere hitsphere;
 
         public Hitbox(Vector center, Vector up, Vector front, double[] sidelengths)
         {
@@ -23,6 +24,17 @@ namespace Raytracer
             corners = new Vector[8];
 
             refresh_Quads();
+
+            double radius = 0;   // hier hitsphere anlegen
+            for (int i = 0; i < 8; i++)
+            {
+                if (i == 0) radius = (corners[i] - center).norm();
+                else if ((corners[i] - center).norm() > radius)
+                {
+                    radius = (corners[i] - center).norm();
+                }
+            }
+            hitsphere = new Hitsphere(center, radius);
         }
 
         private void refresh_Quads()
@@ -54,6 +66,9 @@ namespace Raytracer
 
         public override bool hits(Ray ray)
         {
+            bool hs = hitsphere.hits(ray);
+            if (hs == false) return false;
+
             //Vector v = ray.Direction;
             for(int i = 0; i < 6; i++)
             {

@@ -14,6 +14,7 @@ namespace Raytracer
         private readonly bool multiple_materials;
 
         private readonly EntityGroup group;
+        private readonly Hitsphere hitsphere;
 
         public Cuboid(Vector center, Vector up, Vector front, double[] lengths, Material material)
         {
@@ -30,6 +31,17 @@ namespace Raytracer
             sides = Get_Quads();
 
             group = new EntityGroup(sides, new Hitsphere(center, Math.Sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]) / 2));
+
+            double radius = 0;   // hier hitsphere anlegen
+            for (int i = 0; i < 8; i++)
+            {
+                if (i == 0) radius = (corners[i] - center).norm();
+                else if ((corners[i] - center).norm() > radius)
+                {
+                    radius = (corners[i] - center).norm();
+                }
+            }
+            hitsphere = new Hitsphere(center, radius);
         }
 
         public Cuboid(Vector center, Vector up, Vector front, double[] lengths, Material[] materials)
@@ -47,6 +59,18 @@ namespace Raytracer
             sides = Get_Quads();
 
             group = new EntityGroup(sides, new Hitsphere(center, Math.Sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]) / 2));
+           
+            
+            double radius = 0;   // hier hitsphere anlegen
+            for(int i = 0; i<8; i++)
+            {
+                if (i == 0) radius = (corners[i] - center).norm();
+                else if((corners[i] - center).norm() > radius)
+                {
+                    radius = (corners[i] - center).norm();
+                }
+            }
+            hitsphere = new Hitsphere(center, radius);
         }
 
 
@@ -93,6 +117,7 @@ namespace Raytracer
 
         public override double get_intersection(Ray ray)
         {
+            if (hitsphere.hits(ray) == false) return -1;
             return group.get_intersection(ray);
         }
 
