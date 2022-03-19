@@ -155,14 +155,14 @@ namespace Raytracer
 
         Dictionary<string, int[]> resDictionary = new Dictionary<string, int[]>
         {
-            {"90p", new int[2]{160, 90} },
-            {"180p", new int[2]{320, 180} },
-            {"360p", new int[2]{640, 360} },
-            {"720p", new int[2]{1080, 720} },
+            {"90p"  , new int[2]{160,    90} },
+            {"180p" , new int[2]{320,   180} },
+            {"360p" , new int[2]{640,   360} },
+            {"720p" , new int[2]{1280,  720} },
             {"1080p", new int[2]{1920, 1080} },
             {"1440p", new int[2]{2560, 1440} },
-            {"4k", new int[2]{3840, 2160} },
-            {"8k", new int[2]{7680, 4320} }
+            {"4k"   , new int[2]{3840, 2160} },
+            {"8k"   , new int[2]{7680, 4320} }
         };
 
         Dictionary<int, string> sceneDictionary = new Dictionary<int, string>

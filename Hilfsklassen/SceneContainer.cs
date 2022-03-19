@@ -33,59 +33,54 @@ namespace Raytracer
         }
         public static Scene scene2(int resX, int resY) // Epic Floor test
         {
-            Camera theCamera = new Camera(new Vector(-400, -50, 200), new Vector(4, 0.5, -1.95), new Vector(0, 0, 1), Math.PI/6, resX, resY);
-            Entity[] theEntities = new Entity[1];
+            Camera theCamera = new Camera(new Vector(-600, -660, 400), new Vector(6, 6.6, -3.95), new Vector(0, 0, 1), Math.PI/7, resX, resY);
+            Entity[] theEntities = new Entity[64];
 
             Lightsource[] theLights = new Lightsource[2];
            
-            double intensity = 3;
-            int range = 130;
-            double lights = 130;
-            theLights[0] = new CandleLight(new Vector(-lights-70, -lights-20, lights+40), range, new RaytracerColor(Color.Red), intensity);
-            theLights[1] = new CandleLight(new Vector(-lights-30,  lights, lights), range, new RaytracerColor(Color.Blue), intensity);
-            Random r = new Random();
+            double intensity = 28;
+            int range = 80;
+            double lights = 150;
+            theLights[0] = new CandleLight(new Vector(-lights - 70, -lights + 70, lights + 40), range, new RaytracerColor(Color.White), intensity + 5);
+            //theLights[1] = new CandleLight(new Vector(-lights + 70, -lights - 70, lights + 40), range, new RaytracerColor(Color.DarkGreen), intensity );
+           
             
-            double height;
-            int amount = 26; 
+            // Random r = new Random();
+            int amount = 4; 
             if (amount % 2 != 0) throw new Exception("Amount muss gerade sein");
-
-            double size = 400;
-            Material floorMaterial = new Material(new RaytracerColor(Color.FromArgb(255, 255, 255)), 0, 20, 0.7, 0.6);
-            int maxHeight = 60;
-
+            double size = 100;
+             Material floorMaterial = new Material(new RaytracerColor(Color.FromArgb(38, 255, 168)), 0, 20, 0.5, 0.6);
+            int maxHeight = 20;
+            double s = 21; // spacing: is  subtractive not additive
+            int baseSize = 370;
+            int offsetUpDown = -400;
             Entity[,] cuboids = new Entity[amount, amount]; // greating Cuboids
-            for(int i = 0; i<amount; i++)
+            double height = maxHeight;
+            for (int i = 0; i<amount; i++)
             {
                 for(int j = 0; j<amount; j++)
                 {
-                    height = r.Next(10, maxHeight*10);
-                    cuboids[i,j] = new Cuboid(new Vector(i * (size/amount),j * (size / amount), 0) - new Vector((size - (size/amount))/2, (size - (size / amount)) / 2, 0), new Vector(-1, 0, 0), new Vector(0, 0, -1), new double[3] { size / (amount), size/ (amount), height/10 },floorMaterial);
+                   // height = r.Next(1, maxHeight*10);
+                    cuboids[i,j] = new Cuboid(new Vector(i * (size/amount),j * (size / amount), (baseSize / 2) + (height / 20)) - new Vector((size - (size/amount))/2, (size - (size / amount)) / 2, -offsetUpDown), new Vector(1, 0, 0), new Vector(0, 0, 1), new double[3] { size / (amount) - s, size/ (amount) -s, (height/10) + baseSize },floorMaterial);
+                    //theEntities[i * amount + j] = cuboids[i, j];
                 }
             }
 
-            Entity[] groups = new Entity[amount*amount /4];
-            for (int i = 0; i < amount/2; i++)  //into groups of 4
+            Entity[] groups = new Entity[amount * amount / 4];
+            for (int i = 0; i < amount / 2; i++)  //into groups of 4 
             {
-                for (int j = 0; j < amount/2; j++)
+                for (int j = 0; j < amount / 2; j++)
                 {
                     Entity[] var = new Cuboid[4];
-                    var[0] = cuboids[i*2, j*2];
-                    var[1] = cuboids[i*2+1, j*2];
-                    var[2] = cuboids[i*2, j*2+1];
-                    var[3] = cuboids[i*2+1, j*2+1];
-                    Hitentity e = new Hitbox(new Vector(i * (2*size / amount), j * (2*size / amount), 0) - new Vector((size - (2*size / amount)) / 2, (size - (2*size / amount)) / 2, 0), new Vector(-1, 0, 0), new Vector(0, 0, -1), new double[3] { 2*size / (amount), 2*size / (amount), maxHeight });
-                    groups[i* (amount/2) + j] = new EntityGroup(var, e);
+                    var[0] = cuboids[i * 2, j * 2];
+                    var[1] = cuboids[i * 2 + 1, j * 2];
+                    var[2] = cuboids[i * 2, j * 2 + 1];
+                    var[3] = cuboids[i * 2 + 1, j * 2 + 1];
+                    Hitentity e = new Hitbox(new Vector(i * (2 * size / amount), j * (2 * size / amount), (baseSize / 2) + (maxHeight / 2)) - new Vector((size - (2 * size / amount)) / 2, (size - (2 * size / amount)) / 2, -offsetUpDown), new Vector(1, 0, 0), new Vector(0, 0, 1), new double[3] { 2 * size / (amount), 2 * size / (amount), maxHeight + baseSize });
+                    groups[i * (amount / 2) + j] = new EntityGroup(var, e);
+                    theEntities[i * (amount / 2) + j] = groups[i * (amount / 2) + j];
                 }
-            } 
-
-            Hitentity hitBox = new Hitbox(new Vector(0, 0, 0), new Vector(-1, 0, 0), new Vector(0, 0, 1), new double[3] {size, size, maxHeight});
-            theEntities[0] = new EntityGroup(groups, hitBox);
-           //theEntities[1] = standardfloor(50, RaytracerColor.White);
-           // theEntities[3] = new Cuboid(new Vector(0, 0, 0), new Vector(-1, 0, 0), new Vector(0, 0, 1), new double[3] { size, size, maxHeight }, Material.Matte);
-           // theEntities[2] = new Quadrilateral(new Vector( size / 2, -size / 2, 0), new Vector( size / 2,  size / 2, 0), new Vector( size / 2,  size / 2, size), new Vector( size / 2, -size / 2, size),Material.Mirror);
-           // theEntities[3] = new Quadrilateral(new Vector(-size / 2, -size / 2, 0), new Vector( size / 2, -size / 2, 0), new Vector( size / 2, -size / 2, size), new Vector(-size / 2, -size / 2, size), Material.Mirror);
-           //theEntities[4] = new Quadrilateral(new Vector(-size / 2,  size / 2, 0), new Vector( size / 2,  size / 2, 0), new Vector( size / 2,  size / 2, size), new Vector(-size / 2,  size / 2, size), Material.Mirror);
-           // theEntities[5] = new Quadrilateral(new Vector(-size / 2,  size / 2, 0), new Vector(-size / 2, -size / 2, 0), new Vector(-size / 2, -size / 2, size), new Vector(-size / 2,  size / 2, size), Material.Mirror);
+            }
 
             Scene theScene = new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
             return theScene;
