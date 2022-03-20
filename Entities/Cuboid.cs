@@ -13,7 +13,7 @@ namespace Raytracer
         private readonly Vector[] corners;
         private readonly bool multiple_materials;
 
-        private readonly EntityGroup group;
+        //private readonly EntityGroup group;
 
         public Cuboid(Vector center, Vector up, Vector front, double[] lengths, Material material)
         {
@@ -93,17 +93,73 @@ namespace Raytracer
 
         public override double get_intersection(Ray ray)
         {
-            return group.get_intersection(ray);
+            //return group.get_intersection(ray);
+            Vector v = ray.Direction;
+            double outside = isInside(ray) ? -1 : 1;
+
+            double tmin = double.PositiveInfinity;
+            double t;
+            int j;
+
+            for (int i = 0; i < 3; i++)
+            {
+                j = v * normals[i] * outside > 0 ? i + 3 : i;
+
+                t = sides[j].get_intersection(ray);
+                if (t != -1 && t < tmin) tmin = t;
+            }
+
+            if (tmin == double.PositiveInfinity) return -1;
+            return tmin;
         }
 
         public override double get_intersection(Ray ray, out Vector n, out Material material)
         {
-            return group.get_intersection(ray, out n, out material);
+            //return group.get_intersection(ray, out n, out material);
+            Vector v = ray.Direction;
+            double outside = isInside(ray) ? -1 : 1;
+
+            double tmin = double.PositiveInfinity;
+            double t;
+            int l = 0;
+            int j;
+
+            for(int i = 0; i < 3; i++)
+            {
+                j = v * normals[i] * outside > 0 ? i + 3 : i;
+
+                t = sides[j].get_intersection(ray);
+                if(t != -1 && t < tmin)
+                {
+                    tmin = t;
+                    l = j;
+                }
+            }
+
+            if(tmin == double.PositiveInfinity)
+            {
+                material = null;
+                n = null;
+                return -1;
+            }
+            material = multiple_materials ? this.material[l] : this.material[0];
+            n = l < 3 ? normals[l % 3] : -normals[l % 3];
+            return tmin;
         }
 
         public Vector giveCenter()
         {
             return center;
+        }
+
+        public bool isInside(Ray ray)
+        {
+            Vector x = ray.Start + 1e-6 * ray.Direction - center;
+            if (Math.Abs(x * normals[0]) <= a[0] && Math.Abs(x * normals[1]) <= a[1] && Math.Abs(x * normals[2]) <= a[2])
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
