@@ -31,7 +31,7 @@ namespace Raytracer
 
             return new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
         }
-        public static Scene scene2(int resX, int resY) // Epic Floor test
+        public static Scene scene2(int resX, int resY) // vertical Bars
         {
             Camera theCamera = new Camera(new Vector(-600, -660, 400), new Vector(6, 6.6, -3.95), new Vector(0, 0, 1), Math.PI/7, resX, resY);
             Entity[] theEntities = new Entity[64];
@@ -212,11 +212,42 @@ namespace Raytracer
         }
         public static Scene scene8(int resX, int resY) // General Testing Scene
         {
-            Entity[] e = new Entity[3];
-            e[0] = standardfloor(10, RaytracerColor.White);
-            e[1] = new Cylinder(new Vector(0, 0, 10), new Vector(3, 3, 2), 3,Material.MetalicRed);
-            Lightsource[] l = standardlights(50, 2, 10,1);
-            Camera c = standardCamera(Math.PI / 5, resX, resY);
+            Entity[] e = new Entity[7];
+            Lightsource[] l = new Lightsource[3];
+            l[0] = new ParallelLight(new Vector(-1, 0, 0), new RaytracerColor(Color.FromArgb(255, 255, 255)), 0.8);
+            //l[1] = new CandleLight(new Vector(-30, -20, -20), 5, new RaytracerColor(Color.FromArgb(255,255,255)), 2.1);
+
+            int size = 10;
+            e[0] = new Quadrilateral(new Vector(0, size, size), new Vector(0, size, -size), new Vector(0, -size, -size), new Vector(0, -size, size), new Material(new RaytracerColor(Color.FromArgb(255, 255, 255)), 0, 40, 0.2, 0.8));
+            //e[1] = new Triangle(new Vector(0, size, size), new Vector(0, size, -size), new Vector(0, -size, -size), new Material(new RaytracerColor(Color.FromArgb(255, 255, 255)), 0, 40, 0.2, 0.8)); 
+
+            Camera c = new Camera(new Vector(-500, 0, 0), new Vector(100, 0, 0), new Vector(0, 0, 1), Math.PI / 8, resX, resY);
+            return new Scene(c, e, l);
+        }
+        public static Scene scene9(int resX, int resY) // Minimalist flat Background Windows 
+        {
+            Entity[] e = new Entity[7];
+            Lightsource[] l = new Lightsource[3];
+            l[0] = new ParallelLight(new Vector(-10, 1, 1), new RaytracerColor(Color.FromArgb(255, 255, 255)), 1);
+            l[1] = new CandleLight(new Vector(-18, 0, 0),400, new RaytracerColor(Color.FromArgb(255,255,255)), 0.1);
+
+            int size = 100;
+            RaytracerColor bcol = new RaytracerColor(Color.FromArgb(42,81,172)); 
+            RaytracerColor col = new RaytracerColor(Color.FromArgb(255,232,0));
+            e[0] = new Quadrilateral(new Vector(0, size, size), new Vector(0, size, -size), new Vector(0, -size, -size), new Vector(0, -size, size), new Material(bcol, 0, 1000, 0, 1));  //Background
+           
+            double gap = 0.2;
+            int s = 4;
+
+            Entity[] opti = new Entity[4];
+            opti[1] = new Quadrilateral(new Vector(-20, s, s), new Vector(-20, s, gap), new Vector(-20, 0 + gap, gap), new Vector(-20, gap, s), new Material(col, 0, 100, 0, 1));
+            opti[2] = new Quadrilateral(new Vector(-20, -s, s), new Vector(-20, -s, gap), new Vector(-20, -gap, gap), new Vector(-20, -gap, s), new Material(col, 0, 100, 0, 1));
+            opti[3] = new Quadrilateral(new Vector(-20, -s, -s), new Vector(-20, -s, -gap), new Vector(-20, -gap, -gap), new Vector(-20, -gap, -s), new Material(col, 0, 100, 0, 1));
+            opti[0] = new Quadrilateral(new Vector(-20, s, -s), new Vector(-20, s, -gap), new Vector(-20, gap, -gap), new Vector(-20, gap, -s), new Material(col, 0, 100, 0, 1));
+           
+            e[2] = new EntityGroup(opti, new HitQuadrilateral(new Vector(-20, s, s), new Vector(-20, -s, s), new Vector(-20, -s, -s), new Vector(-20, s, -s)));
+
+            Camera c = new Camera(new Vector(-100000, 0, 0), new Vector(100, 0, 0), new Vector(0, 0, 1), Math.PI /2000, resX, resY);
             return new Scene(c, e, l);
         }
 

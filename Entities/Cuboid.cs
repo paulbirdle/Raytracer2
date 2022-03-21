@@ -13,7 +13,7 @@ namespace Raytracer
         private readonly Vector[] corners;
         private readonly bool multiple_materials;
 
-        //private readonly EntityGroup group;
+        private readonly EntityGroup group;
 
         public Cuboid(Vector center, Vector up, Vector front, double[] lengths, Material material)
         {
