@@ -151,6 +151,10 @@ namespace Raytracer
             {
                 return SceneContainer.scene9(resX, resY);
             }
+            else if (index_of_Scene == 10)
+            {
+                return SceneContainer.scene10(resX, resY);
+            }
             else
             {
                 throw new Exception("Wähl eine existierende Scene aus");
@@ -179,7 +183,8 @@ namespace Raytracer
             {6, "completely Random Spheres"},
             {7, "Smartphone render"},
             {8, "General Testing Scene"},
-            {9, "Minimalist flat Background"}
+            {9, "Minimalist flat Background"},
+            {10, "Smooth Shadow" }
         };
 
         private void save(Bitmap map)
