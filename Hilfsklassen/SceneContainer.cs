@@ -251,7 +251,7 @@ namespace Raytracer
             return new Scene(c, e, l);
         }
 
-        public static Scene scene9(int resx, int resy) // Smooth shadow scene
+        public static Scene scene10(int resx, int resy) // Smooth shadow scene
         {
             Camera cam = new Camera(new Vector(100, 0, 50), new Vector(-1, 0, -0.5), new Vector(0, 0, 1), Math.PI / 4, resx, resy);
             
