@@ -13,6 +13,8 @@ namespace Raytracer
         private readonly Vector[] corners;
         private readonly bool multiple_materials;
 
+        private readonly Hitsphere hitbox;
+
         //private readonly EntityGroup group;
 
         public Cuboid(Vector center, Vector up, Vector front, double[] lengths, Material material)
@@ -29,7 +31,9 @@ namespace Raytracer
             corners = Get_Corners();
             sides = Get_Quads();
 
-            group = new EntityGroup(sides, new Hitsphere(center, Math.Sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]) / 2));
+            hitbox = new Hitsphere(center, Math.Sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]) / 2);
+
+            //group = new EntityGroup(sides, new Hitsphere(center, Math.Sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]) / 2));
         }
 
         public Cuboid(Vector center, Vector up, Vector front, double[] lengths, Material[] materials)
@@ -46,7 +50,9 @@ namespace Raytracer
             corners = Get_Corners();
             sides = Get_Quads();
 
-            group = new EntityGroup(sides, new Hitsphere(center, Math.Sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]) / 2));
+            hitbox = new Hitsphere(center, Math.Sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]) / 2);
+
+            //group = new EntityGroup(sides, new Hitsphere(center, Math.Sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]) / 2));
         }
 
 
@@ -94,6 +100,7 @@ namespace Raytracer
         public override double get_intersection(Ray ray)
         {
             //return group.get_intersection(ray);
+            if (!hitbox.hits(ray)) return -1;
             Vector v = ray.Direction;
             double outside = isInside(ray) ? -1 : 1;
 
@@ -116,6 +123,12 @@ namespace Raytracer
         public override double get_intersection(Ray ray, out Vector n, out Material material)
         {
             //return group.get_intersection(ray, out n, out material);
+            if (!hitbox.hits(ray)) // nötig?
+            {
+                material = null;
+                n = null;
+                return -1;
+            }
             Vector v = ray.Direction;
             double outside = isInside(ray) ? -1 : 1;
 

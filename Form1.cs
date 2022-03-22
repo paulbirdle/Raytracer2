@@ -114,38 +114,41 @@ namespace Raytracer
 
         private Scene sceneSelection(int index_of_Scene, int resX, int resY)
         {
-            Scene scene;
             if (index_of_Scene == 1)
             {
-                return scene = SceneContainer.scene1(resX, resY); // höhere Renderauflösung wird übergeben
+                return SceneContainer.scene1(resX, resY); // höhere Renderauflösung wird übergeben
             }
             else if (index_of_Scene == 2)
             {
-                return scene = SceneContainer.scene2(resX, resY);
+                return SceneContainer.scene2(resX, resY);
             }
             else if (index_of_Scene == 3)
             {
-                return scene = SceneContainer.scene3(resX, resY);
+                return SceneContainer.scene3(resX, resY);
             }
             else if (index_of_Scene == 4)
             {
-                return scene = SceneContainer.scene4(resX, resY);
+                return SceneContainer.scene4(resX, resY);
             }
             else if (index_of_Scene == 5)
             {
-                return scene = SceneContainer.scene5(resX, resY);
+                return SceneContainer.scene5(resX, resY);
             }
             else if (index_of_Scene == 6)
             {
-                return scene = SceneContainer.scene6(resX, resY);
+                return SceneContainer.scene6(resX, resY);
             }
             else if (index_of_Scene == 7)
             {
-                return scene = SceneContainer.scene7(resX, resY);
+                return SceneContainer.scene7(resX, resY);
             }
             else if (index_of_Scene == 8)
             {
-                return scene = SceneContainer.scene8(resX, resY);
+                return SceneContainer.scene8(resX, resY);
+            }
+            else if (index_of_Scene == 9)
+            {
+                return SceneContainer.scene9(resX, resY);
             }
             else
             {
@@ -174,7 +177,8 @@ namespace Raytracer
             {5, "Portal Scene"},
             {6, "completely Random Spheres"},
             {7, "Smartphone render"},
-            {8, "General Testing Scene"}
+            {8, "General Testing Scene"},
+            {9, "smooth lighting" }
         };
 
         private void save(Bitmap map)
