@@ -224,31 +224,45 @@ namespace Raytracer
             Camera c = new Camera(new Vector(-500, 0, 0), new Vector(100, 0, 0), new Vector(0, 0, 1), Math.PI / 8, resX, resY);
             return new Scene(c, e, l);
         }
-        public static Scene scene9(int resX, int resY) // Minimalist flat Background Windows 
+        public static Scene scene9(int resX, int resY) // Minimalist flat background
         {
             Entity[] e = new Entity[7];
-            Lightsource[] l = new Lightsource[3];
-            l[0] = new ParallelLight(new Vector(-10, 1, 1), new RaytracerColor(Color.FromArgb(255, 255, 255)), 1);
-            l[1] = new CandleLight(new Vector(-18, 0, 0),400, new RaytracerColor(Color.FromArgb(255,255,255)), 0.1);
+            Lightsource[] l = new Lightsource[4];
+            //l[3] = new ParallelLight(new Vector(-50, 1, 1), new RaytracerColor(Color.FromArgb(255, 255, 255)), 0.05);
 
-            int size = 100;
-            RaytracerColor bcol = new RaytracerColor(Color.FromArgb(42,81,172)); 
-            RaytracerColor col = new RaytracerColor(Color.FromArgb(255,232,0));
+            int size = 500;
+            RaytracerColor bcol = new RaytracerColor(Color.FromArgb(255,255,255)); 
+            RaytracerColor col = new RaytracerColor(Color.FromArgb(255,255,255));
+
             e[0] = new Quadrilateral(new Vector(0, size, size), new Vector(0, size, -size), new Vector(0, -size, -size), new Vector(0, -size, size), new Material(bcol, 0, 1000, 0, 1));  //Background
            
-            double gap = 0.2;
-            int s = 4;
+            int s = 5;
 
-            Entity[] opti = new Entity[4];
-            opti[1] = new Quadrilateral(new Vector(-20, s, s), new Vector(-20, s, gap), new Vector(-20, 0 + gap, gap), new Vector(-20, gap, s), new Material(col, 0, 100, 0, 1));
-            opti[2] = new Quadrilateral(new Vector(-20, -s, s), new Vector(-20, -s, gap), new Vector(-20, -gap, gap), new Vector(-20, -gap, s), new Material(col, 0, 100, 0, 1));
-            opti[3] = new Quadrilateral(new Vector(-20, -s, -s), new Vector(-20, -s, -gap), new Vector(-20, -gap, -gap), new Vector(-20, -gap, -s), new Material(col, 0, 100, 0, 1));
-            opti[0] = new Quadrilateral(new Vector(-20, s, -s), new Vector(-20, s, -gap), new Vector(-20, gap, -gap), new Vector(-20, gap, -s), new Material(col, 0, 100, 0, 1));
-           
-            e[2] = new EntityGroup(opti, new HitQuadrilateral(new Vector(-20, s, s), new Vector(-20, -s, s), new Vector(-20, -s, -s), new Vector(-20, s, -s)));
 
-            Camera c = new Camera(new Vector(-100000, 0, 0), new Vector(100, 0, 0), new Vector(0, 0, 1), Math.PI /2000, resX, resY);
+            double stretch = 43;
+
+            //e[1] = new Sphere(new Vector(-0.1, 0, 0), s, new Material(col, 0, 100, 0.4, 1));
+            //e[2] = new Sphere(new Vector(-0.1, -stretch, 0), s, new Material(col, 0, 100, 0.4, 1));
+            //e[3] = new Sphere(new Vector(-0.1, stretch, 0), s, new Material(col, 0, 100, 0.4, 1));
+
+            //e[1] = new Quadrilateral(new Vector(-0.1, s, s), new Vector(-0.1, s, -s), new Vector(-0.1, -s,-s), new Vector(-0.1, -s, s), new Material(col, 0, 100, 0, 1));
+            //e[2] = new Triangle(new Vector(-0.1, 0 + stretch, s - s / 2), new Vector(-0.1, s / 2 + stretch, - s / 2), new Vector(-0.1, -s / 2 + stretch, - s / 2), new Material(col, 0, 100, 0, 1));
+            //e[3] = new Disk(new Vector(-0.1, s - stretch, 0),new Vector(-1,0,0), 2, new Material(col, 0, 100, 0, 1));
+
+            l[0] = new Spotlight(new Vector(-80,        0, 0), new Vector(1, 0, 0), Math.PI / 9, new RaytracerColor(Color.FromArgb(0, 255, 0)), 0.9);
+            l[1] = new Spotlight(new Vector(-80,  stretch, 0), new Vector(1, 0, 0), Math.PI / 9, new RaytracerColor(Color.FromArgb(255, 0, 0)), 0.9);
+            l[2] = new Spotlight(new Vector(-80, -stretch, 0), new Vector(1, 0, 0), Math.PI / 9, new RaytracerColor(Color.FromArgb(0, 0, 255)), 0.9);
+
+
+            Camera c = new Camera(new Vector(-1000, -1000, -500), new Vector(100, 100, 50), new Vector(0, 0, 1), Math.PI /10, resX, resY);
             return new Scene(c, e, l);
+
+
+
+            //opti[1] = new Quadrilateral(new Vector(-20, s, s), new Vector(-20, s, gap), new Vector(-20, 0 + gap, gap), new Vector(-20, gap, s), new Material(col, 0, 100, 0, 1)); // WindowsLogo like shape
+            //opti[2] = new Quadrilateral(new Vector(-20, -s, s), new Vector(-20, -s, gap), new Vector(-20, -gap, gap), new Vector(-20, -gap, s), new Material(col, 0, 100, 0, 1));
+            //opti[3] = new Quadrilateral(new Vector(-20, -s, -s), new Vector(-20, -s, -gap), new Vector(-20, -gap, -gap), new Vector(-20, -gap, -s), new Material(col, 0, 100, 0, 1));
+            //opti[0] = new Quadrilateral(new Vector(-20, s, -s), new Vector(-20, s, -gap), new Vector(-20, gap, -gap), new Vector(-20, gap, -s), new Material(col, 0, 100, 0, 1));
         }
 
         public static Scene scene10(int resx, int resy) // Smooth shadow scene

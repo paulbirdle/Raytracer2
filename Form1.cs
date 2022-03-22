@@ -83,7 +83,11 @@ namespace Raytracer
             before = DateTime.Now;
             Bitmap BM = new Bitmap(resX,resY);
 
-            if ((string)aliasingSelector.SelectedItem == "SSAA")
+            if (checkBox1.Checked == true)
+            {
+                BM = showAlias(aliasDetection(col, resX, resY));
+            }
+            else if ((string)aliasingSelector.SelectedItem == "SSAA")
             {
                 BM = convertToBitmap(col, col.GetLength(0) / a, col.GetLength(1) / a, a); // um andere Resolution am Ende z.b fuer Smartphone zuzulassen
             }
@@ -95,10 +99,10 @@ namespace Raytracer
                 }
                 else
                 {
-                    //BM = showAlias(aliasDetection(col, resX, resY));
-                    BM = convertToBitmap(scene.msaa(col, aliasDetection(col, resX, resY), a, depth), resX, resY, 1);
+                   BM = convertToBitmap(scene.msaa(col, aliasDetection(col, resX, resY), a, depth), resX, resY, 1);
                 }
             }
+
             after = DateTime.Now;
             duration = after - before;
             statistic[1] = duration.TotalSeconds;
