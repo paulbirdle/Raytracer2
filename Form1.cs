@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Threading.Tasks;
 
 //TODO: 
+//IMPORTANT: Cuboid und Hitbox haben einen Bug, welcher bei perfekt so darauf schaut, dass sich fordere und hintere Kante überschneiden, dazu führt, dass im gerenderten Bild ein schwarzer Strich auftaucht. 
 //Cylinder, Tetrahedron; Quadrilaterals und Cuboid effizienter
 //render gibt gleich Bitmap zurück (schwierig mit dem Multithreading)
 //Progressbar (auch schwierig mit dem Multithreading)
@@ -19,6 +20,7 @@ namespace Raytracer
 {
     public partial class Form1 : Form
     {
+        int starting_Scene = 9;
         public Form1()
         {
             InitializeComponent();
@@ -26,8 +28,7 @@ namespace Raytracer
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            int scene_selected_at_startup = 3;
-            SceneSelector.Value = scene_selected_at_startup;
+            SceneSelector.Value = starting_Scene;
             displaySceneDescription();
             double[] stats = new double[4] { 0, 0, 0, 0 };
             displayStatistics(stats);
@@ -171,14 +172,14 @@ namespace Raytracer
         Dictionary<int, string> sceneDictionary = new Dictionary<int, string>
         {
             {1, "3 Ball Scene"},
-            {2, "Epic Floor"},
+            {2, "vertical Bars"},
             {3, "Infinity Mirror"},
             {4, "Torus and Disk test Scene"},
             {5, "Portal Scene"},
             {6, "completely Random Spheres"},
             {7, "Smartphone render"},
             {8, "General Testing Scene"},
-            {9, "smooth lighting" }
+            {9, "Minimalist flat Background"}
         };
 
         private void save(Bitmap map)
@@ -210,7 +211,7 @@ namespace Raytracer
                 {
                     for (int y = 0; y < resY; y++)
                     {
-                        if(col[x,y] == null) throw new Exception("asdlfkj");
+                        if(col[x,y] == null) throw new Exception("Irgendwas mit resX, resY Falsch?");
                         outputBM.SetPixel(x, y, col[x, y].Col);
                         continue;
                     }
