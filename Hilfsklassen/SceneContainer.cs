@@ -45,7 +45,7 @@ namespace Raytracer
             //theLights[1] = new CandleLight(new Vector(-lights + 70, -lights - 70, lights + 40), range, new RaytracerColor(Color.DarkGreen), intensity );
            
             
-            // Random r = new Random();
+            //Random r = new Random();
             int amount = 4; 
             if (amount % 2 != 0) throw new Exception("Amount muss gerade sein");
             double size = 100;
@@ -60,7 +60,7 @@ namespace Raytracer
             {
                 for(int j = 0; j<amount; j++)
                 {
-                   // height = r.Next(1, maxHeight*10);
+                    //height = r.Next(1, maxHeight*10);
                     cuboids[i,j] = new Cuboid(new Vector(i * (size/amount),j * (size / amount), (baseSize / 2) + (height / 20)) - new Vector((size - (size/amount))/2, (size - (size / amount)) / 2, -offsetUpDown), new Vector(1, 0, 0), new Vector(0, 0, 1), new double[3] { size / (amount) - s, size/ (amount) -s, (height/10) + baseSize },floorMaterial);
                     //theEntities[i * amount + j] = cuboids[i, j];
                 }

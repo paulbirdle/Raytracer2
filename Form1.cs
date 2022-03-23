@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 //TODO: 
 //IMPORTANT: Cuboid und Hitbox haben einen Bug, welcher bei perfekt so darauf schaut, dass sich fordere und hintere Kante überschneiden, dazu führt, dass im gerenderten Bild ein schwarzer Strich auftaucht. 
 //Cylinder, Tetrahedron; Quadrilaterals und Cuboid effizienter
+//Ellipsoid
 //render gibt gleich Bitmap zurück (schwierig mit dem Multithreading)
 //Progressbar (auch schwierig mit dem Multithreading)
 //Effitienteres Antialiasing z.B. nur bei Kanten in höherer Auflösung Rendern
