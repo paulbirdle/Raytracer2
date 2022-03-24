@@ -82,6 +82,13 @@ namespace Raytracer
             return new Vector(v.Y * w.Z - v.Z * w.Y, v.Z * w.X - v.X * w.Z, v.X * w.Y - v.Y * w.X);
         }
 
+        public static Vector operator &(Vector v, Vector w)
+        {
+            return new Vector(v.X * w.X, v.Y * w.Y, v.Z * w.Z);
+        }
+
+
+
         public static double angle (Vector v, Vector w)
         {
             return Math.Acos(v * w / (v.norm() * w.norm()));
@@ -91,6 +98,11 @@ namespace Raytracer
         {
             Matrix A = Matrix.Rotation(axis, angle);
             return A * to_be_rotated;
+        }
+
+        public static double weightedScalProd (Vector v, Vector w, double[] a)
+        {
+            return v.X * w.X / a[0] + v.Y * w.Y / a[1] + v.Z * w.Z / a[2];
         }
 
         public double norm()

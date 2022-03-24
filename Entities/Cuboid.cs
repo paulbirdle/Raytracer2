@@ -13,9 +13,7 @@ namespace Raytracer
         private readonly Vector[] corners;
         private readonly bool multiple_materials;
 
-        private readonly Hitsphere hitbox;
-
-        //private readonly EntityGroup group;
+        private readonly HitEllipsoid hitEllipsoid;
 
         public Cuboid(Vector center, Vector up, Vector front, double[] lengths, Material material)
         {
@@ -31,9 +29,9 @@ namespace Raytracer
             corners = Get_Corners();
             sides = Get_Quads();
 
-            hitbox = new Hitsphere(center, Math.Sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]) / 2);
-
-            //group = new EntityGroup(sides, new Hitsphere(center, Math.Sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]) / 2));
+            double f = Math.Sqrt(3) / 2;
+            hitEllipsoid = new HitEllipsoid(center, new double[3] { f * a[0], f * a[1], f * a[2] }, normals[0], normals[1]);
+            //minimize surface area of ellipse!
         }
 
         public Cuboid(Vector center, Vector up, Vector front, double[] lengths, Material[] materials)
@@ -50,9 +48,8 @@ namespace Raytracer
             corners = Get_Corners();
             sides = Get_Quads();
 
-            hitbox = new Hitsphere(center, Math.Sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]) / 2);
-
-            //group = new EntityGroup(sides, new Hitsphere(center, Math.Sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]) / 2));
+            double f = Math.Sqrt(3) / 2;
+            hitEllipsoid = new HitEllipsoid(center, new double[3] { f * a[0], f * a[1], f * a[2] }, normals[0], normals[1]);
         }
 
 
@@ -99,10 +96,9 @@ namespace Raytracer
 
         public override double get_intersection(Ray ray)
         {
-            //return group.get_intersection(ray);
-            if (!hitbox.hits(ray)) return -1;
+            if (!hitEllipsoid.hits(ray)) return -1;
             Vector v = ray.Direction;
-            double outside = isInside(ray) ? -1 : 1;
+            double outside = IsInside(ray) ? -1 : 1;
 
             double tmin = double.PositiveInfinity;
             double t;
@@ -122,15 +118,14 @@ namespace Raytracer
 
         public override double get_intersection(Ray ray, out Vector n, out Material material)
         {
-            //return group.get_intersection(ray, out n, out material);
-            if (!hitbox.hits(ray)) // nötig?
+            if (!hitEllipsoid.hits(ray)) // nötig?
             {
                 material = null;
                 n = null;
                 return -1;
             }
             Vector v = ray.Direction;
-            double outside = isInside(ray) ? -1 : 1;
+            double outside = IsInside(ray) ? -1 : 1;
 
             double tmin = double.PositiveInfinity;
             double t;
@@ -165,7 +160,7 @@ namespace Raytracer
             return center;
         }
 
-        public bool isInside(Ray ray)
+        public bool IsInside(Ray ray)
         {
             Vector x = ray.Start + 1e-6 * ray.Direction - center;
             if (Math.Abs(x * normals[0]) <= a[0] && Math.Abs(x * normals[1]) <= a[1] && Math.Abs(x * normals[2]) <= a[2])
