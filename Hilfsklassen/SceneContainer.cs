@@ -14,20 +14,22 @@ namespace Raytracer
             Material RoughYellow = new Material(new RaytracerColor(Color.Yellow), 0.5, 10, 0.7, 0.3);
 
             Entity[] theEntities = new Entity[4];
-            theEntities[0] = new Sphere(new Vector(20, 0, 0), 1, MirrorRed);
+            //theEntities[0] = new Sphere(new Vector(20, 0, 0), 1, MirrorRed);
+            theEntities[0] = new Ellipsoid(new Vector(20, 0, 0), new double[3] { 1, 0.6, 0.4 }, new Vector(0, 1, 1), new Vector(1, 1, -1), MirrorRed);
             theEntities[1] = new Sphere(new Vector(19, -2, 1), 1, MattGreen);
             theEntities[2] = new Sphere(new Vector(18.7, 1.5, 1.3), 0.3, RoughYellow);
-            theEntities[3] = new Cuboid(new Vector(30, -4, -2), new Vector(0, 0, 1), new Vector(-1, 0, 0), new double[3] { 1, 1.5, 2 }, 
+            /*theEntities[3] = new Cuboid(new Vector(30, -4, -2), new Vector(0, 0, 1), new Vector(-1, 0, 0), new double[3] { 1, 1.5, 2 }, 
                 new Material[6]{
                 new Material(RaytracerColor.Pink, 0.7, 100, 0.5, 0.7),
                 new Material(RaytracerColor.Yellow, 0.7, 100, 0.5, 0.7),
                 new Material(RaytracerColor.Orange, 0.7, 100, 0.5, 0.7),
                 new Material(RaytracerColor.Yellow, 0.7, 100, 0.5, 0.7),
                 new Material(RaytracerColor.Orange, 0.7, 100, 0.5, 0.7),
-                new Material(RaytracerColor.Pink, 0.7, 100, 0.5, 0.7) });
+                new Material(RaytracerColor.Pink, 0.7, 100, 0.5, 0.7) });*/
 
-            Lightsource[] theLights = new Lightsource[1];
+            Lightsource[] theLights = new Lightsource[2];
             theLights[0] = new PointLight(new Vector(15, 5, 7), RaytracerColor.White);
+            theLights[1] = new PointLight(new Vector(0, 0, 1), RaytracerColor.White, 0.4);
 
             return new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
         }
@@ -45,7 +47,7 @@ namespace Raytracer
             //theLights[1] = new CandleLight(new Vector(-lights + 70, -lights - 70, lights + 40), range, new RaytracerColor(Color.DarkGreen), intensity );
            
             
-            // Random r = new Random();
+            //Random r = new Random();
             int amount = 4; 
             if (amount % 2 != 0) throw new Exception("Amount muss gerade sein");
             double size = 100;
@@ -60,7 +62,7 @@ namespace Raytracer
             {
                 for(int j = 0; j<amount; j++)
                 {
-                   // height = r.Next(1, maxHeight*10);
+                    //height = r.Next(1, maxHeight*10);
                     cuboids[i,j] = new Cuboid(new Vector(i * (size/amount),j * (size / amount), (baseSize / 2) + (height / 20)) - new Vector((size - (size/amount))/2, (size - (size / amount)) / 2, -offsetUpDown), new Vector(1, 0, 0), new Vector(0, 0, 1), new double[3] { size / (amount) - s, size/ (amount) -s, (height/10) + baseSize },floorMaterial);
                     //theEntities[i * amount + j] = cuboids[i, j];
                 }

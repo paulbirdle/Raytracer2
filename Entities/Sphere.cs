@@ -25,10 +25,10 @@ namespace Raytracer
             Vector direction = ray.Direction;
             Vector v_to_start = start - center;
 
-            double b = direction * v_to_start;
+            double b = 2 * direction * v_to_start;
             double c = v_to_start * v_to_start - squarerad;
 
-            double t = Poly.GetSmallestPositiveRoot(new double[2] { 2 * b, c });
+            double t = Poly.GetSmallestPositiveRoot(new double[2] { b, c });
             if(t == -1)
             {
                 n = null;
@@ -50,10 +50,10 @@ namespace Raytracer
             Vector direction = ray.Direction;
             Vector v_to_start = start - center;
 
-            double b = direction * v_to_start;
+            double b = 2 * direction * v_to_start;
             double c = v_to_start * v_to_start - squarerad;
 
-            return Poly.GetSmallestPositiveRoot(new double[2] { 2 * b, c });
+            return Poly.GetSmallestPositiveRoot(new double[2] { b, c });
         }
     }
 }

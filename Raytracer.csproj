@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Compile Include="Ellipsoid.cs" />
     <Compile Include="Entities\Cone.cs" />
     <Compile Include="Entities\ConeEnvelope.cs" />
     <Compile Include="Entities\Disk.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Entities\Cylinder.cs" />
     <Compile Include="Entities\EntityGroup.cs" />
     <Compile Include="Hilfsklassen\SceneContainer.cs" />
+    <Compile Include="Hitentities\HitEllipsoid.cs" />
     <Compile Include="Hitentities\Hitbox.cs" />
     <Compile Include="Hitentities\Hitentity.cs" />
     <Compile Include="Hitentities\HitQuadrilateral.cs" />
