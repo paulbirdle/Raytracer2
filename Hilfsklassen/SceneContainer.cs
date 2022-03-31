@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Drawing;
+using System.Collections.Generic;
+
 
 namespace Raytracer
 {
@@ -266,7 +268,6 @@ namespace Raytracer
             //opti[3] = new Quadrilateral(new Vector(-20, -s, -s), new Vector(-20, -s, -gap), new Vector(-20, -gap, -gap), new Vector(-20, -gap, -s), new Material(col, 0, 100, 0, 1));
             //opti[0] = new Quadrilateral(new Vector(-20, s, -s), new Vector(-20, s, -gap), new Vector(-20, gap, -gap), new Vector(-20, gap, -s), new Material(col, 0, 100, 0, 1));
         }
-
         public static Scene scene10(int resx, int resy) // Smooth shadow scene
         {
             Camera cam = new Camera(new Vector(100, 0, 50), new Vector(-1, 0, -0.5), new Vector(0, 0, 1), Math.PI / 4, resx, resy);
@@ -291,7 +292,62 @@ namespace Raytracer
 
             return new Scene(cam, ents, lights);
         }
+        public static Scene scene11(int resX,int resY) // Floor again :)
+        {
+            Camera theCamera = new Camera(new Vector(-600, -680, 420), new Vector(6, 6.8, -4.15), new Vector(0, 0, 1), Math.PI / 7, resX, resY);
+            Entity[] theEntities = new Entity[32*32];
 
+            Lightsource[] theLights = new Lightsource[6];
+
+            double intensity = 5;
+            int range = 130;
+            double lights = 150;
+            theLights[0] = new CandleLight(new Vector(-lights - 200, -lights + 70, lights + 80), range, new RaytracerColor(Color.White), intensity );
+            theLights[1] = new CandleLight(new Vector(-lights + 70, -lights - 200, lights + 40), range, new RaytracerColor(Color.DarkGreen), intensity );
+            theLights[2] = new CandleLight(new Vector(0, +40, 100), 17, new RaytracerColor(Color.White), intensity +5);
+            theLights[3] = new CandleLight(new Vector(0, +300, 100), 17, new RaytracerColor(Color.White), intensity + 5);
+            theLights[4] = new CandleLight(new Vector(+220, +80, 100), 17, new RaytracerColor(Color.White), intensity + 5);
+            theLights[5] = new CandleLight(new Vector(lights + 70, lights - 200, lights), 45, new RaytracerColor(Color.DarkGreen), intensity +6);
+
+            Random r = new Random();
+            int amount = 32;
+            if (amount % 2 != 0) throw new Exception("Amount muss gerade sein");
+            double size = 800;
+            Material floorMaterial = new Material(new RaytracerColor(Color.FromArgb(38, 255, 168)), 0, 20, 0.5, 0.6);
+            int maxHeight = 80;
+            double s = 0; // spacing: is  subtractive not additive
+            int baseSize = 18;
+            int offsetUpDown = -40;
+            Entity[,] cuboids = new Entity[amount, amount]; // greating Cuboids
+            double height = maxHeight;
+            for (int i = 0; i < amount; i++)
+            {
+                for (int j = 0; j < amount; j++)
+                {
+                    height = r.Next(1, maxHeight*10);
+                    cuboids[i, j] = new Cuboid(new Vector(i * (size / amount), j * (size / amount), (baseSize / 2) + (height / 20)) - new Vector((size - (size / amount)) / 2, (size - (size / amount)) / 2, -offsetUpDown), new Vector(1, 0, 0), new Vector(0, 0, 1), new double[3] { size / (amount) - s, size / (amount) - s, (height / 10) + baseSize }, floorMaterial);
+                }
+            }
+
+            Entity[] groups = new Entity[amount * amount / 4];
+            for (int i = 0; i < amount / 2; i++)  //into groups of 4 
+            {
+                for (int j = 0; j < amount / 2; j++)
+                {
+                    Entity[] var = new Cuboid[4];
+                    var[0] = cuboids[i * 2, j * 2];
+                    var[1] = cuboids[i * 2 + 1, j * 2];
+                    var[2] = cuboids[i * 2, j * 2 + 1];
+                    var[3] = cuboids[i * 2 + 1, j * 2 + 1];
+                    Hitentity e = new Hitbox(new Vector(i * (2 * size / amount), j * (2 * size / amount), (baseSize / 2) + (maxHeight / 2)) - new Vector((size - (2 * size / amount)) / 2, (size - (2 * size / amount)) / 2, -offsetUpDown), new Vector(1, 0, 0), new Vector(0, 0, 1), new double[3] { 2 * size / (amount), 2 * size / (amount), maxHeight + baseSize });
+                    groups[i * (amount / 2) + j] = new EntityGroup(var, e);
+                    theEntities[i * (amount / 2) + j] = groups[i * (amount / 2) + j];
+                }
+            }
+
+            Scene theScene = new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
+            return theScene;
+        }
         public static Entity standardfloor(double size, RaytracerColor color)
         {
             Material bgm = new Material(color, 0, 100, 0.05, 0.7);
@@ -328,6 +384,72 @@ namespace Raytracer
         {
             Camera c = new Camera(new Vector(-100, 0, 30), new Vector(100, 0, -27), new Vector(0, 0, 1), xAngle, resX, resY);
             return c;
+        }
+
+        public static Dictionary<int, string> sceneDictionary = new Dictionary<int, string>
+        {
+            {1, "3 Ball Scene"},
+            {2, "vertical Bars"},
+            {3, "Infinity Mirror"},
+            {4, "Torus and Disk test Scene"},
+            {5, "Portal Scene"},
+            {6, "completely Random Spheres"},
+            {7, "Smartphone render"},
+            {8, "General Testing Scene"},
+            {9, "Minimalist flat Background"},
+            {10, "Smooth Shadow" },
+            {11, "Floor" }
+        };
+        public static Scene giveScene(int index_of_Scene, int resX, int resY)
+        {
+            if (index_of_Scene == 1)
+            {
+                return SceneContainer.scene1(resX, resY); 
+            }
+            else if (index_of_Scene == 2)
+            {
+                return SceneContainer.scene2(resX, resY);
+            }
+            else if (index_of_Scene == 3)
+            {
+                return SceneContainer.scene3(resX, resY);
+            }
+            else if (index_of_Scene == 4)
+            {
+                return SceneContainer.scene4(resX, resY);
+            }
+            else if (index_of_Scene == 5)
+            {
+                return SceneContainer.scene5(resX, resY);
+            }
+            else if (index_of_Scene == 6)
+            {
+                return SceneContainer.scene6(resX, resY);
+            }
+            else if (index_of_Scene == 7)
+            {
+                return SceneContainer.scene7(resX, resY);
+            }
+            else if (index_of_Scene == 8)
+            {
+                return SceneContainer.scene8(resX, resY);
+            }
+            else if (index_of_Scene == 9)
+            {
+                return SceneContainer.scene9(resX, resY);
+            }
+            else if (index_of_Scene == 10)
+            {
+                return SceneContainer.scene10(resX, resY);
+            }
+            else if (index_of_Scene == 11)
+            {
+                return SceneContainer.scene11(resX, resY);
+            }
+            else
+            {
+                throw new Exception("Wähl eine existierende Scene aus");
+            }
         }
     }
 }

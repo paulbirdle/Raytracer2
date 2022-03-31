@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 //Ellipsoid
 //render gibt gleich Bitmap zurück (schwierig mit dem Multithreading)
 //Progressbar (auch schwierig mit dem Multithreading)
-//Effitienteres Antialiasing z.B. nur bei Kanten in höherer Auflösung Rendern
 //Blur-Material oder generel mal ein Bild Unscharf machen
 //Transparente Objekte mit oder ohne Brechungsindex
 //Große Lightsources, weiche Schatten
@@ -21,7 +20,7 @@ namespace Raytracer
 {
     public partial class Form1 : Form
     {
-        int starting_Scene = 9;
+        int starting_Scene = 11;
         public Form1()
         {
             InitializeComponent();
@@ -37,7 +36,7 @@ namespace Raytracer
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (SceneSelector.Value > sceneDictionary.Count) return;
+            if (SceneSelector.Value > SceneContainer.sceneDictionary.Count) return;
             int scene = (int)SceneSelector.Value;
             int depth = (int)DepthSelector.Value;
             string res = (string)ResolutionSelector.SelectedItem;
@@ -59,11 +58,11 @@ namespace Raytracer
             Scene scene;
             if ((string)aliasingSelector.SelectedItem == "SSAA")
             {
-                 scene = sceneSelection((int)SceneSelector.Value, resX * a, resY * a);
+                 scene = SceneContainer.giveScene(scene_to_Render, resX * a, resY * a);
             }
             else if ((string)aliasingSelector.SelectedItem == "MSAA")
             {
-                 scene = sceneSelection((int)SceneSelector.Value, resX, resY);
+                 scene = SceneContainer.giveScene(scene_to_Render, resX, resY);
             }
             else throw new Exception("Keine Kantenglaettung ausgewaehlt?");
 
@@ -118,54 +117,6 @@ namespace Raytracer
             displayStatistics(statistic);
         }
 
-        private Scene sceneSelection(int index_of_Scene, int resX, int resY)
-        {
-            if (index_of_Scene == 1)
-            {
-                return SceneContainer.scene1(resX, resY); // höhere Renderauflösung wird übergeben
-            }
-            else if (index_of_Scene == 2)
-            {
-                return SceneContainer.scene2(resX, resY);
-            }
-            else if (index_of_Scene == 3)
-            {
-                return SceneContainer.scene3(resX, resY);
-            }
-            else if (index_of_Scene == 4)
-            {
-                return SceneContainer.scene4(resX, resY);
-            }
-            else if (index_of_Scene == 5)
-            {
-                return SceneContainer.scene5(resX, resY);
-            }
-            else if (index_of_Scene == 6)
-            {
-                return SceneContainer.scene6(resX, resY);
-            }
-            else if (index_of_Scene == 7)
-            {
-                return SceneContainer.scene7(resX, resY);
-            }
-            else if (index_of_Scene == 8)
-            {
-                return SceneContainer.scene8(resX, resY);
-            }
-            else if (index_of_Scene == 9)
-            {
-                return SceneContainer.scene9(resX, resY);
-            }
-            else if (index_of_Scene == 10)
-            {
-                return SceneContainer.scene10(resX, resY);
-            }
-            else
-            {
-                throw new Exception("Wähl eine existierende Scene aus");
-            }
-        }
-
         Dictionary<string, int[]> resDictionary = new Dictionary<string, int[]>
         {
             {"90p"  , new int[2]{160,    90} },
@@ -176,20 +127,6 @@ namespace Raytracer
             {"1440p", new int[2]{2560, 1440} },
             {"4k"   , new int[2]{3840, 2160} },
             {"8k"   , new int[2]{7680, 4320} }
-        };
-
-        Dictionary<int, string> sceneDictionary = new Dictionary<int, string>
-        {
-            {1, "3 Ball Scene"},
-            {2, "vertical Bars"},
-            {3, "Infinity Mirror"},
-            {4, "Torus and Disk test Scene"},
-            {5, "Portal Scene"},
-            {6, "completely Random Spheres"},
-            {7, "Smartphone render"},
-            {8, "General Testing Scene"},
-            {9, "Minimalist flat Background"},
-            {10, "Smooth Shadow" }
         };
 
         private void save(Bitmap map)
@@ -407,10 +344,10 @@ namespace Raytracer
 
         private void displaySceneDescription()
         {
-            if ((int)SceneSelector.Value <= sceneDictionary.Count)
+            if ((int)SceneSelector.Value <= SceneContainer.sceneDictionary.Count)
             {
                 SceneDescription.Text = "Scene description: ";
-                SceneDescription.Text += "\n" + sceneDictionary[(int)SceneSelector.Value];
+                SceneDescription.Text += "\n" + SceneContainer.sceneDictionary[(int)SceneSelector.Value];
             }
             else
             {
