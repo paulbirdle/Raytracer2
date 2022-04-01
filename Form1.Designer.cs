@@ -44,6 +44,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.aliasingSelector = new System.Windows.Forms.ComboBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.DepthSelector)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SceneSelector)).BeginInit();
             this.SuspendLayout();
@@ -51,10 +52,10 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(68, 442);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.button1.Location = new System.Drawing.Point(60, 354);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(310, 71);
+            this.button1.Size = new System.Drawing.Size(276, 57);
             this.button1.TabIndex = 1;
             this.button1.Text = "Start Rendering";
             this.button1.UseVisualStyleBackColor = true;
@@ -64,15 +65,15 @@
             // 
             this.statistics.AutoSize = true;
             this.statistics.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.statistics.Location = new System.Drawing.Point(472, 128);
+            this.statistics.Location = new System.Drawing.Point(420, 102);
             this.statistics.Name = "statistics";
-            this.statistics.Size = new System.Drawing.Size(164, 88);
+            this.statistics.Size = new System.Drawing.Size(133, 72);
             this.statistics.TabIndex = 2;
             this.statistics.Text = "Renderdauer   :  0s\nAnzeigedauer  :  0s\nAnzahl Rays     :  0\nAnzahl Vectors :  0";
             // 
             // DepthSelector
             // 
-            this.DepthSelector.Location = new System.Drawing.Point(267, 256);
+            this.DepthSelector.Location = new System.Drawing.Point(237, 205);
             this.DepthSelector.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.DepthSelector.Maximum = new decimal(new int[] {
             20,
@@ -85,7 +86,7 @@
             0,
             0});
             this.DepthSelector.Name = "DepthSelector";
-            this.DepthSelector.Size = new System.Drawing.Size(112, 26);
+            this.DepthSelector.Size = new System.Drawing.Size(100, 22);
             this.DepthSelector.TabIndex = 7;
             this.DepthSelector.Value = new decimal(new int[] {
             2,
@@ -97,9 +98,9 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(64, 260);
+            this.label5.Location = new System.Drawing.Point(57, 208);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(58, 22);
+            this.label5.Size = new System.Drawing.Size(47, 18);
             this.label5.TabIndex = 8;
             this.label5.Text = "Depth";
             // 
@@ -107,15 +108,15 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(64, 165);
+            this.label6.Location = new System.Drawing.Point(57, 132);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(138, 22);
+            this.label6.Size = new System.Drawing.Size(113, 18);
             this.label6.TabIndex = 9;
             this.label6.Text = "Scene to render";
             // 
             // SceneSelector
             // 
-            this.SceneSelector.Location = new System.Drawing.Point(267, 161);
+            this.SceneSelector.Location = new System.Drawing.Point(237, 129);
             this.SceneSelector.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.SceneSelector.Minimum = new decimal(new int[] {
             1,
@@ -123,7 +124,7 @@
             0,
             0});
             this.SceneSelector.Name = "SceneSelector";
-            this.SceneSelector.Size = new System.Drawing.Size(112, 26);
+            this.SceneSelector.Size = new System.Drawing.Size(100, 22);
             this.SceneSelector.TabIndex = 10;
             this.SceneSelector.Value = new decimal(new int[] {
             3,
@@ -136,9 +137,9 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(64, 214);
+            this.label7.Location = new System.Drawing.Point(57, 171);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(95, 22);
+            this.label7.Size = new System.Drawing.Size(79, 18);
             this.label7.TabIndex = 12;
             this.label7.Text = "Resolution";
             // 
@@ -146,9 +147,9 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(64, 359);
+            this.label8.Location = new System.Drawing.Point(57, 287);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(180, 22);
+            this.label8.Size = new System.Drawing.Size(144, 18);
             this.label8.TabIndex = 13;
             this.label8.Text = "AntiAliasing Multiplier";
             // 
@@ -164,10 +165,10 @@
             "1440p",
             "4k",
             "8k"});
-            this.ResolutionSelector.Location = new System.Drawing.Point(267, 208);
+            this.ResolutionSelector.Location = new System.Drawing.Point(237, 166);
             this.ResolutionSelector.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ResolutionSelector.Name = "ResolutionSelector";
-            this.ResolutionSelector.Size = new System.Drawing.Size(112, 28);
+            this.ResolutionSelector.Size = new System.Drawing.Size(100, 24);
             this.ResolutionSelector.TabIndex = 15;
             this.ResolutionSelector.Text = "360p";
             // 
@@ -175,9 +176,9 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(467, 44);
+            this.label9.Location = new System.Drawing.Point(415, 35);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(181, 46);
+            this.label9.Size = new System.Drawing.Size(153, 39);
             this.label9.TabIndex = 16;
             this.label9.Text = "Statistics";
             // 
@@ -191,19 +192,18 @@
             "8",
             "16",
             "32"});
-            this.AAMultiplierSelector.Location = new System.Drawing.Point(266, 353);
+            this.AAMultiplierSelector.Location = new System.Drawing.Point(236, 282);
             this.AAMultiplierSelector.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.AAMultiplierSelector.Name = "AAMultiplierSelector";
-            this.AAMultiplierSelector.Size = new System.Drawing.Size(112, 28);
+            this.AAMultiplierSelector.Size = new System.Drawing.Size(100, 24);
             this.AAMultiplierSelector.TabIndex = 17;
             this.AAMultiplierSelector.Text = "1";
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(672, 424);
-            this.button2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.button2.Location = new System.Drawing.Point(626, 359);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(114, 66);
+            this.button2.Size = new System.Drawing.Size(101, 53);
             this.button2.TabIndex = 18;
             this.button2.Text = "VideoScene Test";
             this.button2.UseVisualStyleBackColor = true;
@@ -213,9 +213,9 @@
             // 
             this.SceneDescription.AutoSize = true;
             this.SceneDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SceneDescription.Location = new System.Drawing.Point(63, 61);
+            this.SceneDescription.Location = new System.Drawing.Point(56, 49);
             this.SceneDescription.Name = "SceneDescription";
-            this.SceneDescription.Size = new System.Drawing.Size(171, 25);
+            this.SceneDescription.Size = new System.Drawing.Size(147, 20);
             this.SceneDescription.TabIndex = 19;
             this.SceneDescription.Text = "Scene Description";
             // 
@@ -223,9 +223,9 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(64, 308);
+            this.label1.Location = new System.Drawing.Point(57, 246);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(168, 22);
+            this.label1.Size = new System.Drawing.Size(136, 18);
             this.label1.TabIndex = 20;
             this.label1.Text = "AntiAliasing Method";
             // 
@@ -235,10 +235,10 @@
             this.aliasingSelector.Items.AddRange(new object[] {
             "SSAA",
             "MSAA"});
-            this.aliasingSelector.Location = new System.Drawing.Point(266, 302);
+            this.aliasingSelector.Location = new System.Drawing.Point(236, 242);
             this.aliasingSelector.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.aliasingSelector.Name = "aliasingSelector";
-            this.aliasingSelector.Size = new System.Drawing.Size(112, 28);
+            this.aliasingSelector.Size = new System.Drawing.Size(100, 24);
             this.aliasingSelector.TabIndex = 21;
             this.aliasingSelector.Text = "MSAA";
             // 
@@ -246,18 +246,27 @@
             // 
             this.checkBox1.AutoSize = true;
             this.checkBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.checkBox1.Location = new System.Drawing.Point(68, 401);
+            this.checkBox1.Location = new System.Drawing.Point(60, 321);
+            this.checkBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(137, 26);
+            this.checkBox1.Size = new System.Drawing.Size(114, 22);
             this.checkBox1.TabIndex = 22;
             this.checkBox1.Text = "Show Edges";
             this.checkBox1.UseVisualStyleBackColor = true;
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(12, 418);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(725, 35);
+            this.progressBar1.TabIndex = 23;
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(831, 527);
+            this.ClientSize = new System.Drawing.Size(749, 464);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.aliasingSelector);
             this.Controls.Add(this.label1);
@@ -302,6 +311,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox aliasingSelector;
         private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }
 

@@ -7,7 +7,7 @@ namespace Raytracer
         private readonly Vector center;
         private readonly Vector[] normals; //up, right, front
         private readonly Material[] material; //oben, rechts, vorne, unten, links, hinten
-        private readonly double[] a;//Die Drei Seitenlängen; a = {Höhe, Breite, Tiefe}
+        private readonly double[] a; //Die Drei Seitenlängen; a = {Höhe, Breite, Tiefe}
 
         private readonly Quadrilateral[] sides; //oben, rechts, vorne, unten, links, hinten
         private readonly Vector[] corners;
@@ -29,8 +29,8 @@ namespace Raytracer
             corners = Get_Corners();
             sides = Get_Quads();
 
-            double f = Math.Sqrt(3) / 2;
-            hitEllipsoid = new HitEllipsoid(center, new double[3] { f * a[0], f * a[1], f * a[2] }, normals[0], normals[1]);
+            double f = Math.Sqrt(3)/2;
+            hitEllipsoid = new HitEllipsoid(center, new double[3] { f * a[0] , f * a[1] , f * a[2] }, normals[0], normals[1]);
             //minimize surface area of ellipse!
         }
 

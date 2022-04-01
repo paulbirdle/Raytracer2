@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
+using System.ComponentModel;
 using System.Threading.Tasks;
 
 //TODO: 
@@ -20,9 +21,18 @@ namespace Raytracer
     public partial class Form1 : Form
     {
         int starting_Scene = 11;
+
+        private BackgroundWorker BW;
         public Form1()
         {
             InitializeComponent();
+
+            BW = new BackgroundWorker();
+            BW.WorkerReportsProgress = true;
+            BW.WorkerSupportsCancellation = true;
+            BW.DoWork += new DoWorkEventHandler(BW_DoWork);
+            BW.ProgressChanged += new ProgressChangedEventHandler(BW_ProgressChanged);
+            //BW.RunWorkerCompleted += new RunWorkerCompletedEventHandler(BW_RunWorkerCompleted);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -65,14 +75,18 @@ namespace Raytracer
             }
             else throw new Exception("Keine Kantenglaettung ausgewaehlt?");
 
+            //BW.RunWorkerAsync();
+            //scene.ProgressChanged += Scene_ProgressChanged;
+
             Ray.numRay = 0;
             Vector.numVec = 0;
             double[] statistic = new double[3];
 
-
             DateTime before = DateTime.Now;
 
-            RaytracerColor[,] col = scene.render(depth);
+            //BW.RunWorkerAsync(scene, depth);
+            //RaytracerColor[,] col = BW.
+            RaytracerColor[,] col = scene.render(depth);    //unser Bösewicht (was Zeit angeht)
 
             DateTime after = DateTime.Now;
             TimeSpan duration = after - before;
@@ -193,7 +207,7 @@ namespace Raytracer
             return outputBM;
         }
 
-        private Boolean[,] aliasDetection(RaytracerColor[,] col, int resX, int resY)
+        private bool[,] aliasDetection(RaytracerColor[,] col, int resX, int resY)
         {
             double threshhold = 3; // ganz guter Wert I guess; mhhh muss nochmal sehen
             bool[,] edges = new bool[resX, resY];
@@ -285,7 +299,7 @@ namespace Raytracer
             return edges;
         }
 
-        private Bitmap showAlias(Boolean [,] alias)
+        private Bitmap showAlias(bool [,] alias)
         {
             Bitmap outputBM = new Bitmap(alias.GetLength(0), alias.GetLength(1));
             for(int x = 0; x< alias.GetLength(0); x++)
@@ -353,6 +367,33 @@ namespace Raytracer
                 SceneDescription.Text = "Scene description: ";
                 SceneDescription.Text += "\nNo Scene " + SceneSelector.Value.ToString() + " exists";
             }
+        }
+
+
+        /*private void Scene_ProgressChanged(int progress)
+        {
+            Invoke((Action)delegate
+            {
+                progressBar1.Value = progress;
+            });
+        }*/
+
+        private void BW_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+
+            //Scene scene = e.Argument[0];
+            //e.Result = scene.render(e.Argument[1], worker, e);
+        }
+
+        private void BW_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            progressBar1.Value = e.ProgressPercentage;
+        }
+
+        private void BW_RunWorkerCompleted(object sender, RunWorkerCompletedEventHandler e)
+        {
+
         }
 
     }

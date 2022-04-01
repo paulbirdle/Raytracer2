@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.ComponentModel;
 
 namespace Raytracer
 {
@@ -12,6 +13,13 @@ namespace Raytracer
         private readonly RaytracerColor ambientColor;
 
         readonly int parallelism = -1;
+
+        public delegate void ProgressUpdate(int value);
+        //public event ProgressUpdate OnProgressUpdate;
+
+        //public event Action<int> ProgressChanged;
+        public volatile int progress = 0;
+
 
         public Scene(Camera cam, Entity[] entities, Lightsource[] lights)
         {
@@ -28,20 +36,17 @@ namespace Raytracer
             this.ambientColor = ambientColor;
         }
 
-        public RaytracerColor[,] render(int depth)
+        public RaytracerColor[,] render(int depth/*, BackgroundWorker worker, DoWorkEventArgs e*/)
         {
             int resY = cam.resY;
             int resX = cam.resX;
             RaytracerColor[,] color = new RaytracerColor[resX, resY];
-           // Vector p = cam.Position;
-           // Vector v = cam.ULCorner;
-           // Vector r = cam.Step_Right;
-           // Vector d = cam.Step_Down;
 
-            
-            ParallelOptions opt = new ParallelOptions();
-            opt.MaxDegreeOfParallelism = parallelism; // max Anzahl Threads, man kann also cpu auslastung ugf. festlegen, -1 ist unbegrenzt (halt hardware begrenzt)
-            
+            ParallelOptions opt = new ParallelOptions
+            {
+                MaxDegreeOfParallelism = parallelism // max Anzahl Threads, man kann also cpu auslastung ugf. festlegen, -1 ist unbegrenzt (halt hardware begrenzt)
+            };
+
             Parallel.For(0,resX, opt,x => // parallel mehrere Threads nutzen
             {
                 for (int y = 0; y < resY; y++)
@@ -50,6 +55,11 @@ namespace Raytracer
                     ray = cam.get_Rays(x, y);
                     color[x, y] = calculateRays(ray, depth);
                 }
+
+                progress = (int)(100 * (double)x / resX);
+                //OnProgressChanged(progress);
+                //OnProgressUpdate?.Invoke(progress);
+                //worker.ReportProgress(progress);
             });
             return color;
         }
@@ -258,6 +268,12 @@ namespace Raytracer
         {
             return ambientColor;
         }
+
+
+        /*private void OnProgressChanged(int progress)
+        {
+            ProgressChanged?.Invoke(progress);
+        }*/
 
     }
 }
