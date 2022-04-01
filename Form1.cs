@@ -76,7 +76,7 @@ namespace Raytracer
             else throw new Exception("Keine Kantenglaettung ausgewaehlt?");
 
             //BW.RunWorkerAsync();
-            //scene.ProgressChanged += Scene_ProgressChanged;
+            scene.ProgressChanged += Scene_ProgressChanged;
 
             Ray.numRay = 0;
             Vector.numVec = 0;
@@ -370,13 +370,13 @@ namespace Raytracer
         }
 
 
-        /*private void Scene_ProgressChanged(int progress)
+        private void Scene_ProgressChanged(int progress)
         {
             Invoke((Action)delegate
             {
                 progressBar1.Value = progress;
             });
-        }*/
+        }
 
         private void BW_DoWork(object sender, DoWorkEventArgs e)
         {

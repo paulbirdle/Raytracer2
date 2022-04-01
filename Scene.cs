@@ -15,9 +15,9 @@ namespace Raytracer
         readonly int parallelism = -1;
 
         public delegate void ProgressUpdate(int value);
-        //public event ProgressUpdate OnProgressUpdate;
+        public event ProgressUpdate OnProgressUpdate;
 
-        //public event Action<int> ProgressChanged;
+        public event Action<int> ProgressChanged;
         public volatile int progress = 0;
 
 
@@ -56,42 +56,16 @@ namespace Raytracer
                     color[x, y] = calculateRays(ray, depth);
                 }
 
-                progress = (int)(100 * (double)x / resX);
-                //OnProgressChanged(progress);
-                //OnProgressUpdate?.Invoke(progress);
+                if(parallelism > 0 && parallelism < 5)
+                {
+                    progress = (int)(100 * (double)x / resX);
+                    OnProgressChanged(progress);
+                    OnProgressUpdate?.Invoke(progress);
+                }
                 //worker.ReportProgress(progress);
             });
             return color;
         }
-
-        public Bitmap renderBM(int depth)
-        {
-            int resY = cam.resY;
-            int resX = cam.resX;
-            Bitmap bitmap = new Bitmap(resX, resY);
-            Vector p = cam.Position;
-            Vector v = cam.ULCorner;
-            Vector r = cam.Step_Right;
-            Vector d = cam.Step_Down;
-
-            ParallelOptions opt = new ParallelOptions();
-            opt.MaxDegreeOfParallelism = parallelism; // max Anzahl Threads, man kann also cpu auslastung ugf. festlegen, -1 ist unbegrenzt (halt hardware begrenzt)
-
-            Parallel.For(0, resX, opt, x => // parallel mehrere Threads nutzen
-            {
-                for (int y = 0; y < resY; y++)
-                {
-                    Ray ray = cam.get_Rays(x, y);
-                    //Ray ray = new Ray(v, p);
-                    Color col = calculateRays(ray, depth).Col;
-                    bitmap.SetPixel(x, y, col);
-                    //v += d;
-                    continue;
-                }
-                //v += r - resY * d;
-            });
-            return bitmap;
-        } //funktioniert noch nicht
 
         public RaytracerColor[,] msaa(RaytracerColor[,] col, bool[,] edges, int msaa, int depth)
         {
@@ -270,10 +244,10 @@ namespace Raytracer
         }
 
 
-        /*private void OnProgressChanged(int progress)
+        private void OnProgressChanged(int progress)
         {
             ProgressChanged?.Invoke(progress);
-        }*/
+        }
 
     }
 }
