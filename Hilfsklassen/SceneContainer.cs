@@ -17,7 +17,8 @@ namespace Raytracer
 
             Entity[] theEntities = new Entity[4];
             //theEntities[0] = new Sphere(new Vector(20, 0, 0), 1, MirrorRed);
-            theEntities[0] = new Ellipsoid(new Vector(20, 0, 0), new double[3] { 1, 0.6, 0.4 }, new Vector(0, 1, 1), new Vector(1, 1, -1), MirrorRed);
+            //theEntities[0] = new Ellipsoid(new Vector(20, 0, 0), new double[3] { 1, 0.6, 0.4 }, new Vector(0, 1, 1), new Vector(1, 1, -1), MirrorRed);
+            theEntities[0] = new Cylinder(new Vector(20, 0, 0), new Vector(1, -1, 2), 1.5, 0.5, MirrorRed);
             theEntities[1] = new Sphere(new Vector(19, -2, 1), 1, MattGreen);
             theEntities[2] = new Sphere(new Vector(18.7, 1.5, 1.3), 0.3, RoughYellow);
             /*theEntities[3] = new Cuboid(new Vector(30, -4, -2), new Vector(0, 0, 1), new Vector(-1, 0, 0), new double[3] { 1, 1.5, 2 }, 
@@ -29,9 +30,10 @@ namespace Raytracer
                 new Material(RaytracerColor.Orange, 0.7, 100, 0.5, 0.7),
                 new Material(RaytracerColor.Pink, 0.7, 100, 0.5, 0.7) });*/
 
-            Lightsource[] theLights = new Lightsource[2];
+            Lightsource[] theLights = new Lightsource[3];
             theLights[0] = new PointLight(new Vector(15, 5, 7), RaytracerColor.White);
             theLights[1] = new PointLight(new Vector(0, 0, 1), RaytracerColor.White, 0.4);
+            theLights[2] = new CandleLight(new Vector(19, 4, -4), 3, RaytracerColor.White);
 
             return new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
         }
