@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Raytracer
+﻿namespace Raytracer
 {
     class Tetrahedron : Entity
     {
