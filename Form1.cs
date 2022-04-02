@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 //TODO: 
 //IMPORTANT: Cuboid und Hitbox haben einen Bug, welcher bei perfekt so darauf schaut, dass sich fordere und hintere Kante überschneiden, dazu führt, dass im gerenderten Bild ein schwarzer Strich auftaucht. 
-//Cylinder, Tetrahedron; Quadrilaterals und Cuboid effizienter
+//Tetrahedron; Quadrilaterals und Cuboid effizienter
 //render gibt gleich Bitmap zurück (schwierig mit dem Multithreading)
 //Progressbar (auch schwierig mit dem Multithreading)
 //Blur-Material oder generel mal ein Bild Unscharf machen
@@ -20,7 +20,7 @@ namespace Raytracer
 {
     public partial class Form1 : Form
     {
-        int starting_Scene = 11;
+        int starting_Scene = 1;
 
         private BackgroundWorker BW;
         public Form1()

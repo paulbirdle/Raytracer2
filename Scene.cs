@@ -12,7 +12,7 @@ namespace Raytracer
         private readonly Lightsource[] lights;
         private readonly RaytracerColor ambientColor;
 
-        readonly int parallelism = 3;
+        readonly int parallelism = 1;
 
         public delegate void ProgressUpdate(int value);
         public event ProgressUpdate OnProgressUpdate;

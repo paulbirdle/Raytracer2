@@ -18,7 +18,8 @@ namespace Raytracer
             Entity[] theEntities = new Entity[4];
             //theEntities[0] = new Sphere(new Vector(20, 0, 0), 1, MirrorRed);
             //theEntities[0] = new Ellipsoid(new Vector(20, 0, 0), new double[3] { 1, 0.6, 0.4 }, new Vector(0, 1, 1), new Vector(1, 1, -1), MirrorRed);
-            theEntities[0] = new Cylinder(new Vector(20, 0, 0), new Vector(1, -1, 2), 1.5, 0.5, MirrorRed);
+            theEntities[0] = new Tetrahedron(new Vector[4] { new Vector(20, -1, -1), new Vector(20, 1.5, -0.7), new Vector(20, -0.3, 0.5), new Vector(18, 0.1, -0.3) }, MirrorRed);
+            //theEntities[0] = new Cylinder(new Vector(20, 0, 0), new Vector(1, -1, 2), 1.5, 0.5, MirrorRed);
             theEntities[1] = new Sphere(new Vector(19, -2, 1), 1, MattGreen);
             theEntities[2] = new Sphere(new Vector(18.7, 1.5, 1.3), 0.3, RoughYellow);
             /*theEntities[3] = new Cuboid(new Vector(30, -4, -2), new Vector(0, 0, 1), new Vector(-1, 0, 0), new double[3] { 1, 1.5, 2 }, 
