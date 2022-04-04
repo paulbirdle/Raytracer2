@@ -3,36 +3,32 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
-using System.ComponentModel;
 using System.Threading.Tasks;
 
 //TODO: 
-//IMPORTANT: Cuboid und Hitbox haben einen Bug, welcher bei perfekt so darauf schaut, dass sich fordere und hintere Kante überschneiden, dazu führt, dass im gerenderten Bild ein schwarzer Strich auftaucht. 
-//Cuboid effizienter
-//render gibt gleich Bitmap zurück
-//Progressbar
-//Blur-Material oder generel mal ein Bild Unscharf machen
+//Cuboid und Hitbox Bug fixen
+//Rectangle, Square
+//Voraussichtliche Zeit
+//GUI
+//Erstellen von Szenen einfacher machen
+//
 //Transparente Objekte mit oder ohne Brechungsindex
 //Große Lightsources, weiche Schatten
+//
+//render gibt gleich Bitmap zurück
+//Blur-Material oder generell mal ein Bild unscharf machen
+
 
 
 namespace Raytracer
 {
     public partial class Form1 : Form
     {
-        int starting_Scene = 1;
+        int starting_Scene = 11;
 
-        private BackgroundWorker BW;
         public Form1()
         {
             InitializeComponent();
-
-            BW = new BackgroundWorker();
-            BW.WorkerReportsProgress = true;
-            BW.WorkerSupportsCancellation = true;
-            BW.DoWork += new DoWorkEventHandler(BW_DoWork);
-            BW.ProgressChanged += new ProgressChangedEventHandler(BW_ProgressChanged);
-            //BW.RunWorkerCompleted += new RunWorkerCompletedEventHandler(BW_RunWorkerCompleted);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -75,7 +71,6 @@ namespace Raytracer
             }
             else throw new Exception("Keine Kantenglaettung ausgewaehlt?");
 
-            //BW.RunWorkerAsync();
             scene.ProgressChanged += Scene_ProgressChanged;
 
             Ray.numRay = 0;
@@ -84,14 +79,11 @@ namespace Raytracer
 
             DateTime before = DateTime.Now;
 
-            //BW.RunWorkerAsync(scene, depth);
-            //RaytracerColor[,] col = BW.
             RaytracerColor[,] col = scene.render(depth);    //unser Bösewicht (was Zeit angeht)
 
             DateTime after = DateTime.Now;
             TimeSpan duration = after - before;
             statistic[0] = duration.TotalSeconds;
-
 
             before = DateTime.Now;
             Bitmap BM = new Bitmap(resX,resY);
@@ -378,23 +370,6 @@ namespace Raytracer
             });
         }
 
-        private void BW_DoWork(object sender, DoWorkEventArgs e)
-        {
-            BackgroundWorker worker = sender as BackgroundWorker;
-
-            //Scene scene = e.Argument[0];
-            //e.Result = scene.render(e.Argument[1], worker, e);
-        }
-
-        private void BW_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            progressBar1.Value = e.ProgressPercentage;
-        }
-
-        private void BW_RunWorkerCompleted(object sender, RunWorkerCompletedEventHandler e)
-        {
-
-        }
 
     }
 }

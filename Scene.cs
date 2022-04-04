@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Drawing;
-using System.ComponentModel;
 
 namespace Raytracer
 {
@@ -36,34 +35,31 @@ namespace Raytracer
             this.ambientColor = ambientColor;
         }
 
-        public RaytracerColor[,] render(int depth/*, BackgroundWorker worker, DoWorkEventArgs e*/)
+        public RaytracerColor[,] render(int depth)
         {
             int resY = cam.resY;
             int resX = cam.resX;
             RaytracerColor[,] color = new RaytracerColor[resX, resY];
 
-            ParallelOptions opt = new ParallelOptions
-            {
-                MaxDegreeOfParallelism = parallelism // max Anzahl Threads, man kann also cpu auslastung ugf. festlegen, -1 ist unbegrenzt (halt hardware begrenzt)
-            };
+            ParallelOptions opt = new ParallelOptions { MaxDegreeOfParallelism = parallelism };
 
-            Parallel.For(0,resX, opt,x => // parallel mehrere Threads nutzen
+            int a = 10; //Anzahl for-Schleifen, die zu einer Parallel.for zusammengefasst werden
+            int outer = (int)Math.Ceiling(resX / (double)a); 
+            for(int X = 0; X < outer; X++)
             {
-                for (int y = 0; y < resY; y++)
+                Parallel.For(a*X, Math.Min(resX, a*(X+1)), opt, x =>
                 {
-                    Ray ray; // muss hier initialisiert werden, sonst reden sich die Threads gegenseitig rein -> Renderfehler
-                    ray = cam.get_Rays(x, y);
-                    color[x, y] = calculateRays(ray, depth);
-                }
-
-                if(parallelism > 0 && parallelism < 5)
-                {
-                    progress = (int)(100 * (double)x / resX);
-                    OnProgressChanged(progress);
-                    OnProgressUpdate?.Invoke(progress);
-                }
-                //worker.ReportProgress(progress);
-            });
+                    for (int y = 0; y < resY; y++)
+                    {
+                        Ray ray;
+                        ray = cam.get_Rays(x, y);
+                        color[x, y] = calculateRays(ray, depth);
+                    }
+                });
+                progress = (int)(100 * (double)a*X / resX);
+                OnProgressChanged(progress);
+                OnProgressUpdate?.Invoke(progress);
+            }
             return color;
         }
 
@@ -76,36 +72,43 @@ namespace Raytracer
             ParallelOptions opt = new ParallelOptions();
             opt.MaxDegreeOfParallelism = parallelism; // max Anzahl Threads, man kann also cpu auslastung ugf. festlegen, -1 ist unbegrenzt (halt hardware begrenzt)
 
-            Parallel.For(0, resX, opt, x => // parallel mehrere Threads nutzen
+            int a = 10;
+            int outer = (int)Math.Ceiling(resX / (double)a);
+            for (int X = 0; X < outer; X++)
             {
-                for (int y = 0; y < resY; y++)
+                Parallel.For(a * X, Math.Min(resX, a * (X + 1)), opt, x =>
                 {
-                    if(edges[x,y])
+                    for (int y = 0; y < resY; y++)
                     {
-                        Ray ray; // muss hier initialisiert werden, sonst reden sich die Threads gegenseitig rein -> Renderfehler
-                        int actX;
-                        int actY;
-                        RaytracerColor[] c = new RaytracerColor[msaa* msaa]; // in dieses array werden die Farben eines Blocks reingeschrieben, um sie dann als avg auf die BM zu schreiben
-                        int i;
-                        int j;
-
-                        actX = msaa * x;
-                        actY = msaa * y;
-                        for (int s1 = 0; s1 < msaa; s1++)
+                        if (edges[x, y])
                         {
-                           for (int s2 = 0; s2 < msaa; s2++)
-                           {
-                              i = actX + s1;
-                              j = actY + s2;
-                              ray = camera.get_Rays(i, j);
-                                c[msaa * s1 + s2] = calculateRays(ray, depth);
-                           }
-                        }
-                        col[x,y]= new RaytracerColor(RaytracerColor.avg(c));             
-                    }
-                }
-            });
+                            Ray ray; // muss hier initialisiert werden, sonst reden sich die Threads gegenseitig rein -> Renderfehler
+                            int actX;
+                            int actY;
+                            RaytracerColor[] c = new RaytracerColor[msaa * msaa]; // in dieses array werden die Farben eines Blocks reingeschrieben, um sie dann als avg auf die BM zu schreiben
+                            int i;
+                            int j;
 
+                            actX = msaa * x;
+                            actY = msaa * y;
+                            for (int s1 = 0; s1 < msaa; s1++)
+                            {
+                                for (int s2 = 0; s2 < msaa; s2++)
+                                {
+                                    i = actX + s1;
+                                    j = actY + s2;
+                                    ray = camera.get_Rays(i, j);
+                                    c[msaa * s1 + s2] = calculateRays(ray, depth);
+                                }
+                            }
+                            col[x, y] = new RaytracerColor(RaytracerColor.avg(c));
+                        }
+                    }
+                });
+                progress = (int)(100 * (double)a * X / resX);
+                OnProgressChanged(progress);
+                OnProgressUpdate?.Invoke(progress);
+            }
             return col;
         }
 
