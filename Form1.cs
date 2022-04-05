@@ -17,14 +17,18 @@ using System.Threading.Tasks;
 //
 //render gibt gleich Bitmap zurück
 //Blur-Material oder generell mal ein Bild unscharf machen
-
+//Möglicherweise bessere Edgedetection
+//Progressbar bzw. Msaa anpassen, dass auch da 0-100% durchlaufen werden. Gerade läuft das so 1.5mal durch...
+//Dynamische Renderresolution-Anpassung, nach Grad der Kantenstärke z.B. 90p in komplett gleichen Gebieten, 1080 in Übergängen, 8k bei harten Kanten oder so... Keine Ahnung wie man das dann nennt...
+//Kantenglättung ohne weiteres Rendern, also lediglich erkennen von Kanten und dann diese irgendwie verrrechnen, dass die Treppeneffekte nicht mehr so sichtbar sind
+//
 
 
 namespace Raytracer
 {
     public partial class Form1 : Form
     {
-        int starting_Scene = 11;
+        int starting_Scene = 12;
 
         public Form1()
         {
@@ -201,20 +205,19 @@ namespace Raytracer
 
         private bool[,] aliasDetection(RaytracerColor[,] col, int resX, int resY)
         {
-            double threshhold = 3; // ganz guter Wert I guess; mhhh muss nochmal sehen
+            double threshhold = 20; // ganz guter Wert I guess; mhhh muss nochmal sehen
             bool[,] edges = new bool[resX, resY];
 
-
-            int minG;
-            int maxG; 
-            int minR;
-            int maxR; 
-            int minB;
-            int maxB;
-
-
-            for (int x = 1; x < resX - 1; x++)
+            Parallel.For(1, resX - 1, x =>
             {
+                int minG;
+                int maxG;
+                int minR;
+                int maxR;
+                int minB;
+                int maxB;
+
+                int value;
                 for (int y = 1; y < resY - 1; y++)
                 {
                     minG = col[x - 1, y - 1].G;
@@ -224,13 +227,14 @@ namespace Raytracer
                     {
                         for (int j = -1; j < 2; j++)
                         {
-                            if (col[x + i, y + j].G < minG)
+                            value = col[x + i, y + j].G;
+                            if (value < minG)
                             {
-                                minG = col[x + i, y + j].G;
+                                minG = value;
                             }
-                            if (col[x + i, y + j].G > maxG)
+                            if (value > maxG)
                             {
-                                maxG = col[x + i, y + j].G;
+                                maxG = value;
                             }
                         }
                     }
@@ -240,21 +244,20 @@ namespace Raytracer
                         continue;
                     }
 
-
                     minR = col[x - 1, y - 1].R;
                     maxR = minR;
-
                     for (int i = -1; i < 2; i++)
                     {
                         for (int j = -1; j < 2; j++)
                         {
-                            if (col[x + i, y + j].R < minR)
+                            value = col[x + i, y + j].R;
+                            if (value < minR)
                             {
-                                minR = col[x + i, y + j].R;
+                                minR = value;
                             }
-                            if (col[x + i, y + j].R > maxR)
+                            if (value > maxR)
                             {
-                                maxR = col[x + i, y + j].R;
+                                maxR = value;
                             }
                         }
                     }
@@ -266,28 +269,27 @@ namespace Raytracer
 
                     minB = col[x - 1, y - 1].B;
                     maxB = minB;
-
                     for (int i = -1; i < 2; i++)
                     {
                         for (int j = -1; j < 2; j++)
                         {
-                            if (col[x + i, y + j].B < minB)
+                            value = col[x + i, y + j].B;
+                            if ( value < minB)
                             {
-                                minB = col[x + i, y + j].B;
+                                minB = value;
                             }
-                            if (col[x + i, y + j].B > maxB)
+                            if (value > maxB)
                             {
-                                maxB = col[x + i, y + j].B;
+                                maxB = value;
                             }
                         }
                     }
                     if (maxB - minB > threshhold)
                     {
                         edges[x, y] = true;
-                        continue;
                     }
                 }
-            }
+            });
             return edges;
         }
 

@@ -33,6 +33,7 @@
             double t;
             for(int i = 0; i < size; i++)
             {
+                if (entities[i] == null) continue;
                 t = entities[i].get_intersection(ray);
                 if (t < tmin && t > 1e-10) tmin = t;
             }

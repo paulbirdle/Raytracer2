@@ -295,7 +295,7 @@ namespace Raytracer
 
             return new Scene(cam, ents, lights);
         }
-        public static Scene scene11(int resX,int resY) // Floor again :)
+        public static Scene scene11(int resX, int resY) // Floor again :)
         {
             Camera theCamera = new Camera(new Vector(-600, -680, 420), new Vector(6, 6.8, -4.15), new Vector(0, 0, 1), Math.PI / 7, resX, resY);
             Entity[] theEntities = new Entity[32*32];
@@ -332,25 +332,67 @@ namespace Raytracer
                 }
             }
 
-            Entity[] groups = new Entity[amount * amount / 4];
-            for (int i = 0; i < amount / 2; i++)  //into groups of 4 
-            {
-                for (int j = 0; j < amount / 2; j++)
-                {
-                    Entity[] var = new Cuboid[4];
-                    var[0] = cuboids[i * 2, j * 2];
-                    var[1] = cuboids[i * 2 + 1, j * 2];
-                    var[2] = cuboids[i * 2, j * 2 + 1];
-                    var[3] = cuboids[i * 2 + 1, j * 2 + 1];
-                    Hitentity e = new Hitbox(new Vector(i * (2 * size / amount), j * (2 * size / amount), (baseSize / 2) + (maxHeight / 2)) - new Vector((size - (2 * size / amount)) / 2, (size - (2 * size / amount)) / 2, -offsetUpDown), new Vector(1, 0, 0), new Vector(0, 0, 1), new double[3] { 2 * size / (amount), 2 * size / (amount), maxHeight + baseSize });
-                    groups[i * (amount / 2) + j] = new EntityGroup(var, e);
-                    theEntities[i * (amount / 2) + j] = groups[i * (amount / 2) + j];
-                }
-            }
+            //Entity[] groups = new Entity[amount * amount / 4]; bringt nicht wirklich was
+            //for (int i = 0; i < amount / 2; i++)  //into groups of 4 
+            //{
+            //    for (int j = 0; j < amount / 2; j++)
+            //    {
+            //        Entity[] var = new Cuboid[4];
+            //        var[0] = cuboids[i * 2, j * 2];
+            //        var[1] = cuboids[i * 2 + 1, j * 2];
+            //        var[2] = cuboids[i * 2, j * 2 + 1];
+            //        var[3] = cuboids[i * 2 + 1, j * 2 + 1];
+            //        Hitentity e = new Hitbox(new Vector(i * (2 * size / amount), j * (2 * size / amount), (baseSize / 2) + (maxHeight / 2)) - new Vector((size - (2 * size / amount)) / 2, (size - (2 * size / amount)) / 2, -offsetUpDown), new Vector(1, 0, 0), new Vector(0, 0, 1), new double[3] { 2 * size / (amount), 2 * size / (amount), maxHeight + baseSize });
+            //        groups[i * (amount / 2) + j] = new EntityGroup(var, e);
+            //        theEntities[i * (amount / 2) + j] = groups[i * (amount / 2) + j];
+            //    }
+            //}
 
             Scene theScene = new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
             return theScene;
         }
+        public static Scene scene12(int resX, int resY) // Greek architecture
+        {
+            Entity[] theEntities = new Entity[30];
+
+            Material m = new Material(new RaytracerColor(200, 200, 200), 0, 1, 0.3, 0.9);
+            Material floorMaterial = new Material(new RaytracerColor(200,200,200), 0.2, 1, 0.3, 0.9);
+
+            double flsize = 10;
+            theEntities[0] = new Cuboid(new Vector(0, 0, -0.4), new Vector(1, 0, 0), new Vector(0,0,1), new double[3] { flsize*5/4, flsize, 0.8 }, floorMaterial); // BodenPlatte
+            theEntities[25] = new Cuboid(new Vector(0, 0, -0.4), new Vector(1, 0, 0), new Vector(0, 0, 1), new double[3] { (0.3 + flsize * 5 / 4), (0.3 + flsize), 0.26666}, floorMaterial); // BodenPlatte
+            theEntities[26] = new Cuboid(new Vector(0, 0, -0.66666), new Vector(1, 0, 0), new Vector(0, 0, 1), new double[3] { (0.6 + flsize * 5 / 4), (0.6 + flsize), 0.26666}, floorMaterial); // BodenPlatte
+            double dist = 2.5;
+            int height = 5;
+            for(int i = 0; i<5; i++) // saeulen
+            {
+                theEntities[i * 4 + 1] = new Cylinder(new Vector((2 * dist) - i * dist,  1.5 * dist, 0), new Vector((2 * dist) - i * dist,  1.5 * dist, height), 0.3, m);
+                theEntities[i * 4 + 2] = new Cylinder(new Vector((2 * dist) - i * dist,  0.5 * dist, 0), new Vector((2 * dist) - i * dist,  0.5 * dist, height), 0.3, m); 
+                theEntities[i * 4 + 3] = new Cylinder(new Vector((2 * dist) - i * dist, -0.5 * dist, 0), new Vector((2 * dist) - i * dist, -0.5 * dist, height), 0.3, m);
+                theEntities[i * 4 + 4] = new Cylinder(new Vector((2 * dist) - i * dist, -1.5 * dist, 0), new Vector((2 * dist) - i * dist, -1.5 * dist, height), 0.3, m);
+            }
+            flsize = flsize - 0.3;
+            double roofwidth = 0.5;
+            theEntities[21] = new Cuboid(new Vector(0, 0, roofwidth/2 + height), new Vector(1, 0, 0), new Vector(0, 0, 1), new double[3] { (flsize * 5 / 4), flsize, roofwidth}, m); // Deckenplatte
+            theEntities[22] = new Triangle(new Vector(-flsize * 5 / 8, flsize/2, height + roofwidth), new Vector(-flsize * 5 / 8, -flsize/2, height + roofwidth), new Vector(-flsize * 5 / 8, 0, height + roofwidth + 1.4), m); // Dreieck an forderer Deckenkante
+            theEntities[23] = new Quadrilateral(new Vector(-flsize * 5 / 8,  flsize / 2, height + roofwidth), new Vector(flsize * 5 / 8,  flsize / 2, height + roofwidth), new Vector(flsize * 5 / 8, 0, height + roofwidth + 1.3), new Vector(-flsize * 5 / 8, 0, height + roofwidth + 1.3), m); // schraeges Dach seite 1
+            theEntities[24] = new Quadrilateral(new Vector(-flsize * 5 / 8, -flsize / 2, height + roofwidth), new Vector(flsize * 5 / 8, -flsize / 2, height + roofwidth), new Vector(flsize * 5 / 8, 0, height + roofwidth + 1.3), new Vector(-flsize * 5 / 8, 0, height + roofwidth + 1.3), m); // schraeges Dach seite 2
+
+
+            Camera theCamera = new Camera(new Vector(-200,-80, 80), new Vector(200, 80, -80), new Vector(0, 0, 1), Math.PI / 6, resX, resY);
+            Lightsource[] theLights = new Lightsource[6];
+            theLights[0] = new CandleLight(new Vector(-8, -10, 10), 20, new RaytracerColor(Color.White), 1);
+            theLights[3] = new CandleLight(new Vector(-12, 1, 0), 20, new RaytracerColor(Color.White), 0.2);
+            theLights[2] = new PointLight(new Vector(dist, dist, 4.8), new RaytracerColor(Color.Red), 0.6);
+
+
+            Entity[] e = new Entity[1];
+            Hitentity h = new Hitsphere(new Vector(0, 0, 0), flsize);
+            e[0] = new EntityGroup(theEntities, h);
+            Scene theScene = new Scene(theCamera, e, theLights, RaytracerColor.White);
+            return theScene;
+        }
+
         public static Entity standardfloor(double size, RaytracerColor color)
         {
             Material bgm = new Material(color, 0, 100, 0.05, 0.7);
@@ -401,7 +443,8 @@ namespace Raytracer
             {8, "General Testing Scene"},
             {9, "Minimalist flat Background"},
             {10, "Smooth Shadow" },
-            {11, "Floor" }
+            {11, "Floor" },
+            {12, "Greek architecture" }
         };
         public static Scene giveScene(int index_of_Scene, int resX, int resY)
         {
@@ -448,6 +491,10 @@ namespace Raytracer
             else if (index_of_Scene == 11)
             {
                 return SceneContainer.scene11(resX, resY);
+            }
+            else if (index_of_Scene == 12)
+            {
+                return SceneContainer.scene12(resX, resY);
             }
             else
             {
