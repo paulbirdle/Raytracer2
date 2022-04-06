@@ -44,19 +44,19 @@ namespace Raytracer
             ParallelOptions opt = new ParallelOptions { MaxDegreeOfParallelism = parallelism };
 
             int a = 10; //Anzahl for-Schleifen, die zu einer Parallel.for zusammengefasst werden
-            int outer = (int)Math.Ceiling(resX / (double)a); 
-            for(int X = 0; X < outer; X++)
+            int outer = (int)Math.Ceiling(resX / (double)a);
+            for (int X = 0; X < outer; X++)
             {
-                Parallel.For(a*X, Math.Min(resX, a*(X+1)), opt, x =>
-                {
-                    for (int y = 0; y < resY; y++)
-                    {
-                        Ray ray;
-                        ray = cam.get_Rays(x, y);
-                        color[x, y] = calculateRays(ray, depth);
-                    }
-                });
-                progress = (int)(100 * (double)a*X / resX);
+                Parallel.For(a * X, Math.Min(resX, a * (X + 1)), opt, x =>
+                      {
+                          for (int y = 0; y < resY; y++)
+                          {
+                              Ray ray;
+                              ray = cam.get_Rays(x, y);
+                              color[x, y] = calculateRays(ray, depth);
+                          }
+                      });
+                progress = (int)(100 * (double)a * (X+1) / resX);
                 OnProgressChanged(progress);
                 OnProgressUpdate?.Invoke(progress);
             }
@@ -116,7 +116,7 @@ namespace Raytracer
                         }
                     }
                 });
-                progress = (int)(100 * (double)a * X / resX);
+                progress = (int)(100 * (double)a * (X+1) / resX);
                 OnProgressChanged(progress);
                 OnProgressUpdate?.Invoke(progress);
             }
