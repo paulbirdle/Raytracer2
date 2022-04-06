@@ -60,6 +60,17 @@ namespace Raytracer
                 OnProgressChanged(progress);
                 OnProgressUpdate?.Invoke(progress);
             }
+
+            /*Parallel.For(0, resX, opt, x =>
+            {
+                for (int y = 0; y < resY; y++)
+                {
+                    Ray ray;
+                    ray = cam.get_Rays(x, y);
+                    color[x, y] = calculateRays(ray, depth);
+                }
+            });*/
+
             return color;
         }
 
