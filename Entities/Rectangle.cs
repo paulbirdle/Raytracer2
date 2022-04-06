@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Raytracer
 {
-    class Rectangle : Entity// : Quadrilateral
+    class Rectangle : Entity
     {
         protected readonly Vector center;
         protected readonly Vector n;
@@ -17,10 +17,6 @@ namespace Raytracer
 
         public Rectangle(Vector center, Vector n, Vector m1, double a1, double a2, Material material)
         {
-            /*if(Math.Abs(a1-a2) < 1e-3*a1)
-            {
-                this = new Square();
-            }*/
             this.center = center;
             this.n = n.normalize();
             m1 -= m1 * this.n * this.n;
@@ -53,7 +49,7 @@ namespace Raytracer
 
             for (int i = 0; i < 2; i++)
             {
-                if (Math.Abs((intersection - center) * m[i]) > a[i])
+                if (Math.Abs((intersection - center) * m[i]) > a[i]/2)
                 {
                     n = null;
                     material = null;
@@ -86,7 +82,7 @@ namespace Raytracer
 
             for (int i = 0; i < 2; i++)
             {
-                if (Math.Abs((intersection - center) * m[i]) > a[i])
+                if (Math.Abs((intersection - center) * m[i]) > a[i]/2)
                 {
                     return -1;
                 }

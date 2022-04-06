@@ -163,7 +163,7 @@ namespace Raytracer
         public bool IsInside(Ray ray)
         {
             Vector x = ray.Start + 1e-6 * ray.Direction - center;
-            if (Math.Abs(x * n[0]) <= a[0] && Math.Abs(x * n[1]) <= a[1] && Math.Abs(x * n[2]) <= a[2])
+            if (Math.Abs(x * n[0]) <= a[0]/2 && Math.Abs(x * n[1]) <= a[1]/2 && Math.Abs(x * n[2]) <= a[2]/2)
             {
                 return true;
             }

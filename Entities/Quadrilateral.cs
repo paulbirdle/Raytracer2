@@ -17,27 +17,19 @@ namespace Raytracer
             {
                 throw new Exception("Das ist kein Viereck");
             }
-            if (Math.Abs((corners[3]-corners[2])*n) > 1e-10)
-            {
-                throw new Exception("Die Ecken liegen nicht in einer Ebene");
-            }
             this.corners = corners;
             this.material = material;
             n = GetNormal();
             n_side = Get_n_side();
+            if (Math.Abs((corners[3]-corners[2])*n) > 1e-10)
+            {
+                throw new Exception("Die Ecken liegen nicht in einer Ebene");
+            }
         }
 
         public Quadrilateral(Vector corner1, Vector corner2, Vector corner3, Vector corner4, Material material)
             :this(new Vector[4] { corner1, corner2, corner3, corner4 }, material)
         {
-        }
-
-        public Quadrilateral()
-        {
-            corners = null;
-            material = null;
-            n = null;
-            n_side = null;
         }
 
         public Vector[] Get_n_side()
