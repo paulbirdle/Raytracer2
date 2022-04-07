@@ -4,11 +4,11 @@ namespace Raytracer
 {
     class Quadrilateral : Entity
     {
-        private readonly Vector[] corners;
-        private readonly Material material;
-        private readonly Vector n;
+        protected readonly Vector[] corners;
+        protected readonly Material material;
+        protected readonly Vector n;
 
-        private readonly Vector[] n_side; //zeigt immer nach außen
+        protected readonly Vector[] n_side; //zeigt immer nach außen
 
 
         public Quadrilateral(Vector[] corners, Material material)
@@ -17,26 +17,19 @@ namespace Raytracer
             {
                 throw new Exception("Das ist kein Viereck");
             }
-            if (Math.Abs((corners[3]-corners[2])*n) > 1e-10)
-            {
-                throw new Exception("Die Ecken liegen nicht in einer Ebene");
-            }
             this.corners = corners;
             this.material = material;
             n = GetNormal();
             n_side = Get_n_side();
-        }
-
-        public Quadrilateral(Vector corner1, Vector corner2, Vector corner3, Vector corner4, Material material)
-        {
-            corners = new Vector[4] { corner1, corner2, corner3, corner4 };
-            this.material = material;
-            n = GetNormal();
-            if (Math.Abs((corners[3] - corners[2]) * n) > 1e-10)
+            if (Math.Abs((corners[3]-corners[2])*n) > 1e-10)
             {
                 throw new Exception("Die Ecken liegen nicht in einer Ebene");
             }
-            n_side = Get_n_side();
+        }
+
+        public Quadrilateral(Vector corner1, Vector corner2, Vector corner3, Vector corner4, Material material)
+            :this(new Vector[4] { corner1, corner2, corner3, corner4 }, material)
+        {
         }
 
         public Vector[] Get_n_side()
