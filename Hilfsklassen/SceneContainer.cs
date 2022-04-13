@@ -38,6 +38,7 @@ namespace Raytracer
 
             return new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
         }
+
         public static Scene scene2(int resX, int resY) // vertical Bars
         {
             Camera theCamera = new Camera(new Vector(-600, -660, 400), new Vector(6, 6.6, -3.95), new Vector(0, 0, 1), Math.PI/7, resX, resY);
@@ -92,6 +93,7 @@ namespace Raytracer
             Scene theScene = new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
             return theScene;
         }
+
         public static Scene scene3(int resX, int resY) // Balls Mirrored Multiple times
         {
             Camera theCamera = new Camera(new Vector(-10,-10,10),new Vector(0.5,5,0), new Vector(0,1.2,2), Math.PI/1.45,resX,resY);
@@ -127,6 +129,7 @@ namespace Raytracer
             Scene theScene = new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
             return theScene;
         }
+
         public static Scene scene4(int resX, int resY) // Torus and Disk test Scene
         {
             Camera cam = new Camera(new Vector(49, 0, 0), new Vector(-1, 0, 0), new Vector(0, 0, 1), Math.PI / 4, resX, resY);
@@ -207,6 +210,7 @@ namespace Raytracer
             Camera c = standardCamera(Math.PI /12, resX, resY);
             return new Scene(c, e, l);
         }
+
         public static Scene scene7(int resX, int resY) // Smartphone Hintergrund
         {
             Scene baseScene  = scene3(resX,resY);
@@ -217,6 +221,7 @@ namespace Raytracer
             c = new Camera(c.Position, c.Direction, c.Up, c.yAngle, resY, resX); // res tauschen fuer hochkantes Bild
             return new Scene(c, e, l, r); 
         }
+
         public static Scene scene8(int resX, int resY) // General Testing Scene
         {
             Entity[] e = new Entity[7];
@@ -231,6 +236,7 @@ namespace Raytracer
             Camera c = new Camera(new Vector(-500, 0, 0), new Vector(100, 0, 0), new Vector(0, 0, 1), Math.PI / 8, resX, resY);
             return new Scene(c, e, l);
         }
+
         public static Scene scene9(int resX, int resY) // Minimalist flat background
         {
             Entity[] e = new Entity[7];

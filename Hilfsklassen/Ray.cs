@@ -1,18 +1,24 @@
-﻿namespace Raytracer
+﻿using System.Threading;
+
+namespace Raytracer
 {
     class Ray
     {
         public static long numRay = 0;
         public Ray(Vector direction, Vector start)
         {
-            numRay++;
+#if DEBUG
+            Interlocked.Increment(ref numRay);
+#endif
             Direction = direction.normalize();
             Start = start;
         }
 
         public Ray(Vector direction, Vector start, bool normalized)
         {
-            numRay++;
+#if DEBUG
+            Interlocked.Increment(ref numRay);
+#endif
             if (normalized == true)
             {
                 Direction = direction;

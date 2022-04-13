@@ -1,45 +1,54 @@
 ﻿using System;
+using System.Threading;
 
 namespace Raytracer
 {
     class Vector 
     {
-        private readonly double[] v;
+        //private readonly double[] v;
+        private  double vx = 0; // ca. 20% schneller...
+        private  double vy = 0;
+        private  double vz = 0;
         public static long numVec = 0;
 
         public Vector(double x, double y, double z)
         {
-            numVec++;
-            v = new double[3] { x, y, z };
+#if DEBUG
+            Interlocked.Increment(ref numVec);
+#endif
+            vx = x;
+            vy = y;
+            vz = z;
         }
 
         public Vector()
         {
-            numVec++;
-            v = new double[3] { 0, 0, 0 };
+#if DEBUG
+            Interlocked.Increment(ref numVec);
+#endif
         }
 
         public double X
         {
-            get { return v[0]; }
-            set { v[0] = value; }
+            get { return vx; }
+            set { vx = value; }
         }
 
         public double Y
         {
-            get { return v[1]; }
-            set { v[1] = value; }
+            get { return vy; }
+            set { vy = value; }
         }
 
         public double Z
         {
-            get { return v[2]; }
-            set { v[2] = value; }
+            get { return vz; }
+            set { vz = value; }
         }
 
         public double Get(int i)
         {
-            return v[i];
+            return (i == 0) ? vx : (i == 1) ? vy : vz;
         }
 
         public static Vector operator *(double a, Vector w)
