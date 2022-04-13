@@ -22,7 +22,9 @@ using System.Threading.Tasks;
 //Dynamische Renderresolution-Anpassung, nach Grad der Kantenstärke z.B. 90p in komplett gleichen Gebieten, 1080 in Übergängen, 8k bei harten Kanten oder so... Keine Ahnung wie man das dann nennt...
 //Kantenglättung ohne weiteres Rendern, also lediglich erkennen von Kanten und dann diese irgendwie verrrechnen, dass die Treppeneffekte nicht mehr so sichtbar sind
 //
-
+// einzelne bitmaps fuer jeden thread... maybe
+// oder nicht immer neue threads aufmachen, koennte viel Zeit brauchen immer neue auf zu machen. also neue Klasse mit Teil von Bild oder so 
+//
 
 namespace Raytracer
 {
