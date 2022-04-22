@@ -334,7 +334,8 @@ namespace Raytracer
                 for (int j = 0; j < amount; j++)
                 {
                     height = r.Next(1, maxHeight*10);
-                    cuboids[i, j] = new Cuboid(new Vector(i * (size / amount), j * (size / amount), (baseSize / 2) + (height / 20)) - new Vector((size - (size / amount)) / 2, (size - (size / amount)) / 2, -offsetUpDown), new Vector(1, 0, 0), new Vector(0, 0, 1), new double[3] { size / (amount) - s, size / (amount) - s, (height / 10) + baseSize }, floorMaterial);
+                    //cuboids[i, j] = new Cuboid(new Vector(i * (size / amount), j * (size / amount), (baseSize / 2) + (height / 20)) - new Vector((size - (size / amount)) / 2, (size - (size / amount)) / 2, -offsetUpDown), new Vector(1, 0, 0), new Vector(0, 0, 1), new double[3] { size / (amount) - s, size / (amount) - s, (height / 10) + baseSize }, floorMaterial);
+                    theEntities[i*amount + j] = new Cuboid(new Vector(i * (size / amount), j * (size / amount), (baseSize / 2) + (height / 20)) - new Vector((size - (size / amount)) / 2, (size - (size / amount)) / 2, -offsetUpDown), new Vector(1, 0, 0), new Vector(0, 0, 1), new double[3] { size / (amount) - s, size / (amount) - s, (height / 10) + baseSize }, floorMaterial);
                 }
             }
 
