@@ -6,9 +6,9 @@ namespace Raytracer
     class Vector 
     {
         //private readonly double[] v;
-        private  double vx = 0; // ca. 20% schneller...
-        private  double vy = 0;
-        private  double vz = 0;
+        private double vx = 0; // ca. 20% schneller...
+        private double vy = 0;
+        private double vz = 0;
         public static long numVec = 0;
 
         public Vector(double x, double y, double z)
