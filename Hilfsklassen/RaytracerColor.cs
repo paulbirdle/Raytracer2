@@ -184,6 +184,11 @@ namespace Raytracer
             get { return new RaytracerColor(Color.Pink); }
         }
 
+        public static RaytracerColor DarkGreen
+        {
+            get { return new RaytracerColor(Color.DarkGreen); }
+        }
+
 
         public RaytracerColor darken(double percent)
         {

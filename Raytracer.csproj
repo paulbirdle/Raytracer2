@@ -116,6 +116,7 @@
     <Compile Include="Lightsources\Spotlight.cs" />
     <Compile Include="Entities\Tetrahedron.cs" />
     <Compile Include="Entities\Rectangle.cs" />
+    <Compile Include="Entities\ParallelCuboids.cs" />
     <Compile Include="VideoScenes\MovingCameraScene.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

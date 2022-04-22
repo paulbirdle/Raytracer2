@@ -211,7 +211,7 @@ namespace Raytracer
             return new Scene(c, e, l);
         }
 
-        public static Scene scene7(int resX, int resY) // Smartphone Hintergrund
+        public static Scene scene7(int resX, int resY) // Srtphone Hintergrund
         {
             Scene baseScene  = scene3(resX,resY);
             Camera c = baseScene.giveCamera();
@@ -335,6 +335,7 @@ namespace Raytracer
                 {
                     height = r.Next(1, maxHeight*10);
                     cuboids[i, j] = new Cuboid(new Vector(i * (size / amount), j * (size / amount), (baseSize / 2) + (height / 20)) - new Vector((size - (size / amount)) / 2, (size - (size / amount)) / 2, -offsetUpDown), new Vector(1, 0, 0), new Vector(0, 0, 1), new double[3] { size / (amount) - s, size / (amount) - s, (height / 10) + baseSize }, floorMaterial);
+                    theEntities[amount * i + j] = cuboids[i, j];
                 }
             }
 
@@ -398,6 +399,52 @@ namespace Raytracer
             Scene theScene = new Scene(theCamera, e, theLights, RaytracerColor.White);
             return theScene;
         }
+        public static Scene scene13(int resX, int resY) //ParallelCuboids
+        {
+            Camera theCamera = new Camera(new Vector(-600, -680, 420), new Vector(6, 6.8, -4.15), new Vector(0, 0, 1), Math.PI / 7, resX, resY);
+
+            Lightsource[] theLights = new Lightsource[6];
+
+            double I = 5;
+            int range = 130;
+            double lights = 150;
+            theLights[0] = new CandleLight(new Vector(-lights - 200, -lights + 70, lights + 80), range, RaytracerColor.White, I);
+            theLights[1] = new CandleLight(new Vector(-lights + 70, -lights - 200, lights + 40), range, RaytracerColor.DarkGreen, I);
+            theLights[2] = new CandleLight(new Vector(0, +40, 100), 17, RaytracerColor.White, I + 5);
+            theLights[3] = new CandleLight(new Vector(0, +300, 100), 17, RaytracerColor.White, I + 5);
+            theLights[4] = new CandleLight(new Vector(+220, +80, 100), 17, RaytracerColor.White, I + 5);
+            theLights[5] = new CandleLight(new Vector(lights + 70, lights - 200, lights), 45, RaytracerColor.DarkGreen, I + 6);
+
+            Random r = new Random();
+            int amount = 32;    //gerade
+            double size = 800;
+            Material floorMat = new Material(new RaytracerColor(Color.FromArgb(38, 255, 168)), 0, 20, 0.5, 0.6);
+            int MaxHeight = 80;
+            int height;
+            double s = 0; // spacing: is  subtractive not additive
+            int baseSize = 18;
+            int offsetUpDown = -40;
+
+            Vector[] centers = new Vector[amount * amount];
+            double[,] a = new double[amount * amount, 3];
+            double size1 = size / amount;
+            for (int i = 0; i < amount; i++)
+            {
+                for (int j = 0; j < amount; j++)
+                {
+                    height = r.Next(1, MaxHeight * 10);
+                    centers[amount*i+j] =  new Vector(i * size1, j * size1, (baseSize / 2) + (height / 20)) - new Vector((size - size1) / 2, (size - size1) / 2, -offsetUpDown);
+                    a[amount * i + j, 0] = size / (amount) - s;
+                    a[amount * i + j, 1] = size / (amount) - s;
+                    a[amount * i + j, 2] = (height / 10) + baseSize;
+                }
+            }
+            Vector[] n = new Vector[3] { new Vector(1, 0, 0), new Vector(0, 1, 0), new Vector(0, 0, 1) };
+            Entity[] theEntities = new Entity[] { new ParallelCuboids(n, centers, a, floorMat) };
+
+            Scene theScene = new Scene(theCamera, theEntities, theLights, RaytracerColor.Black);
+            return theScene;
+        }
 
         public static Entity standardfloor(double size, RaytracerColor color)
         {
@@ -450,57 +497,62 @@ namespace Raytracer
             {9, "Minimalist flat Background"},
             {10, "Smooth Shadow" },
             {11, "Floor" },
-            {12, "Greek architecture" }
+            {12, "Greek architecture" },
+            {13, "ParallelCuboids" }
         };
         public static Scene giveScene(int index_of_Scene, int resX, int resY)
         {
             if (index_of_Scene == 1)
             {
-                return SceneContainer.scene1(resX, resY); 
+                return scene1(resX, resY); 
             }
             else if (index_of_Scene == 2)
             {
-                return SceneContainer.scene2(resX, resY);
+                return scene2(resX, resY);
             }
             else if (index_of_Scene == 3)
             {
-                return SceneContainer.scene3(resX, resY);
+                return scene3(resX, resY);
             }
             else if (index_of_Scene == 4)
             {
-                return SceneContainer.scene4(resX, resY);
+                return scene4(resX, resY);
             }
             else if (index_of_Scene == 5)
             {
-                return SceneContainer.scene5(resX, resY);
+                return scene5(resX, resY);
             }
             else if (index_of_Scene == 6)
             {
-                return SceneContainer.scene6(resX, resY);
+                return scene6(resX, resY);
             }
             else if (index_of_Scene == 7)
             {
-                return SceneContainer.scene7(resX, resY);
+                return scene7(resX, resY);
             }
             else if (index_of_Scene == 8)
             {
-                return SceneContainer.scene8(resX, resY);
+                return scene8(resX, resY);
             }
             else if (index_of_Scene == 9)
             {
-                return SceneContainer.scene9(resX, resY);
+                return scene9(resX, resY);
             }
             else if (index_of_Scene == 10)
             {
-                return SceneContainer.scene10(resX, resY);
+                return scene10(resX, resY);
             }
             else if (index_of_Scene == 11)
             {
-                return SceneContainer.scene11(resX, resY);
+                return scene11(resX, resY);
             }
             else if (index_of_Scene == 12)
             {
-                return SceneContainer.scene12(resX, resY);
+                return scene12(resX, resY);
+            }
+            else if (index_of_Scene == 13)
+            {
+                return scene13(resX, resY);
             }
             else
             {

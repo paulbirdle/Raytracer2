@@ -6,6 +6,7 @@ namespace Raytracer
     {
         private readonly Vector center;
         private readonly Material material;
+        protected readonly double p;
         private readonly Matrix B; //realer Raum --> lokales Koordinatensystem
 
         private readonly Matrix Bt;
@@ -22,12 +23,28 @@ namespace Raytracer
             B = new Matrix(new double[3, 3] { { axis1.X / a[0], axis1.Y / a[0], axis1.Z / a[0] }, { axis2.X / a[1], axis2.Y / a[1], axis2.Z / a[1] }, { axis3.X / a[2], axis3.Y / a[2], axis3.Z / a[2] } });
             Bt = Matrix.Transpose(B);
             C = Bt * B;
+            p = 2;
         }
 
 
         public Ellipsoid(Vector center, double a1, double a2, double a3, Vector axis1, Vector axis2, Material material)
             : this(center, new double[3] { a1, a2, a3 }, axis1, axis2, material)
         { }
+
+
+        public Ellipsoid(Vector center, double[] a, Vector axis1, Vector axis2, Material material, double p)
+        {
+            this.center = center;
+            axis1 = axis1.normalize();
+            axis2 = (axis2 - axis2 * axis1 * axis1).normalize();
+            this.material = material;
+
+            Vector axis3 = axis1 ^ axis2;
+            B = new Matrix(new double[3, 3] { { axis1.X / a[0], axis1.Y / a[0], axis1.Z / a[0] }, { axis2.X / a[1], axis2.Y / a[1], axis2.Z / a[1] }, { axis3.X / a[2], axis3.Y / a[2], axis3.Z / a[2] } });
+            Bt = Matrix.Transpose(B);
+            C = Bt * B;
+            this.p = p;
+        }
 
 
         public override double get_intersection(Ray ray, out Vector n, out Material material)

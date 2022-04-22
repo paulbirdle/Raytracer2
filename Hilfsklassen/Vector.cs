@@ -114,6 +114,12 @@ namespace Raytracer
             return v.X * w.X / a[0] + v.Y * w.Y / a[1] + v.Z * w.Z / a[2];
         }
 
+        public static double pNorm(Vector v, double p)
+        {
+            double sum = Math.Pow(Math.Abs(v.vx),p) + Math.Pow(Math.Abs(v.vy), p) + Math.Pow(Math.Abs(v.vz), p);
+            return Math.Pow(sum, 1 / p);
+        }
+
         public double norm()
         {
             return Math.Sqrt(this * this);
